@@ -1,0 +1,81 @@
+{
+  "menu": [
+    {
+      "navheader": "Menu principal",
+      "icon": "more_horiz"
+    },
+    {
+      "url": "home",
+      "name": "Caja Diaria",
+      "i18n": "Caja Diaria",
+      "class": "waves-effect waves-cyan",
+      "icon": "mail_outline",
+      "slug": "app-email",
+      "tag": "",
+      "tagcustom": "badge   accent-2 float-right mr-2"
+    },
+    {
+      "url": "proveedores",
+      "name": "Proveedores",
+      "i18n": "proveedores",
+      "class": "waves-effect waves-cyan",
+      "icon": "local_shipping",
+      "slug": "app-contacts"
+    },
+    {
+      "url": "clientes",
+      "name": "Clientes",
+      "i18n": "Clientes",
+      "class": "waves-effect waves-cyan",
+      "icon": "contacts",
+      "slug": "clientes"
+    },
+    {
+      "url": "conceptos",
+      "name": "Conceptos",
+      "i18n": "Conceptos",
+      "class": "waves-effect waves-cyan",
+      "icon": "assignment",
+      "slug": "conceptos"
+    },
+    {
+      "url": "ordenes",
+      "name": "Ordenes",
+      "i18n": "Ordenes",
+      "class": "waves-effect waves-cyan",
+      "slug": "app-invoice",
+      "icon": "receipt"
+    },
+    {
+      "url": "javascript:void(0)",
+      "name": "Informes",
+      "i18n": "Informes",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "slug": "Informes",
+      "icon": "local_printshop",
+      "submenu": [
+        {
+          "url": "eCommerce-products-page",
+          "name": "Products Page",
+          "i18n": "Products Page",
+          "slug": "eCommerce-products-page"
+        },
+        {
+          "url": "eCommerce-pricing",
+          "name": "Pricing",
+          "i18n": "Pricing",
+          "slug": "eCommerce-pricing"
+        }
+      ]
+    },
+    {
+      "url": "http://zondasoftware.com.ar/",
+      "name": "Ayuda",
+      "i18n": "Ayuda",
+      "class": "waves-effect waves-cyan",
+      "icon": "help_outline",
+      "slug": "support",
+      "newTab": "_blank"
+    }
+  ]
+}
