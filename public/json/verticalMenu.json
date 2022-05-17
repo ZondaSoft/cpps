@@ -15,36 +15,12 @@
       "tagcustom": "badge   accent-2 float-right mr-2"
     },
     {
-      "url": "proveedores",
-      "name": "Proveedores",
-      "i18n": "proveedores",
-      "class": "waves-effect waves-cyan",
-      "icon": "local_shipping",
-      "slug": "app-contacts"
-    },
-    {
-      "url": "clientes",
-      "name": "Clientes",
-      "i18n": "Clientes",
-      "class": "waves-effect waves-cyan",
-      "icon": "contacts",
-      "slug": "clientes"
-    },
-    {
       "url": "conceptos",
       "name": "Conceptos",
       "i18n": "Conceptos",
       "class": "waves-effect waves-cyan",
       "icon": "assignment",
       "slug": "conceptos"
-    },
-    {
-      "url": "ordenes",
-      "name": "Ordenes",
-      "i18n": "Ordenes",
-      "class": "waves-effect waves-cyan",
-      "slug": "app-invoice",
-      "icon": "receipt"
     },
     {
       "url": "javascript:void(0)",

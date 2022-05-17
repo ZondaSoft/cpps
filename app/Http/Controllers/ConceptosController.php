@@ -68,7 +68,7 @@ class ConceptosController extends Controller
         $nrolegajo = 0;
 
         if ($id == null) {
-            $legajo = Cpa001::Where('codigo', '>', 0)
+            $legajo = Cpa010::Where('codigo', '>', 0)
                 ->orderBy('codigo')
                 ->first();      // find($id);
 
@@ -79,7 +79,7 @@ class ConceptosController extends Controller
                 $nrolegajo = $legajo->codigo;
             }
         } else {
-            $legajo = Cpa001::find($id);
+            $legajo = Cpa010::find($id);
             if ($legajo == null) {
                 $legajo = Cpa010::Where('codigo', '>', 0)
                     ->orderBy('codigo')
@@ -273,14 +273,12 @@ class ConceptosController extends Controller
             'codigo.required' => 'El Código del cliente es obligatorio',
             'codigo.unique' => 'El Código del cliente ya existe',
             'detalle.required' => 'La razón social es obligatorio',
-            'detalle.min' => 'La razón social debe tener más de 2 letras',
-            'nom_com.required' => 'El nombre de fantasia es obligatorios'
+            'detalle.min' => 'La razón social debe tener más de 2 letras'
         ];
 
         $rules = [
             'codigo' => 'required|unique:vta001s',
-            'detalle' => 'required|min:2',
-            'nom_com' => 'required'
+            'detalle' => 'required|min:2'
         ];
 
         $this->validate($request, $rules, $messages);
@@ -291,37 +289,18 @@ class ConceptosController extends Controller
 
         $legajo->codigo = $request->input('codigo');
         $legajo->detalle = $request->input('detalle');
-        $legajo->nom_com = $request->input('nom_com');
-        $legajo->cuit = $request->input('cuit');
-        $legajo->domic = $request->input('domic');
-        $legajo->dom_com = $request->input('dom_com');
-        $legajo->localid = $request->input('localid');
-        $legajo->codpostal = $request->input('codpostal');
-
-        $legajo->tel1 = $request->input('tel1');
-        $legajo->tel2 = $request->input('tel2');
-        $legajo->tel3 = $request->input('tel3');
-        $legajo->email = $request->input('email');
-        $legajo->web = $request->input('web');
-        
-        // Pestaña forma de pago
-        $legajo->formap = $request->input('formap');
-        $legajo->banco = $request->input('banco');
-        $legajo->sucursal = $request->input('sucursal');
-        $legajo->cuenta = $request->input('cuenta');
-        $legajo->cbu = $request->input('cbu');
 
         $legajo->save();   // INSERT INTO - SQL
 
         if ($legajo->codigo > 0)
-            return redirect('/home');
+            return redirect('/conceptos/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
     }
 
 
     public function edit($id = 0)
     {
         if ($id == 0) {
-            return redirect('/home');
+            return redirect('/conceptos');
         }
 
         $provincias = [];
@@ -348,7 +327,7 @@ class ConceptosController extends Controller
 
         $legajo = Cpa010::find($id);
         if ($legajo == null) {
-            return redirect('/home');
+            return redirect('/conceptos');
         }
 
         $agregar = False;
@@ -474,7 +453,7 @@ class ConceptosController extends Controller
 
         // dd($legajo->cod_centro);
 
-        return redirect('/home/' . $id);
+        return redirect('/conceptos/' . $id);
     }
 
 
@@ -492,7 +471,7 @@ class ConceptosController extends Controller
         $images = null;
 
         return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"nombres\":\"$legajo->nombres\"}";
-        //return redirect("/home/");
+        //return redirect("/conceptos/");
     }
 
     public function baja(Request $request, $id = null)
@@ -522,7 +501,7 @@ class ConceptosController extends Controller
         }
 
         // return "{\"result\":\"ok\",\"id\":\"$legajo->id\"}";
-        return redirect("/home/");
+        return redirect("/conceptos/");
     }
 
 

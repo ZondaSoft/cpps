@@ -3,10 +3,15 @@
     class="{{$configData['navbarMainClass']}} @if($configData['isNavbarDark']=== true) {{'navbar-dark'}} @elseif($configData['isNavbarDark']=== false) {{'navbar-light'}} @elseif(!empty($configData['navbarBgColor'])) {{$configData['navbarBgColor']}} @else {{$configData['navbarMainColor']}} @endif">
     <div class="nav-wrapper">
       <div class="header-search-wrapper hide-on-med-and-down">
-        <i class="material-icons">search</i>
-        <input class="header-search-input z-depth-2" type="text" name="Search" placeholder="Busqueda rápida"
+        {{-- Daniel Salazar --}}
+        {{-- <i class="material-icons">search</i>
+        <input class="header-search-input z-depth-2" type="text" name="Search" placeholder="Busqueda rápida."
           data-search="template-list">
-        <ul class="search-list collection display-none"></ul>
+        <ul class="search-list collection display-none"></ul> --}}
+        <div class="white-text">
+        <h5 style="color: #FFFFFF">Caja Diaria</h5>
+        </div>
+
       </div>
       <ul class="navbar-list right">
         {{-- <li class="dropdown-language">

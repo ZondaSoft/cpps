@@ -3,8 +3,7 @@
     class="{{$configData['navbarMainClass']}} @if($configData['isNavbarDark']=== true) {{'navbar-dark'}} @elseif($configData['isNavbarDark']=== false) {{'navbar-light'}} @elseif(!empty($configData['navbarBgColor'])) {{$configData['navbarBgColor']}} @else {{$configData['navbarMainColor']}} @endif">
     <div class="nav-wrapper">
       <div class="header-search-wrapper hide-on-med-and-down">
-
-        @if ($configData['title'] === 'Ordenes de Trabajo')
+        @if ($configData['title'] === 'Caja diaria')
           <h5 class="breadcrumb" style="font-size: 30px;"><span>@yield('title')</span></h5>
         @else
           <i class="material-icons">search</i>

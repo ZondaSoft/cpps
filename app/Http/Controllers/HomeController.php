@@ -6,8 +6,9 @@ use Illuminate\Http\Request;
 use App\Models\Datoempr;
 use App\Models\Vta001;
 use App\Models\Fza002;
-use App\Models\Tal001;
-use App\Models\Tal030;
+use App\Models\Fza030;  // Movimientos
+use App\Models\Fza020;  // Head de movimientos
+use App\Models\Cpa010;  // Conceptos
 use Carbon\Carbon;
 
 class HomeController extends Controller
@@ -19,7 +20,7 @@ class HomeController extends Controller
 
     public function index(Request $request, $id = null, $direction = null)
     {
-        $legajoNew = new Tal030;
+        $legajoNew = new Cpa010;
         $legajoNew->fecha = Carbon::Now()->format('d/m/Y');
         $legajoNew->hasta = Carbon::Now()->format('d/m/Y');
         $legajoNew->fecha_sin = Carbon::Now()->format('d/m/Y');
@@ -27,77 +28,41 @@ class HomeController extends Controller
         $periodo = null;
         
         $fecha = null;
+        $legajo = null;
+        $novedad = null;
         $legajoReadOnly = '';
-        $dni = null;
+        $agregar = true;
+        $edicion = true;
+        $active = 1;
+        $cuenta = 0;
 
-        // si no se pasan ninguno de los dos parametros, limpio la sesion
-        if ($request->has('dni') or $request->has('cod_nov2')) {
-        } else {
-            \Session::put('legajo_add',0);
-            \Session::put('legajo_name_add','');
-            \Session::put('cod_nov_new','');
-            \Session::put('cod_nov_name_new','');
-            \Session::put('fecha_add','');
+        //------------------------------------------------------------------------
+        // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
+        //------------------------------------------------------------------------
+        $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+        if ($cajaAbierta == null) {
+            // Busco ultima caja cerrada
+            $ultimaCaja = Fza020::first();
+
+            // No hay cajas anteriores ?
+            if ($ultimaCaja == null) {
+                $legajo = new Fza020;
+                $legajo->id = 1;
+                $legajo->fecha = Carbon::Now()->format('d/m/Y');
+                $legajo->apertura = 0.00;
+                $legajo->cierre = 0.00;
+            }
+
+            return view('caja-apertura')->with(compact('novedad','dni','fecha','cuenta',
+                'legajoNew','legajo','agregar','edicion','active'));
         }
 
-        //-------------------------------------------------------------------------
-        //    Si se paso la vble dni usada en el nro. de legajo en los modales
-        //-------------------------------------------------------------------------
-        if ($request->has('dni')) {
-            $dni = $request->query('dni');
-
-            $legajo = Vta001::where('codigo',$dni)->first();
-
-			if ($legajo != null) {
-                $legajoNew->detalle = $legajo->detalle . ' ' . $legajo->nom_com;
-                //$legajoNew->sector = $legajo->codsector;
-            }
-
-            $legajoNew->legajo = $dni;
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $novedad = (\Session::get('cod_nov_new'));
-
-            if ($novedad != null) {
-                $legajoNew->cod_nov = $novedad;
-            }
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $fecha = (\Session::get('fecha_add'));
-
-            if ($fecha != null) {
-                $legajoNew->fecha = $fecha;
-            } else {
-                // Si la fecha no fue traida por la sesion carho fecha de hoy
-                $legajoNew->fecha = Carbon::Now()->format('d/m/Y');
-            }
-
-            // Traigo datos almacenados en la sesion (ApyNom)
-            //$apynom_object = (\Session::get('legajo_name_add'));
-            //$apynom = $apynom_object[0];
-
-            //if ($apynom_object != null) {
-            //    $legajoNew->detalle = $apynom;
-            //}
-
-            // Creo la session con el helper
-            \Session::put('legajo_add',$legajoNew->legajo);
-            \Session::put('legajo_name_add',$legajoNew->detalle);
-        } else {
-            $legajo = new Vta001;
-			$legajo->id = 0;
-			$legajo->detalle = '';
-        }
 
         if ($request->has('cod_nov2')) {
             $cod_nov = $request->query('cod_nov2');
 
             // Traigo datos almacenados en la sesion (Nro.legajo)
             $dni = (\Session::get('legajo_add'));
-
-            if ($dni != null) {
-                $legajoNew->legajo = $dni;
-            }
 
             // Traigo datos almacenados en la sesion (ApyNom)
             $apynom = (\Session::get('legajo_name_add'));
@@ -148,7 +113,7 @@ class HomeController extends Controller
             /*----------------------------------------------------*/
             /*                Carga de filtros
             /*----------------------------------------------------*/
-            if ($request->has('dni2') or $request->has('cod_nov2') or $request->has('fecha5') or $request->has('cliente')) {
+            if ($request->has('dni2') or $request->has('cod_nov2') or $request->has('fecha5')) {
                 $dni = $request->query('dni2');
 				$cod_nov = $request->query('cod_nov2');
                 $fecha_orig = $request->query('fecha5');
@@ -177,7 +142,7 @@ class HomeController extends Controller
                 //config()->set('database.connections.your_connection.strict', false);
 
                 if ($order == 2 or $order == null) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
                       ->orderBy('numero','asc')
                       ->paginate(9)
                       ->appends(request()->query());
@@ -185,36 +150,36 @@ class HomeController extends Controller
                       //->orderBy('fecha','asc')
                       
                 } elseif ($order == 1 or $order == 0) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','desc')
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                      ->orderBy('fecha','desc')
                       ->paginate(9)
                       ->appends(request()->query());
 
                       //->orderBy('fecha','desc')
 
                 } elseif ($order == 3) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','asc')
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                      ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());
 
                       //->orderBy('fecha','asc')
                       
                 } elseif ($order == 4) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','desc')
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                      ->orderBy('fecha','desc')
                       ->paginate(9)
                       ->appends(request()->query());
 
                       //->orderBy('fecha','desc')
                       
                 } elseif ($order == 9) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','asc')
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                      ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());
                 } elseif ($order == 10) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
                       ->paginate(9)
                       ->appends(request()->query());
                 }
@@ -234,7 +199,7 @@ class HomeController extends Controller
                     // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
                     //config()->set('database.connections.mysql.strict', false);
                     
-                    $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
+                    $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
                         ->orderBy('ciente','asc')
                         ->paginate(9)
                         ->appends(request()->query());
@@ -247,17 +212,13 @@ class HomeController extends Controller
             // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
             //config()->set('database.connections.your_connection.strict', false);
             
-            $periodo2 = "";
-
-            //$novedades = Tal030::orderBy('fecha')->where('id',0)->paginate(9);
-            $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','asc')
+            //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+            $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                      ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());
             
             //->orderBy('fecha','asc')
-
-            $novedades->periodo = "  /    ";
         }
 
         $id_crud = 2;
@@ -284,71 +245,15 @@ class HomeController extends Controller
             //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
         }
 
-        //dd(session()->pull('origen_novedad'));
-        \Session::put('origen_novedad',2);
-        
-        return view('ordenes')->with(compact('novedad','dni','cod_nov','fecha','legajo',
-            'legajoNew','agregar','edicion','active','novedades','periodo','periodo2','legajos', 'order','id_crud', 'legajoReadOnly','fecha5'));
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        //dd($apertura);
+
+        return view('ordenes')->with(compact('novedad','apertura','dni','cod_nov','fecha','legajo',
+            'legajoNew','agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5'));
     }
 
     
-    public function add()
-    {
-        $clientes = [];
-        $vehiculos = [];
-        $bancos = [];
-        
-        $legajo = new Vta001;      // find($id);     // dd($legajo);
-
-        $legajo->numero = 1;
-
-        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $agregar = True;
-        $active = 1;
-
-        $legajo->foto = '/img/personal/none.png';
-        /* $localidades = Sue019::orderBy('codigo')->get();
-        $sectores   = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
-        $ccostos    = Sue030::orderBy('detalle')->get();
-        $jerarquias = Sue014::orderBy('detalle')->get();
-        $categorias = Sue006::orderBy('detalle')->get();
-        $cuadrillas = Sue054::orderBy('detalle')->get();
-        $obras      = Sue009::orderBy('detalle')->get();
-        $sindicatos = Sue015::orderBy('detalle')->get();
-        $convenios  = Sue007::orderBy('detalle')->get();
-        $contratos  = Sue107::orderBy('detalle')->get();
-        $horarios   = Sue094::orderBy('detalle')->get();
-        $actividades = Sicoss01::orderBy('codigo')->paginate(6);
-        $condiciones = Sicoss05::orderBy('codigo')->paginate(6);
-        $contrataciones = Sicoss08::orderBy('codigo')->paginate(6);
-        $situaciones = Sicoss12::orderBy('codigo')->paginate(6);
-        $obras2 = SicossObras::orderBy('codigo')->paginate(6);
-        $sinie = SicossSinie::orderBy('codigo')->paginate(6);
-        $zonas = SicossZona::orderBy('codigo')->paginate(6);
-        $provincias = Sue012::orderBy('id')->where('codigo','!=','')->paginate(8);
-        $capacidades = Sue052::orderBy('id')->paginate(8); */
-        $clientes = Vta001::orderBy('detalle')->get();
-        $vehiculos = Tal001::orderBy('detalle')->get();
-        $bancos = Fza002::orderBy('detalle')->get();
-
-        /* if ($legajo != null) {
-            $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
-        } else {
-            $familiares = new Sue002;
-        } */
-
-        return view('orden-add')->with(compact(
-            'legajo',
-            'clientes',
-            'agregar',
-            'edicion',
-            'active',
-            'vehiculos',
-            'bancos'
-        ));
-    }
-
-
     function getClientes() {
         $clientes = Vta001::orderBy('detalle')
             ->where('id','<', 4)
@@ -358,15 +263,15 @@ class HomeController extends Controller
     }
 
 
-    function getVehiculos($idCliente = null) {
-        $clientes = null;
+    // function getVehiculos($idCliente = null) {
+    //     $clientes = null;
 
-        if ($idCliente != null) {
-            $clientes = Tal001::orderBy('detalle')
-                ->where('cliente', $idCliente)
-                ->get();
-        }
+    //     if ($idCliente != null) {
+    //         $clientes = Tal001::orderBy('detalle')
+    //             ->where('cliente', $idCliente)
+    //             ->get();
+    //     }
         
-        return response()->json($clientes);
-    }
+    //     return response()->json($clientes);
+    // }
 }

@@ -78,7 +78,7 @@
               <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/conceptos/add') }}" >Agregar</a>
               <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/conceptos/edit') }}/{{ $legajo->id }}" style="font-color: withe">Editar</a>
               <a title="Dar de Baja al cliente actual" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
-                  <em class="icon-trash" style="color: white"></em> &nbsp;Baja cliente
+                  <em class="icon-trash" style="color: white"></em> &nbsp;Borrar concepto
               </a>
             @endif
           </div>

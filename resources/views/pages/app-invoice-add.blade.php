@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page Title --}}
-@section('title','App Invoice Add')
+@section('title','CPPS - Caja diaria')
 
 {{-- page styles --}}
 @section('page-style')
