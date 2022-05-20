@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Datoempr;
 use App\Models\Cpa010;
 use App\Models\Fza002;
+use App\Models\Fza020;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -17,55 +18,13 @@ class ConceptosController extends Controller
     
     public function index($id = null, $direction = null)
     {
-        $provincias = [];
-        $localidades = [];
-        $ccostos = [];
-        $jerarquias = [];
-        $categorias = [];
-        $sectores = [];
-        $cuadrillas = [];
-        $obras = [];
-        $sindicatos = [];
-        $convenios = [];
-        $contratos = [];
-        $capacidades = [];
-        $horarios = [];
-        $actividades = [];
-        $condiciones = [];
-        $contrataciones = [];
-        $situaciones = [];
-        $obras2 = [];
-        $zonas = [];
-        $familiares = [];
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 1;
-
-        // Si no tiene permisos re-dirigo a carga de novedades
-        if (auth()->user()->rol == "CARGA-TARJA-INFORMES") {
-            $active = 26;
-
-            $sector = Sue011::orderBy('detalle')
-                ->whereNotNull('codigo')
-                ->join('roles_sectores', function ($join) {
-                    $join->on('roles_sectores.codsector', '=', 'sue011s.codigo')
-                        ->where('user', auth()->user()->name);
-                    })
-                ->first();
-            
-            if ($sector != null) {
-                return redirect('/novedadeslist/?codsector=' . $sector->codigo);
-            }
-
-            return redirect('/infpresentismo');
-        } elseif (auth()->user()->rol == "TARJAS-INFORMES") {
-            return redirect('/infpresentismo');
-        }
-
-
-        //-----------------------------
-
+        $fecha = null;
+        $id_caja = 0;
         $nrolegajo = 0;
+        $cerrada = false;
 
         if ($id == null) {
             $legajo = Cpa010::Where('codigo', '>', 0)
@@ -135,11 +94,17 @@ class ConceptosController extends Controller
                 ->first();
         }
 
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura != null) {
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        }
+
         $now = Carbon::now();
-
-        // Combos de tablas anexas
-        $bancos = Fza002::orderBy('detalle')->get();
-
 
         return view('conceptos.index')->with(compact(
             'empresa',
@@ -147,27 +112,9 @@ class ConceptosController extends Controller
             'agregar',
             'edicion',
             'active',
-            'bancos',
-            'provincias',
-            'localidades',
-            'ccostos',
-            'jerarquias',
-            'categorias',
-            'sectores',
-            'cuadrillas',
-            'obras',
-            'sindicatos',
-            'convenios',
-            'contratos',
-            'capacidades',
-            'horarios',
-            'actividades',
-            'condiciones',
-            'contrataciones',
-            'situaciones',
-            'obras2',
-            'zonas',
-            'familiares'
+            'fecha',
+            'id_caja',
+            'cerrada'
         ));
     }
 
@@ -178,90 +125,35 @@ class ConceptosController extends Controller
      */
     public function add()
     {
-        $provincias = [];
-        $localidades = [];
-        $ccostos = [];
-        $jerarquias = [];
-        $categorias = [];
-        $sectores = [];
-        $cuadrillas = [];
-        $obras = [];
-        $sindicatos = [];
-        $convenios = [];
-        $contratos = [];
-        $capacidades = [];
-        $horarios = [];
-        $actividades = [];
-        $condiciones = [];
-        $contrataciones = [];
-        $situaciones = [];
-        $obras2 = [];
-        $zonas = [];
-        $familiares = [];
-        $sinie = [];
-        
+        $fechaActual = null;
+        $fecha = null;
+        $id_caja = 0;
+        $cerrada = false;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura != null) {
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        }
+
         $legajo = new Cpa010;      // find($id);     // dd($legajo);
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
         $active = 1;
 
-        $legajo->foto = '/img/personal/none.png';
-        /* $localidades = Sue019::orderBy('codigo')->get();
-        $sectores   = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
-        $ccostos    = Sue030::orderBy('detalle')->get();
-        $jerarquias = Sue014::orderBy('detalle')->get();
-        $categorias = Sue006::orderBy('detalle')->get();
-        $cuadrillas = Sue054::orderBy('detalle')->get();
-        $obras      = Sue009::orderBy('detalle')->get();
-        $sindicatos = Sue015::orderBy('detalle')->get();
-        $convenios  = Sue007::orderBy('detalle')->get();
-        $contratos  = Sue107::orderBy('detalle')->get();
-        $horarios   = Sue094::orderBy('detalle')->get();
-        $actividades = Sicoss01::orderBy('codigo')->paginate(6);
-        $condiciones = Sicoss05::orderBy('codigo')->paginate(6);
-        $contrataciones = Sicoss08::orderBy('codigo')->paginate(6);
-        $situaciones = Sicoss12::orderBy('codigo')->paginate(6);
-        $obras2 = SicossObras::orderBy('codigo')->paginate(6);
-        $sinie = SicossSinie::orderBy('codigo')->paginate(6);
-        $zonas = SicossZona::orderBy('codigo')->paginate(6);
-        $provincias = Sue012::orderBy('id')->where('codigo','!=','')->paginate(8);
-        $capacidades = Sue052::orderBy('id')->paginate(8); */
-        $bancos = Fza002::orderBy('detalle')->get();
-
-        /* if ($legajo != null) {
-            $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
-        } else {
-            $familiares = new Sue002;
-        } */
-
         return view('conceptos.index')->with(compact(
             'legajo',
             'agregar',
             'edicion',
             'active',
-            'localidades',
-            'sectores',
-            'ccostos',
-            'jerarquias',
-            'categorias',
-            'cuadrillas',
-            'obras',
-            'sindicatos',
-            'convenios',
-            'contratos',
-            'horarios',
-            'familiares',
-            'actividades',
-            'condiciones',
-            'contrataciones',
-            'situaciones',
-            'obras2',
-            'sinie',
-            'zonas',
-            'provincias',
-            'capacidades',
-            'bancos'
+            'fecha',
+            'id_caja',
+            'cerrada'
         ));
     }
 
@@ -299,32 +191,13 @@ class ConceptosController extends Controller
 
     public function edit($id = 0)
     {
+        $id_caja = 0;
+        $fecha = null;
+
         if ($id == 0) {
             return redirect('/conceptos');
         }
-
-        $provincias = [];
-        $localidades = [];
-        $ccostos = [];
-        $jerarquias = [];
-        $categorias = [];
-        $sectores = [];
-        $cuadrillas = [];
-        $obras = [];
-        $sindicatos = [];
-        $convenios = [];
-        $contratos = [];
-        $capacidades = [];
-        $horarios = [];
-        $actividades = [];
-        $condiciones = [];
-        $contrataciones = [];
-        $situaciones = [];
-        $obras2 = [];
-        $zonas = [];
-        $familiares = [];
-        $sinie = [];
-
+        
         $legajo = Cpa010::find($id);
         if ($legajo == null) {
             return redirect('/conceptos');
@@ -333,44 +206,14 @@ class ConceptosController extends Controller
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 1;
+        $cerrada = false;
 
         $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
         $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
         $legajo->fecha_vto = Carbon::parse($legajo->fecha_vto)->format('d/m/Y');
         $legajo->ultima_act = Carbon::parse($legajo->ultima_act)->format('d/m/Y');
 
-        /* $foto = Sue111::orderBy('legajo')
-            ->where('legajo', '=', $legajo->codigo)
-            ->where('concepto', '=', '1.4')
-            ->first();
-
-        if ($foto != null) {
-            $legajo->foto = $foto->nom_arch;
-        } else {
-            $legajo->foto = '/img/personal/none.png';
-        } */
-
-        /* $localidades = Sue019::orderBy('codigo')->get();
-        $sectores   = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
-        $ccostos    = Sue030::orderBy('detalle')->get();
-        $jerarquias = Sue014::orderBy('detalle')->get();
-        $categorias = Sue006::orderBy('detalle')->get();
-        $cuadrillas = Sue054::orderBy('detalle')->get();
-        $obras      = Sue009::orderBy('detalle')->get();
-        $sindicatos = Sue015::orderBy('detalle')->get();
-        $convenios  = Sue007::orderBy('detalle')->get();
-        $contratos  = Sue107::orderBy('detalle')->get();
-        $horarios   = Sue094::orderBy('detalle')->get();
-        $actividades = Sicoss01::orderBy('codigo')->paginate(6);
-        $condiciones = Sicoss05::orderBy('codigo')->paginate(6);
-        $contrataciones = Sicoss08::orderBy('codigo')->paginate(6);
-        $situaciones = Sicoss12::orderBy('codigo')->paginate(6);
-        $obras2 = SicossObras::orderBy('codigo')->paginate(6);
-        $sinie = SicossSinie::orderBy('codigo')->paginate(6);
-        $zonas = SicossZona::orderBy('codigo')->paginate(6);
-        $provincias = Sue012::orderBy('id')->where('codigo','!=','')->paginate(8);
-        $capacidades = Sue052::orderBy('id')->paginate(8); */
-        $bancos = Fza002::orderBy('detalle')->get();
+        //$bancos = Fza002::orderBy('detalle')->get();
 
         /* if ($legajo != null) {
             $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
@@ -383,28 +226,10 @@ class ConceptosController extends Controller
             'agregar',
             'edicion',
             'active',
-            'localidades',
-            'sectores',
-            'ccostos',
-            'jerarquias',
-            'categorias',
-            'cuadrillas',
-            'obras',
-            'sindicatos',
-            'convenios',
-            'contratos',
-            'horarios',
-            'familiares',
-            'actividades',
-            'condiciones',
-            'contrataciones',
-            'situaciones',
-            'obras2',
-            'sinie',
-            'zonas',
-            'provincias',
-            'capacidades',
-            'bancos'
+            'cerrada',
+            'id_caja',
+            'fecha'
+            
         ));    // Abrir form de modificacion
     }
 
@@ -467,10 +292,11 @@ class ConceptosController extends Controller
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 17;
+        $cerrada = false;
 
         $images = null;
 
-        return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"nombres\":\"$legajo->nombres\"}";
+        return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"}";
         //return redirect("/conceptos/");
     }
 
@@ -508,6 +334,10 @@ class ConceptosController extends Controller
     public function search(Request $request)
     {
         $active = 1;
+        $id_caja = 0;
+        $cerrada = false;
+        $fecha = null;
+
         //$legajos = Cpa010::paginate(5);
         $legajos = Cpa010::name($request->get('name'))
             ->where('codigo', '!=', null)
@@ -518,6 +348,6 @@ class ConceptosController extends Controller
 
         $name = $request->get('name');
 
-        return view('conceptos.search')->with(compact('legajos', 'active', 'name'));
+        return view('conceptos.search')->with(compact('legajos', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
 }

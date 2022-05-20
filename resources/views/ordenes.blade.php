@@ -25,39 +25,36 @@
   <div class="invoice-filter-action mr-3">
     <a href="javascript:void(0)" class="btn waves-effect waves-light invoice-export border-round z-depth-4">
       <i class="material-icons">picture_as_pdf</i>
-      <span class="hide-on-small-only">Exportar</span>
+      <span class="hide-on-small-only">Imprimir</span>
     </a>
   </div>
+  
   <!-- create agregar button-->
-  <div class="invoice-create-btn">
-    <a href="{{asset('orden-add')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
-      <i class="material-icons">add</i>
-      <span class="hide-on-small-only">Agregar comprobante</span>
-    </a>
-  </div>
-
-  <!----------------------------------------------->
-  <!--          MODAL DE CONFIRMACION            -->
-  <!----------------------------------------------->
-  {{-- <div id="modal1" class="modal">
-    <div class="modal-content">
-      <h4>Cerrar Caja ?</h4>
-      <p>Está a punto de realizar el cierre de caja, recuerde que este paso es irreversible ....</p>
+  @if ($cerrada == false)
+    <div class="invoice-create-btn">
+      <a href="{{asset('orden-add')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+        <i class="material-icons">add</i>
+        <span class="hide-on-small-only">Agregar...</span>
+      </a>
     </div>
-    <div class="modal-footer">
-      <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat">Volver</a>
-      <a href="{{ asset('/caja-cerrar') }}" class="btn waves-effect waves-light deep-orange darken-1 z-depth-4 modal-trigger">Cerrar caja !</a>
+
+    <!-- create cierre de caja button-->
+    
+    <div class="invoice-create-btn" style="margin-left: 15px">
+      <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4 modal-trigger" >  {{-- onclick="showModalBorrar()" --}}
+        <i class="material-icons">vpn_key</i>
+        <span class="hide-on-small-only">Cerrar caja</span>
+      </a>
     </div>
-  </div> --}}
+  @else
+    <div class="invoice-create-btn">
+      <a href="{{asset('orden-abrir')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+        <i class="material-icons">add</i>
+        <span class="hide-on-small-only">Abrir nueva caja</span>
+      </a>
+    </div>
+  @endif
 
-
-  <!-- create cierre de caja button-->
-  <div class="invoice-create-btn" style="margin-left: 15px">
-    <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4 modal-trigger" >  {{-- onclick="showModalBorrar()" --}}
-      <i class="material-icons">vpn_key</i>
-      <span class="hide-on-small-only">Cerrar caja</span>
-    </a>
-  </div>
   <!-- <div class="filter-btn"> -->
     <!-- Dropdown Trigger -->
     {{-- <a class='dropdown-trigger btn waves-effect waves-light purple darken-1 border-round' href='#'
@@ -97,6 +94,7 @@
       {{ $saldoDebito = 0 }}
       {{ $saldoCredito = 0 }}
       {{ $saldoBancario = 0 }}
+      {{ $saldoCheques = 0 }}
       </div>
 
       <tbody>
@@ -120,25 +118,20 @@
           <td><span class="invoice-amount">${{ number_format($saldo,2) }}</span></td>
           <td>
             <div class="invoice-action">
-              <a href="{{asset('app-invoice-view')}}" class="invoice-action-view mr-4">
-                <i class="material-icons">remove_red_eye</i>
-              </a>
-              <a href="{{asset('app-invoice-edit')}}" class="invoice-action-edit">
-                <i class="material-icons">edit</i>
-              </a>
+              
             </div>
           </td>
         </tr>
-
         @foreach ($novedades as $novedad)
         <tr>
           <td></td>
           <td></td>
-          <td>
-              <a href="{{asset('apertura') . '/' . $novedad->id }}">{{ $novedad->numero }}</a>
+          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
+              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="#">{{ $novedad->numero }}</a>
           </td>
-          <td>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
-          <td><span class="invoice-customer">
+          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
+          <td><span class="invoice-customer" 
+            @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
             @if ($novedad->cuenta == 0) Contado efectivo (Gastos) @endif
             @if ($novedad->cuenta == 1) Tarjeta Credito (Ingresos)) @endif
             @if ($novedad->cuenta == 2) Tarjeta Debito (Ingresos) @endif
@@ -146,26 +139,54 @@
             @if ($novedad->cuenta == 4) Transf. Bancaria Macro (Ingresos) @endif
             @if ($novedad->cuenta == 5) Contado efectivo (Ingresos) @endif
           </span></td>
-          <td><span class="invoice-customer">{{ $novedad->concepto }} - {{ substr($novedad->nomConcepto,0,20) }}</span></td>
-          <td><span class="invoice-amount">@if ($novedad->cuenta == 0)-@endif ${{ number_format($novedad->importe,2) }}</span></td>
+          <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
+            {{ substr($novedad->nomConcepto,0,20) }}
+          </span></td>
+          
+          <td>
+            <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
+              @if ($novedad->cuenta == 0)-@endif 
+              ${{ number_format($novedad->importe,2) }}
+            </span>
+          </td>
 
           <div hidden>
-            @if ($novedad->cuenta == 0)
+            @if ($novedad->cuenta == 0 or $novedad->cuenta == 5)
               {{ $saldo = $saldo - $novedad->importe }}
-            @else
-              {{ $saldo = $saldo + $novedad->importe }}
             @endif
+
+            @if ($novedad->cuenta == 2)
+              {{ $saldoDebito = $saldoDebito + $novedad->importe }}
+            @endif
+            @if ($novedad->cuenta == 1)
+              {{ $saldoCredito = $saldoCredito + $novedad->importe }}
+            @endif
+            @if ($novedad->cuenta == 3 or $novedad->cuenta == 4)
+              {{ $saldoBancario = $saldoBancario + $novedad->importe }}
+            @endif
+            @if ($novedad->cuenta == 6)
+              {{ $saldoCheques = $saldoCheques + $novedad->importe }}
+            @endif
+  
           </div>
 
-          <td><span class="invoice-amount">${{ number_format($saldo,2) }}</span></td>
+          <td>
+            <span class="invoice-amount">
+              @if ($novedad->cuenta == 0 or $novedad->cuenta == 5)
+                ${{ number_format($saldo,2) }}
+              @endif
+            </span>
+          </td>
           <td>
             <div class="invoice-action">
-              <a href="{{asset('app-invoice-view')}}" class="invoice-action-view mr-4">
-                <i class="material-icons">remove_red_eye</i>
-              </a>
-              <a href="{{asset('app-invoice-edit')}}" class="invoice-action-edit">
-                <i class="material-icons">edit</i>
-              </a>
+              @if ($cerrada == false)
+                <a href="{{ asset('orden-add') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4">
+                  <i class="material-icons">edit</i>
+                </a>
+                <a href="{{ asset('orden') . '/delete/' . $novedad->id }}" class="invoice-action-edit">
+                  <i class="material-icons">delete</i>
+                </a>
+              @endif
             </div>
           </td>
         </tr>
@@ -208,6 +229,14 @@
           <label for="saldo">Bancarios</label>
           <small class="errorTxt1"></small>
         </div>
+
+        <div class="col m2 s2 input-field">
+          <input id="saldoCheques" name="saldoCheques" type="text" class="validate" 
+            value="{{ old('saldoCheques',$saldoCheques) }}"
+            disabled data-error=".errorTxt1">
+          <label for="saldo">Cheques</label>
+          <small class="errorTxt1"></small>
+        </div>
       
       </div>
     </div>
@@ -224,6 +253,11 @@
 
 {{-- page scripts --}}
 @section('page-script')
+
+<script>
+  $('#modal1').modal('open');
+</script>
+
 <script src="{{asset('js/scripts/app-invoice.js')}}"></script>
 <script src="{{asset('js/scripts/advance-ui-modals.js')}}"></script>
 @endsection

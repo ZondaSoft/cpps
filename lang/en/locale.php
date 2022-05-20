@@ -96,6 +96,8 @@ return [
     "ChartJS"=> "ChartJS",
     "Chartist"=> "Chartist",
     "Informes"=> "Informes",
+    "Cajas"=> "Cajas",
+    "cajas"=> "cajas",
     "Menu levels"=> "Menu levels",
     "Second level"=> "Second level",
     "Second level child"=> "Second level child",

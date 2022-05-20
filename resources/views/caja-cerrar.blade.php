@@ -17,11 +17,7 @@
     <!-- invoice view page -->
     <div class="col xl12 m12 s12">
       <!-- Form -->
-      @if($agregar == true)
-      <form method="post" action="{{ asset( url('/caja-cerrar' . $id_caja) ) }}" enctype="multipart/form-data">
-      @else
       <form method="post" action="{{ asset( url('/caja-cerrar/' . $id_caja) ) }}" enctype="multipart/form-data">
-      @endif
         
       {{ csrf_field() }}
 
@@ -58,7 +54,7 @@
               </div>
 
               <div class="col m2 s2 save">
-                <a class="btn btn-light-indigo btn-block waves-effect waves-light">
+                <a class="btn btn-light-indigo btn-block waves-effect waves-light" href="{{ asset('/home') }}">
                   <span class="responsive-text">Cancelar</span>
                 </a>
               </div>
@@ -127,11 +123,22 @@
                   value="{{ old('rinde',$rindeEfectivo) }}"
                   maxlength="8" autocomplete='off' step="0.01"
                   required
+                  autofocus
                   oninput="calcularDiferencia(this)"
                   data-error=".errorTxt6">
                 <label for="rinde">Arqueo de caja</label>
                 <small class="errorTxt6"></small>
+
+                <div class="card-alert card green lighten-5">
+                  <div class="card-content green-text">
+                    <p>Importe en efectivo</p>
+                  </div>
+                  <button type="button" class="close green-text" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">×</span>
+                  </button>
+                </div>
               </div>
+              
 
               <div class="col xl3 m3 input-field">
                 <input id="diferencia" name="diferencia" type="number" placeholder="$ 0000.00" class="validate" 
@@ -153,15 +160,19 @@
               </div>
 
               <div class="col xl3 m3 input-field">
-                <input id="importe" name="importe" type="number" placeholder="$ 0000.00" class="validate" 
-                  value="{{ old('importe',$tarjetaCredito) }}"
+                <input id="tarjetacredito" name="tarjetacredito" type="number" placeholder="$ 0000.00" class="validate" 
+                  value="{{ old('tarjetacredito',$tarjetaCredito) }}"
                   disabled
                   maxlength="8" step="0.01"
                   required
                   data-error=".errorTxt6">
-                <label for="importe">Importe a rendir</label>
+                <label for="tarjetacredito">Importe a rendir</label>
                 <small class="errorTxt6"></small>
               </div>
+
+              <input id="tarjetacredito2" name="tarjetacredito2" type="number"
+                  value="{{ old('tarjetacredito2',$tarjetaCredito) }}"
+                  hidden>
             </div>
 
             <!-- Tarjeta de Debito -->
@@ -173,15 +184,19 @@
               </div>
 
               <div class="col xl3 m3 input-field">
-                <input id="importe" name="importe" type="number" placeholder="$ 0000.00" class="validate" 
-                  value="{{ old('importe',$tarjetaDebito) }}"
+                <input id="tarjetadebito" name="tarjetadebito" type="number" placeholder="$ 0000.00" class="validate" 
+                  value="{{ old('tarjetadebito',$tarjetaDebito) }}"
                   disabled
                   maxlength="8" step="0.01"
                   required
                   data-error=".errorTxt6">
-                <label for="importe">Importe a rendir</label>
+                <label for="tarjetadebito">Importe a rendir</label>
                 <small class="errorTxt6"></small>
               </div>
+
+              <input id="tarjetadebito2" name="tarjetadebito2" type="number"
+                  value="{{ old('tarjetadebito2',$tarjetaDebito) }}"
+                  hidden>
             </div>
 
             
@@ -194,15 +209,19 @@
               </div>
 
               <div class="col xl3 m3 input-field">
-                <input id="importe" name="importe" type="number" placeholder="$ 0000.00" class="validate" 
-                  value="{{ old('importe',$bancarios) }}"
+                <input id="bancarios" name="bancarios" type="number" placeholder="$ 0000.00" class="validate" 
+                  value="{{ old('bancarios',$bancarios) }}"
                   disabled
                   maxlength="8" step="0.01"
                   required
                   data-error=".errorTxt6">
-                <label for="importe">Importe a rendir</label>
+                <label for="bancarios">Importe a rendir</label>
                 <small class="errorTxt6"></small>
               </div>
+
+              <input id="bancarios2" name="bancarios2" type="number" placeholder="$ 0000.00" class="validate" 
+                  value="{{ old('bancarios2',$bancarios) }}"
+                  hidden>
             </div>
 
             
@@ -215,15 +234,19 @@
               </div>
 
               <div class="col xl3 m3 input-field">
-                <input id="importe" name="importe" type="number" placeholder="$ 0000.00" class="validate" 
-                  value="{{ old('importe',$cheques) }}"
+                <input id="cheques" name="cheques" type="number" placeholder="$ 0000.00" class="validate" 
+                  value="{{ old('cheques',$cheques) }}"
                   disabled
                   maxlength="8" step="0.01"
                   required
                   data-error=".errorTxt6">
-                <label for="importe">Importe a rendir</label>
+                <label for="cheques">Importe a rendir</label>
                 <small class="errorTxt6"></small>
               </div>
+
+              <input id="cheques2" name="cheques2" type="number"
+                  value="{{ old('cheques2',$cheques) }}"
+                  hidden>
             </div>
 
 

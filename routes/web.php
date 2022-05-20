@@ -59,8 +59,11 @@ Route::get('/home/add', 'HomeController@add')
 Route::post('/home/add', 'HomeController@store');
 Route::get('/home/edit/{id?}', 'HomeController@edit')->name('home.edit')->where('id', '[0-9]+');
 Route::post('/home/edit/{id}', 'HomeController@update');
-Route::get('/home/search/', 'HomeController@search')->name('home.search');
-Route::get('/home/{id?}/search/', 'HomeController@search')->name('search');
+
+Route::get('/home/search', 'CajaController@search')->name('home.search');
+Route::get('/home/search', 'CajaController@search')->name('home.search');
+Route::get('/home/{id?}/search/', 'CajaController@search')->name('home.search');
+
 Route::get('/home/{id?}/{direction?}/search/', 'HomeController@search')->name('search');
 Route::get('/home/delete/{id}', 'HomeController@delete');
 Route::post('/home/delete/{id}', 'HomeController@baja');
@@ -71,15 +74,19 @@ Route::get('/home/{id?}/importar', 'HomeController@importar');
 Route::post('/home/importar', 'ImportController@importlegajos');
 
 
-Route::get('/orden-add', 'CajaController@add')
-    ->name('orden.add');
+Route::get('/orden-add', 'CajaController@add')->name('orden.add');
 Route::post('/orden-add', 'CajaController@store');
+Route::get('/orden-add/edit/{id}', 'CajaController@edit')->name('orden.edit');
+Route::post('/orden-add/edit/{id}', 'CajaController@update')->name('orden.update');
+Route::get('/orden/delete/{id}', 'CajaController@delete')->name('orden.delete');
+Route::post('/orden/delete/{id}', 'CajaController@borrar')->name('orden.borrar');
 
 // Apertura de caja
-Route::post('/orden-abrir', 'HomeController@apertura');
+Route::get('/orden-abrir', 'CajaController@preapertura');
+Route::post('/orden-abrir', 'CajaController@apertura');
 // Cierre de Caja
 Route::get('/caja-cerrar/{id}', 'CajaController@cerrar');
-
+Route::post('/caja-cerrar/{id}', 'CajaController@close');
 
 Route::get('/conceptos/{id?}/{direction?}', 'ConceptosController@index')
     ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
@@ -91,7 +98,7 @@ Route::get('/conceptos/edit/{id?}', 'ConceptosController@edit')->name('conceptos
 Route::post('/conceptos/edit/{id}', 'ConceptosController@update');
 Route::get('/conceptos/search/', 'ConceptosController@search')->name('conceptos.search');
 Route::get('/conceptos/{id?}/search/', 'ConceptosController@search')->name('search');
-Route::get('/conceptos/{id?}/{direction?}/search/', 'ConceptosController@search')->name('search');
+Route::get('/conceptos/{id?}/{direction?}/search/', 'ConceptosController@search')->name('conceptos.search');
 Route::get('/conceptos/delete/{id}', 'ConceptosController@delete');
 Route::post('/conceptos/delete/{id}', 'ConceptosController@baja');
 Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');

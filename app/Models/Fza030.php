@@ -11,6 +11,7 @@ class Fza030 extends Model
 {
     use HasFactory;
 
+    protected $fillable = ['concepto','comentarios'];
 
     // Filtros y busquedas
     public function scopeSearch($query, $codsector, $cod_nov, $fecha, $order)
@@ -29,11 +30,11 @@ class Fza030 extends Model
         // Solo Cliente
         if ($codsector == null and $cod_nov == null and $fecha == null) {
             //$query->where('legajo', 'LIKE', "%{$dni}%");
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto');
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto');
         }
         // Legajo y fecha
         if ($codsector == null and $cod_nov == null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
                         ->where('fecha', 'LIKE', "%{$fecha}%");
         }
         // Solo sector
@@ -44,64 +45,64 @@ class Fza030 extends Model
             
         // Sector y fecha
         } elseif ($codsector != null and $cod_nov == null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
 
         // Legajo y sector
         } elseif ($codsector != null and $cod_nov == null and $fecha == null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto');
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto');
 
         // Legajo,  sector y fecha
         } elseif ($codsector != null and $cod_nov == null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
                         ->Where('fecha', 'LIKE', "%{$fecha}%")
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%");
         // Sector y novedad
         } elseif ($codsector != null and $cod_nov != null and $fecha == null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%");
 
         // Sector y novedad y fecha
         } elseif ($codsector != null and $cod_nov != null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%")
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
                         
         // Legajo, Sector y novedad
         } elseif ($codsector != null and $cod_nov != null and $fecha == null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%");
 
         // Legajo, Sector y novedad Y fecha
         } elseif ($codsector != null and $cod_nov != null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%")
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
 
         // Legajo y novedad
         } elseif ($codsector == null and $cod_nov != null and $fecha == null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%");
 
         // Legajo, novedad y fecha
         } elseif ($codsector == null and $cod_nov != null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('fza030s.importe', 'LIKE', "%{$cod_nov}%")
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
 
         // Solo Novedad
         } elseif ($codsector == null and $cod_nov != null and $fecha == null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('cod_nov', 'LIKE', "%{$cod_nov}%");
 
         // Fecha
         } elseif ($codsector == null and $cod_nov == null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
 
         // Novedad y fecha
         } elseif ($codsector == null and $cod_nov != null and $fecha != null) {
-            return $query->select('fza030s.fecha','fza030s.cuenta','fza030.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
+            return $query->select('fza030s.fecha','fza030s.cuenta','fza030s.numero','fza030s.id','fza030s.importe','fza030s.concepto','estado','fza030s.comentarios','fza030s.concepto')
                         ->Where('cod_nov', 'LIKE', "%{$cod_nov}%")
                         ->Where('fecha', 'LIKE', "%{$fecha}%");
         }

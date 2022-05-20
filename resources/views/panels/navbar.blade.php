@@ -9,7 +9,7 @@
           data-search="template-list">
         <ul class="search-list collection display-none"></ul> --}}
         <div class="white-text">
-        <h5 style="color: #FFFFFF">Caja Diaria</h5>
+        <h5 style="color: #FFFFFF">Caja Diaria @if ($cerrada == true) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
         </div>
 
       </div>
@@ -21,12 +21,18 @@
           </a>
         </li> --}}
         <li class="hide-on-med-and-down">
+          <a class="waves-effect waves-block waves-light" href="{{\Request::url()}}/search">
+            {{-- {{ asset('/search') }} --}}
+            <i class="material-icons">search</i>
+          </a>
+        </li>
+        <li class="hide-on-med-and-down">
           <a class="waves-effect waves-block waves-light toggle-fullscreen" href="javascript:void(0);">
             <i class="material-icons">settings_overscan</i>
           </a>
         </li>
         <li class="hide-on-large-only search-input-wrapper">
-          <a class="waves-effect waves-block waves-light search-button" href="javascript:void(0);">
+          <a class="waves-effect waves-block waves-light search-button" href="javascript:search(0);">
             <i class="material-icons">search</i>
           </a>
         </li>

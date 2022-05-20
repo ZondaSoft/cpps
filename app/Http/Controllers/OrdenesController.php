@@ -296,7 +296,6 @@ class OrdenesController extends Controller
     {
         $clientes = [];
         $vehiculos = [];
-        $bancos = [];
         
         $legajo = new Vta001;      // find($id);     // dd($legajo);
 
@@ -307,30 +306,9 @@ class OrdenesController extends Controller
         $active = 1;
 
         $legajo->foto = '/img/personal/none.png';
-        /* $localidades = Sue019::orderBy('codigo')->get();
-        $sectores   = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
-        $ccostos    = Sue030::orderBy('detalle')->get();
-        $jerarquias = Sue014::orderBy('detalle')->get();
-        $categorias = Sue006::orderBy('detalle')->get();
-        $cuadrillas = Sue054::orderBy('detalle')->get();
-        $obras      = Sue009::orderBy('detalle')->get();
-        $sindicatos = Sue015::orderBy('detalle')->get();
-        $convenios  = Sue007::orderBy('detalle')->get();
-        $contratos  = Sue107::orderBy('detalle')->get();
-        $horarios   = Sue094::orderBy('detalle')->get();
-        $actividades = Sicoss01::orderBy('codigo')->paginate(6);
-        $condiciones = Sicoss05::orderBy('codigo')->paginate(6);
-        $contrataciones = Sicoss08::orderBy('codigo')->paginate(6);
-        $situaciones = Sicoss12::orderBy('codigo')->paginate(6);
-        $obras2 = SicossObras::orderBy('codigo')->paginate(6);
-        $sinie = SicossSinie::orderBy('codigo')->paginate(6);
-        $zonas = SicossZona::orderBy('codigo')->paginate(6);
-        $provincias = Sue012::orderBy('id')->where('codigo','!=','')->paginate(8);
-        $capacidades = Sue052::orderBy('id')->paginate(8); */
         $clientes = Vta001::orderBy('detalle')->get();
         $vehiculos = Tal001::orderBy('detalle')->get();
-        $bancos = Fza002::orderBy('detalle')->get();
-
+        
         /* if ($legajo != null) {
             $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
         } else {
@@ -343,8 +321,7 @@ class OrdenesController extends Controller
             'agregar',
             'edicion',
             'active',
-            'vehiculos',
-            'bancos'
+            'vehiculos'
         ));
     }
 

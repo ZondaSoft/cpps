@@ -71,7 +71,6 @@
               <input id="id" name="id" type="text" placeholder="00000000" class="validate" 
                 value="{{ old('id',$legajo->id) }}"
                 disabled
-                {{ $agregar?'enabled autofocus=""':'disabled' }}
                 maxlength="8" autocomplete='off'
                 required
                 data-error=".errorTxt1">
@@ -85,10 +84,9 @@
             <div class="col xl2 m2 input-field">
                 <input id="fecha" name="fecha" type="text" placeholder="dd/mm/aaaa" class="datepicker validate" 
                   value="{{ old('fecha',$legajo->fecha) }}"
-                  {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }}
                   maxlength="8" autocomplete='off'
                   required
+                  autofocus
                   data-error=".errorTxt2">
                 <label for="fecha">Fecha</label>
                 <small class="errorTxt2"></small>
@@ -102,10 +100,8 @@
               <div class="col xl3 m3 input-field">
                 <input id="apertura" name="apertura" type="number" placeholder="$ 0000.00" class="validate" 
                   value="{{ old('apertura',$legajo->apertura) }}"
-                  {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }}
-                  maxlength="8" autocomplete='off'
-                  required
+                  maxlength="11" autocomplete='off'
+                  readonly
                   data-error=".errorTxt3">
                 <label for="apertura">Saldo de inicio</label>
                 <small class="errorTxt3"></small>
@@ -115,7 +111,8 @@
             <!-- Observaciones -->
             <div class="row mb-1" style="margin-left: 2px;">
               <div class="col xl8 m8 input-field">
-                <input type="text" id="comentarios" name="comentarios" placeholder="Comentarios">
+                <input type="text" id="comentarios" name="comentarios" placeholder="Comentarios" autocomplete='off'>
+                <label for="comentarios">Comentarios</label>
               </div>
             </div>
 

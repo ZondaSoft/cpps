@@ -63,13 +63,9 @@
     <link rel="stylesheet" href="{{ asset('css/bootstrap.css') }}" id="bscss">
     <!-- =============== APP STYLES ===============-->
     <link rel="stylesheet" href="{{ asset('css/app.css') }}" id="maincss">
-    @if ($GLOBALS['cliente_id'] == 1)
-      <link rel="stylesheet" href="{{ asset('css/theme-g.css') }}" id="maincss">
-    @endif
-    @if ($GLOBALS['cliente_id'] == 4)
-      <link rel="stylesheet" href="{{ asset('css/theme-e.css') }}" id="maincss">
-    @endif
-
+    <link rel="stylesheet" href="{{ asset('css/theme-g.css') }}" id="maincss">
+    {{-- <link rel="stylesheet" href="{{ asset('css/theme-e.css') }}" id="maincss"> --}}
+    
     <!-- <link rel="stylesheet" href="{ asset('css/bootstrap-colorpicker.css') }}" id="maincss"> -->
 
     <!-- AUTOCOMPLETE-->
@@ -107,20 +103,18 @@
             <div class="navbar-header">
                <a class="navbar-brand" href="{{ asset('/home') }}">
                   <div class="brand-logo">
-                     @if ($GLOBALS['cliente_id'] == 1)
-                        <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS">
-                     @endif
-                     @if ($GLOBALS['cliente_id'] == 4)
-                        <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS>
-                     @endif
+                     {{-- @if ($GLOBALS['cliente_id'] == 1) --}}
+                     <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS">
+                     {{-- <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS> --}}
+                     {{-- @endif --}}
                   </div>
                   <div class="brand-logo-collapsed">
-                     @if ($GLOBALS['cliente_id'] == 1)
-                        <img class="img-fluid" src="/img/logo-cpps.jpg" alt="CPPS">
-                     @endif
+                     {{-- @if ($GLOBALS['cliente_id'] == 1) --}}
+                     <img class="img-fluid" src="/img/logo-cpps.jpg" alt="CPPS">
+                     {{-- @endif
                      @if ($GLOBALS['cliente_id'] == 4)
                         <img class="img-fluid" src="/img/logo-cpps.jpg" alt="CPPS">
-                     @endif
+                     @endif --}}
                   </div>
                </a>
             </div>

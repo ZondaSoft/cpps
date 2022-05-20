@@ -17,11 +17,7 @@
     <!-- invoice view page -->
     <div class="col xl12 m12 s12">
       <!-- Form -->
-      @if($agregar == true)
-      <form method="post" action="{{ asset( url('/orden-add') ) }}" enctype="multipart/form-data">
-      @else
-      <form method="post" action="{{ asset( url('/orden-add/edit/'.$legajo->id) ) }}" enctype="multipart/form-data">
-      @endif
+      <form method="post" action="{{ asset( url('/orden/delete/'.$legajo->id) ) }}" enctype="multipart/form-data">
         
       {{ csrf_field() }}
 
@@ -46,24 +42,20 @@
 
             <div class="row mb-12">
               <div class="col m7 s7 save">
-                @if($agregar == true)
-                  <h5 style="margin-top: 7px;margin-bottom: 14px;">Nuevo comprobante</h5>
-                @else
-                  <h5 style="margin-top: 7px;margin-bottom: 14px;">Editar comprobante</h5>
-                @endif
+                <h5 style="margin-top: 7px;margin-bottom: 14px;">Eliminar comprobante</h5>
               </div>
 
               <div class="col m2 s2 save">
                 <button class="btn waves-effect waves-light display-flex align-items-center justify-content-center">
                   <i class="material-icons mr-4">check</i>
                   <span class="btn-label"><i class="fa fa-check"></i>
-                  </span>Grabar
+                  </span>Eliminar
                 </button>
               </div>
 
               <div class="col m2 s2 save">
                 <a href="{{ asset('/home') }}" class="btn btn-light-indigo btn-block waves-effect waves-light">
-                  <span class="responsive-text">Cancelar</span>
+                  <span class="responsive-text">Volver</span>
                 </a>
               </div>
             </div>
@@ -74,9 +66,7 @@
             <!-- Cuenta -->
             <div class="row mb-1">
               <div class="col m6 s6 input-field">
-                  <select id="cuenta" name="cuenta"
-                  {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }} >
+                  <select id="cuenta" name="cuenta" disabled>
                       <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Contado efectivo (Gastos)</option>
                       <option value = 1 @if ( old('cuenta',$legajo->cuenta)  == 1)  selected   @endif  >Tarjeta credito (Ingresos)</option>
                       <option value = 2 @if ( old('cuenta',$legajo->cuenta)  == 2)  selected   @endif  >Tarjeta debito (Ingresos)</option>
@@ -93,8 +83,7 @@
               <div class="col xl2 m1 input-field">
                 <input id="fecha" name="fecha" type="text" placeholder="dd/mm/aaaa" class="datepicker validate" 
                   value="{{ old('fecha',$legajo->fecha) }}"
-                  {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }}
+                  disabled
                   maxlength="8" autocomplete='off'
                   required
                   data-error=".errorTxt2">
@@ -116,7 +105,7 @@
             <!-- concepto o tipo de movimiento -->
             <div class="row mb-1">
               <div class="col m6 s6 input-field">
-                  <select id="concepto" name="concepto" {{ $edicion?'enabled':'disabled' }}>
+                  <select id="concepto" name="concepto" disabled }}>
                       <option value = '' @if ( old('vehiculo',$legajo->vehiculo)  == '')  selected   @endif  >Seleccione el concepto</option>
                       @foreach ($conceptos as $concepto)
                           <option value = "{{ $concepto->codigo  }}" @if ( old('concepto',$legajo->concepto)  == $concepto->codigo)  selected   @endif  >{{ $concepto->detalle }}   ({{ $concepto->codigo  }})</option>
@@ -129,7 +118,7 @@
             <!-- Tipo de comprobante -->
             <div class="row mb-1">
               <div class="col m3 s3 input-field">
-                <select id="tipo" name="tipo" {{ $edicion?'enabled':'disabled' }}>
+                <select id="tipo" name="tipo" disabled }}>
                     <option value = 0 @if ( old('tipo',$legajo->tipo)  == 0)  selected   @endif  >Factura</option>
                     <option value = 1 @if ( old('tipo',$legajo->tipo)  == 1)  selected   @endif  >Ticket</option>
                     <option value = 2 @if ( old('tipo',$legajo->tipo)  == 2)  selected   @endif  >Nota debito</option>
@@ -148,8 +137,7 @@
               <div class="col xl3 m3 input-field">
                 <input id="numero" name="numero" type="text" placeholder="00000000" class="validate" 
                   value="{{ old('numero',$legajo->numero) }}"
-                  {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }}
+                  disabled
                   maxlength="8" autocomplete='off'
                   required
                   data-error=".errorTxt5">
@@ -163,7 +151,7 @@
               <div class="col xl3 m3 input-field">
                 <input id="importe" name="importe" type="number" placeholder="$ 0000.00" class="validate" 
                   value="{{ old('importe',$legajo->importe) }}"
-                  {{ $edicion?'':'disabled' }}
+                  disabled
                   maxlength="8" autocomplete='off' step="0.01"
                   required
                   data-error=".errorTxt6">
@@ -176,7 +164,7 @@
             <div class="row mb-1">
               <div class="col xl10 m10 input-field">
                 <input id="comentarios" name="comentarios" type="text" placeholder="Comentarios"
-                  value="{{ old('comentarios',$legajo->comentarios) }}">
+                  value="{{ old('comentarios',$legajo->comentarios) }}" disabled>
                 <label for="comentarios">Comentarios</label>
               </div>
             </div>

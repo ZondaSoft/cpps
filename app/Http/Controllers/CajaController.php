@@ -26,7 +26,9 @@ class CajaController extends Controller
         $legajoNew->fecha_sin = Carbon::Now()->format('d/m/Y');
         $legajoNew->dias = 1;
         $periodo = null;
-        
+        $codsector = null;
+        $cod_nov = null;
+        $cerrada = false;
         $fecha = null;
         $legajo = null;
         $novedad = null;
@@ -34,6 +36,7 @@ class CajaController extends Controller
         $agregar = true;
         $edicion = true;
         $active = 1;
+        $anterior = 0;
         $cuenta = 0;
         $id_caja = 0;
 
@@ -41,11 +44,12 @@ class CajaController extends Controller
         // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
         //------------------------------------------------------------------------
         $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+
         if ($cajaAbierta == null) {
             // Busco ultima caja cerrada
-            $ultimaCaja = Fza020::first();
+            $ultimaCaja = Fza020::orderBy('id','asc')->first();
 
-            // No hay cajas anteriores ?
+            // No hay cajas anteriores ? ABRO 1ER CAJA
             if ($ultimaCaja == null) {
                 $legajo = new Fza020;
                 $legajo->id = 1;
@@ -53,12 +57,14 @@ class CajaController extends Controller
                 $legajo->fecha = Carbon::Now()->format('d/m/Y');
                 $legajo->apertura = 0.00;
                 $legajo->cierre = 0.00;
-            }
 
-            return view('caja-apertura')->with(compact('novedad','dni','fecha','cuenta',
-                'legajoNew','legajo','agregar','edicion','active'));
+                return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                    'legajoNew','legajo','agregar','edicion','active'));            
+            }
+    
         } else {
             $id_caja = $cajaAbierta->id;
+            $fecha = $cajaAbierta->fecha;
         }
 
 
@@ -66,10 +72,6 @@ class CajaController extends Controller
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 26;
         $novedad = null;
-        $dni = null;
-        $codsector = null;
-        $cod_nov = null;
-        $fecha = null;
         $order = null;
         $fecha_orig = null;
         $fecha5 = null;
@@ -90,9 +92,10 @@ class CajaController extends Controller
         
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
         $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
-                    ->orderBy('fecha','asc')
-                    ->paginate(9)
-                    ->appends(request()->query());
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->paginate(9)
+            ->appends(request()->query());
         
         //->orderBy('fecha','asc')
 
@@ -120,21 +123,84 @@ class CajaController extends Controller
             //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
         }
 
+        // Busco ultima caja abierta
         $apertura = Fza020::whereNull('cerrada')->first();
+        if ($apertura == null) {
+            // Si no hay cajas abierta vaya a la ultima usada aunque este cerrada
+            $apertura = Fza020::orderBy('id', 'asc')->first();
 
-        //dd($apertura);
+            if ($apertura != null) {
+                
+                $id_caja = $apertura->id;
+                $fecha = $apertura->fecha;
+                $cerrada = true;
 
-        return view('ordenes')->with(compact('novedad','apertura','dni','cod_nov','fecha','legajo',
-            'legajoNew','agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja'));
+            } else {
+                // Si todo falla redirijo a apertura inicial
+                $legajo = new Fza020;
+                $id_caja = $legajo->id;
+                $legajo->fecha = Carbon::Now()->format('d/m/Y');
+                $legajo->apertura = 0.00;
+                $legajo->cierre = 0.00;
+
+                return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                    'legajoNew','legajo','agregar','edicion','active'));  
+            }
+        }
+
+        return view('ordenes')->with(compact('novedad','apertura','id_caja','cod_nov','fecha','legajo',
+            'legajoNew','agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
+    }
+
+
+    
+    public function preapertura()
+    {
+        //------------------------------------------------------------------------
+        // Controlo si hay caja abierta y rechazo en caso de que exista
+        //------------------------------------------------------------------------
+        $agregar = true;
+        $edicion = false;
+        $active = true;
+        $cerrada = false;
+        $legajoNew = null;
+        $cuenta = null;
+        $fecha = null;
+        $novedad = null;
+        $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+
+        if ($cajaAbierta == null) {
+            // Busco ultima caja cerrada
+            $ultimaCaja = Fza020::orderBy('id','asc')->first();
+
+            // No hay cajas anteriores ? ABRO 1ER CAJA
+            if ($ultimaCaja != null) {
+                $legajo = new Fza020;
+                $legajo->id = 1;
+                $id_caja = 1;
+                $legajo->fecha = Carbon::Now()->format('d/m/Y');
+                $legajo->apertura = $ultimaCaja->cierre;
+                $legajo->cierre = $ultimaCaja->cierre;
+
+                $fecha = $legajo->fecha;
+
+                return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                    'legajoNew','legajo','agregar','edicion','active','cerrada'));            
+            }
+
+        } else {
+            $id_caja = $cajaAbierta->id;
+            $fecha = $cajaAbierta->fecha;
+        }
     }
 
 
     public function add()
     {
-        $clientes = [];
-        $bancos = [];
         $fechaActual = null;
         $id_caja = 0;
+        $fecha = null;
+        $cerrada = false;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -146,11 +212,12 @@ class CajaController extends Controller
             $legajo->apertura = 0.00;
             $legajo->cierre = 0.00;
 
-            return view('caja-apertura')->with(compact('novedad','dni','fecha','cuenta',
+            return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
                 'legajoNew','legajo','agregar','edicion','active'));
         } else {
 
             $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
             $id_caja = $apertura->id;
         
         }
@@ -162,13 +229,12 @@ class CajaController extends Controller
         }
         $legajo->id_caja = $id_caja;
 
-        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Modificar, Borrar
         $agregar = True;
         $active = 1;
 
         $conceptos = Cpa010::orderBy('detalle')->get();
-        $bancos = Fza002::orderBy('detalle')->get();
-
+        
         /* if ($legajo != null) {
             $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
         } else {
@@ -181,7 +247,9 @@ class CajaController extends Controller
             'agregar',
             'edicion',
             'active',
-            'bancos'
+            'fecha',
+            'id_caja',
+            'cerrada'
         ));
     }
 
@@ -225,6 +293,160 @@ class CajaController extends Controller
     }
 
 
+    public function edit($id = 0)
+    {
+        if ($id == 0) {
+            return redirect('/home');
+        }
+
+        $fecha = null;
+        $id_caja = 0;
+        $agregar = False;
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 1;
+        $cerrada = false;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura == null) {
+            $legajo = new Fza020;
+            $legajo->fecha = Carbon::Now()->format('d/m/Y');
+            $legajo->apertura = 0.00;
+            $legajo->cierre = 0.00;
+
+            return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
+                'legajoNew','legajo','agregar','edicion','active'));
+        } else {
+
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        
+        }
+        
+        $legajo = Fza030::find($id);
+        if ($legajo == null) {
+            return redirect('/home');
+        }
+
+        
+
+        $legajo->fecha = Carbon::parse($legajo->fecha)->format('d/m/Y');
+        $conceptos = Cpa010::orderBy('detalle')->get();
+
+        return view('orden-add')->with(compact(
+            'legajo',
+            'agregar',
+            'edicion',
+            'active',
+            'fecha',
+            'id_caja',
+            'conceptos',
+            'cerrada'
+        ));    // Abrir form de modificacion
+    }
+
+
+    public function update(Request $request, $id)
+    {
+        // Validaciones
+        $messages = [
+            'concepto.required' => 'La Razon social es obligatoria',
+            'concepto.min' => 'La Razon social debe tener más de 2 letras',
+            'importe.required' => 'El importe es obligatorio'
+        ];
+
+        $rules = [
+            'concepto' => 'required|min:2',
+            'importe' => 'required'
+        ];
+
+        // Validacion de campos
+        $this->validate($request, $rules, $messages);
+
+        // Grabar en bbdd los cambios del form de alta
+        // dd($request->all());
+        $legajo = Fza030::find($id);
+
+        $legajo->concepto = $request->input('concepto');
+        $legajo->tipo = $request->input('tipo');
+        $legajo->importe = $request->input('importe');
+        $legajo->comentarios = $request->input('comentarios');
+
+        $legajo->update($request->only('concepto', 'tipo', 'importe', 'comentarios'));
+
+        // dd($legajo->cod_centro);
+
+        return redirect('/home/' . $id);
+    }
+
+
+    public function delete($id)
+    {
+        $legajo = Fza030::find($id);
+        if ($legajo == null) {
+            return "{\"result\":\"cancel\",\"id\":\"$legajo->id\"}";
+        }
+
+        $fecha = null;
+        $id_caja = 0;
+        $agregar = False;
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 1;
+        $cerrada = false;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura == null) {
+            $legajo = new Fza020;
+            $legajo->fecha = Carbon::Now()->format('d/m/Y');
+            $legajo->apertura = 0.00;
+            $legajo->cierre = 0.00;
+
+            return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
+                'legajoNew','legajo','agregar','edicion','active'));
+        } else {
+
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        
+        }
+
+        $legajo->fecha = Carbon::parse($legajo->fecha)->format('d/m/Y');
+        $conceptos = Cpa010::orderBy('detalle')->get();
+
+        return view('orden-delete')->with(compact(
+            'legajo',
+            'agregar',
+            'edicion',
+            'active',
+            'fecha',
+            'id_caja',
+            'cerrada',
+            'conceptos'
+        ));    // Abrir form de modificacion
+    }
+
+
+
+    public function borrar($id)
+    {
+        $legajo = Fza030::find($id);
+        if ($legajo == null) {
+            return "{\"result\":\"cancel\",\"id\":\"$legajo->id\"}";
+        }
+
+        $legajo->delete();
+
+        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+    }
+
+
     public function apertura(Request $request)
     {
         // Validaciones
@@ -263,12 +485,14 @@ class CajaController extends Controller
         $fechaActual = null;
         $id_caja = 0;
         $importeEfectivo = 0;
-        $rindeEfectivo = 0;
+        $rindeEfectivo = '';
         $saldoEfectivo = 0;
         $tarjetaCredito = 0;
         $tarjetaDebito = 0;
         $bancarios = 0;
         $cheques = 0;
+        $fecha = null;
+        $cerrada = false;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -280,7 +504,7 @@ class CajaController extends Controller
             $legajo->apertura = 0.00;
             $legajo->cierre = 0.00;
 
-            return view('caja-apertura')->with(compact('novedad','dni','fecha','cuenta',
+            return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
                 'legajoNew','legajo','agregar','edicion','active'));
         } else {
 
@@ -288,11 +512,37 @@ class CajaController extends Controller
             $id_caja = $apertura->id;
             $importeEfectivo = $apertura->apertura;
             $saldoEfectivo = -$importeEfectivo;
-        
+            $apertura->fecha = Carbon::parse($apertura->fecha)->format('d/m/Y');
+            
+            $fecha = $apertura->fecha;
+            $fechaActual = $fecha;
         }
 
-        $legajo = Fza030::Where('id_caja', $id_caja)->get();
+        $legajo = Fza030::Where('id_caja', $id_caja)
+            ->orderBy('id')
+            ->get();
         
+        foreach ($legajo as $comprobante) {
+            if ($comprobante->cuenta == 0) {
+                $importeEfectivo = $importeEfectivo - $comprobante->importe;
+            }
+            if ($comprobante->cuenta == 1) {
+                $tarjetaCredito = $tarjetaCredito + $comprobante->importe;
+            }
+            if ($comprobante->cuenta == 2) {
+                $tarjetaDebito = $tarjetaDebito + $comprobante->importe;
+            }
+            if ($comprobante->cuenta == 3) {
+                $bancarios = $bancarios + $comprobante->importe;
+            }
+            if ($comprobante->cuenta == 4) {
+                $saldoBancario = $bancarios + $comprobante->importe;
+            }
+            if ($comprobante->cuenta == 5) {
+                $importeEfectivo = $importeEfectivo + $comprobante->importe;
+            }
+        }
+
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
         $active = 1;
@@ -302,7 +552,9 @@ class CajaController extends Controller
             'agregar',
             'edicion',
             'active',
+            'cerrada',
             'id_caja',
+            'fecha',
             'fechaActual',
             'importeEfectivo',
             'rindeEfectivo',
@@ -312,5 +564,71 @@ class CajaController extends Controller
             'bancarios',
             'cheques'
         ));
+    }
+
+
+
+    public function close(Request $request, $id)
+    {
+        $fechaActual = null;
+        $id_caja = 0;
+        $importeEfectivo = 0;
+        $rindeEfectivo = '';
+        $tarjetaCredito = 0;
+        $tarjetaDebito = 0;
+        $bancarios = 0;
+        $cheques = 0;
+        $fecha = null;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::where('id', $id)->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura == null) {
+            return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+
+        } else {
+
+            $fechaActual = $apertura->fecha;
+            $id_caja = $apertura->id;
+            $importeEfectivo = $apertura->apertura;
+            $saldoEfectivo = -$importeEfectivo;
+            //$apertura->fecha = Carbon::parse($apertura->fecha)->format('d/m/Y');
+            $fecha = $apertura->fecha;
+            $fechaActual = $fecha;
+        }
+
+        $apertura->cierre = $request->input('rinde');
+        $apertura->tarjetadebito = $request->input('tarjetadebito2');
+        $apertura->tarjetacredito = $request->input('tarjetacredito2');
+        $apertura->bancarios = $request->input('bancarios2');
+        $apertura->cheques = $request->input('cheques2');
+        $apertura->cerrada = true;
+        
+        $apertura->update($request->only('cierre', 'tarjetaDebito', 'cerrada'));
+
+        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+    }
+
+
+
+
+    public function search(Request $request)
+    {
+        $active = 1;
+        $id_caja = 0;
+        $cerrada = false;
+        $fecha = null;
+
+        //$legajos = Cpa010::paginate(5);
+        $legajos = Fza020::name($request->get('name'))
+            ->orderBy('id')
+            ->paginate(10);
+
+        //dd($legajos);
+
+        $name = $request->get('name');
+
+        return view('home.search')->with(compact('legajos', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
 }
