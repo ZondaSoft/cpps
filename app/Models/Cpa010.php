@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Cpa010 extends Model
 {
     use HasFactory;
+
+    
+    protected $fillable = ['detalle','cuenta'];
+
     
     public function scopeName($query, $name)
     {

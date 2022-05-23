@@ -45,12 +45,13 @@
           <div class="row mb-6">
             <div class="col m6 s6 input-field">
                 <select id="cuenta" name="cuenta" {{ $edicion?'enabled':'disabled' }} onchange="changeVehiculos()">
-                    <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Contado efectivo</option>
+                    <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Egresos en efectivo</option>
                     <option value = 1 @if ( old('cuenta',$legajo->cuenta)  == 1)  selected   @endif  >Tarjeta credito</option>
                     <option value = 2 @if ( old('cuenta',$legajo->cuenta)  == 2)  selected   @endif  >Tarjeta debito</option>
                     <option value = 3 @if ( old('cuenta',$legajo->cuenta)  == 3)  selected   @endif  >Transferencia Bancaria (Galicia)</option>
                     <option value = 4 @if ( old('cuenta',$legajo->cuenta)  == 4)  selected   @endif  >Transferencia Bancaria (Macro)</option>
-                    <option value = 5 @if ( old('cuenta',$legajo->cuenta)  == 5)  selected   @endif  >Otras cuentas</option>
+                    <option value = 5 @if ( old('cuenta',$legajo->cuenta)  == 5)  selected   @endif  >Ingresos en efectivo</option>
+                    <option value = 6 @if ( old('cuenta',$legajo->cuenta)  == 6)  selected   @endif  >Ingresos en cheques</option>
                 </select>
                 <label>Cod.Cuenta</label>
             </div>

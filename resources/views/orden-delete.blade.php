@@ -67,12 +67,13 @@
             <div class="row mb-1">
               <div class="col m6 s6 input-field">
                   <select id="cuenta" name="cuenta" disabled>
-                      <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Contado efectivo (Gastos)</option>
+                      <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Egresos en efectivo</option>
                       <option value = 1 @if ( old('cuenta',$legajo->cuenta)  == 1)  selected   @endif  >Tarjeta credito (Ingresos)</option>
                       <option value = 2 @if ( old('cuenta',$legajo->cuenta)  == 2)  selected   @endif  >Tarjeta debito (Ingresos)</option>
                       <option value = 3 @if ( old('cuenta',$legajo->cuenta)  == 3)  selected   @endif  >Transf. Bancaria Galicia (Ingresos)</option>
                       <option value = 4 @if ( old('cuenta',$legajo->cuenta)  == 4)  selected   @endif  >Transf. Bancaria Macro (Ingresos)</option>
-                      <option value = 5 @if ( old('cuenta',$legajo->cuenta)  == 5)  selected   @endif  >Contado efectivo (Ingresos)</option>
+                      <option value = 5 @if ( old('cuenta',$legajo->cuenta)  == 5)  selected   @endif  >Ingresos en efectivo</option>
+                      <option value = 5 @if ( old('cuenta',$legajo->cuenta)  == 5)  selected   @endif  >Ingresos en Cheques</option>
                   </select>
                   <label>Cod.Cuenta</label>
               </div>

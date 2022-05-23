@@ -141,12 +141,13 @@
           <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
           <td><span class="invoice-customer" 
             @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-            @if ($novedad->cuenta == 0) Contado efectivo (Gastos) @endif
+            @if ($novedad->cuenta == 0) Egresos en efectivo @endif
             @if ($novedad->cuenta == 1) Tarjeta Credito (Ingresos)) @endif
             @if ($novedad->cuenta == 2) Tarjeta Debito (Ingresos) @endif
             @if ($novedad->cuenta == 3) Transf. Bancaria Galicia (Ingresos) @endif
             @if ($novedad->cuenta == 4) Transf. Bancaria Macro (Ingresos) @endif
-            @if ($novedad->cuenta == 5) Contado efectivo (Ingresos) @endif
+            @if ($novedad->cuenta == 5) Ingresos en efectivo @endif
+            @if ($novedad->cuenta == 6) Ingresos en Cheques @endif
           </span></td>
           <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
             {{ substr($novedad->nomConcepto,0,20) }}

@@ -178,7 +178,8 @@ class ConceptosController extends Controller
         $legajo = new Cpa010();
         //$request->all();
         //$legajo = Cpa010::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
-
+        
+        $legajo->cuenta = $request->input('cuenta');
         $legajo->codigo = $request->input('codigo');
         $legajo->detalle = $request->input('detalle');
 
@@ -208,10 +209,10 @@ class ConceptosController extends Controller
         $active = 1;
         $cerrada = false;
 
-        $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
-        $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
-        $legajo->fecha_vto = Carbon::parse($legajo->fecha_vto)->format('d/m/Y');
-        $legajo->ultima_act = Carbon::parse($legajo->ultima_act)->format('d/m/Y');
+        // $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
+        // $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
+        // $legajo->fecha_vto = Carbon::parse($legajo->fecha_vto)->format('d/m/Y');
+        // $legajo->ultima_act = Carbon::parse($legajo->ultima_act)->format('d/m/Y');
 
         //$bancos = Fza002::orderBy('detalle')->get();
 
@@ -238,14 +239,14 @@ class ConceptosController extends Controller
     {
         // Validaciones
         $messages = [
-            'detalle.required' => 'La Razon social es obligatoria',
-            'detalle.min' => 'La Razon social debe tener más de 2 letras',
-            'nom_com.required' => 'El nombre comercial es obligatorio'
+            'cuenta.required' => 'El Código de cuenta es obligatorio',
+            'detalle.required' => 'La descripción es obligatoria',
+            'detalle.min' => 'La Razon social debe tener más de 2 letras'
         ];
 
         $rules = [
-            'detalle' => 'required|min:2',
-            'nom_com' => 'required'
+            'cuenta' => 'required',
+            'detalle' => 'required|min:2'
         ];
 
         // Validacion de campos
@@ -255,26 +256,12 @@ class ConceptosController extends Controller
         // dd($request->all());
         $legajo = Cpa010::find($id);
 
-        $legajo->detalle = $request->input('detalle');
-        $legajo->cuit = $request->input('cuit');
-        $legajo->domic = $request->input('domic');
-        $legajo->dom_com = $request->input('dom_com');
-        $legajo->localid = $request->input('localid');
-        $legajo->codpostal = $request->input('codpostal');
-        $legajo->tel1 = $request->input('tel1');
-        $legajo->tel2 = $request->input('tel2');
-        $legajo->tel3 = $request->input('tel3');
-        $legajo->email = $request->input('email');
-        $legajo->web = $request->input('web');
-        
-        // Pestaña forma de pago (update)
-        $legajo->formap = $request->input('formap');
-        $legajo->banco = $request->input('banco');
-        $legajo->sucursal = $request->input('sucursal');
         $legajo->cuenta = $request->input('cuenta');
-        $legajo->cbu = $request->input('cbu');
+        //$legajo->codigo = $request->input('codigo');
+        $legajo->detalle = $request->input('detalle');
+        
 
-        $legajo->update($request->only('detalle', 'nom_com', 'cuit', 'domic', 'nom_com', 'localid', 'codpostal', 'tel1', 'tel2', 'tel3', 'email', 'web', 'forma_pago', 'banco', 'sucursal', 'cuenta', 'cbu'));
+        $legajo->update($request->only('detalle', 'cuenta'));
 
         // dd($legajo->cod_centro);
 

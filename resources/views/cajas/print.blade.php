@@ -99,10 +99,10 @@
                       &nbsp;{{ date('d/m/Y', strtotime($novedad->fecha)) }}
                     </td>
                     <td style="text-align: left">
-                      @if ($novedad->cuenta == 0) Contado efectivo (Gastos) @endif
+                      @if ($novedad->cuenta == 0) Ingresos en efectivo @endif
                       @if ($novedad->cuenta == 1) Tarjeta Credito (Ingresos)) @endif
                       @if ($novedad->cuenta == 2) Tarjeta Debito (Ingresos) @endif
-                      @if ($novedad->cuenta == 5) Contado efectivo (Ingresos) @endif
+                      @if ($novedad->cuenta == 5) Ingresos en efectivo @endif
                     </td>
                     <td>
                       {{ $novedad->concepto }} - {{ substr($novedad->nomConcepto,0,20) }}
@@ -380,7 +380,7 @@
                     &nbsp;{{ date('d/m/Y', strtotime($cheque->fecha)) }}
                   </td>
                   <td style="text-align: left">
-                    @if ($cheque->cuenta == 2) Tarjeta cheque (Ingresos) @endif
+                    @if ($cheque->cuenta == 6) Ingresos en Cheques @endif
                   </td>
                   <td>
                     {{ $cheque->concepto }} - {{ substr($cheque->nomConcepto,0,20) }}
