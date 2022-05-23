@@ -58,7 +58,7 @@
                                     </td style="height: 10px;">
 
                                     <td style="height: 10px;">
-                                       {{ $legajo->fecha }}
+                                       {{ date('d/m/Y', strtotime($legajo->fecha)) }}
                                     </td>
                                     <td style="height: 10px;">
                                        @if ($legajo->cerrada == 1)
@@ -73,6 +73,17 @@
                            </tbody>
                         </table>
 
+                        <div class="card-footer">
+                           <div class="d-flex">
+                              <!-- <button class="btn btn-sm btn-secondary">Clear</button> -->
+                              <nav class="ml-auto">
+                                 <ul class="pagination pagination-sm">
+                                    &nbsp;&nbsp;&nbsp;Páginas : 
+                                    {{ $legajos->links() }}
+                                 </ul>
+                              </nav>
+                           </div>
+                        </div>
 
                      </div>
                      <!-- END table-responsive-->

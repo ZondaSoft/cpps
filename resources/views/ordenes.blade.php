@@ -23,10 +23,19 @@
   <!-- create invoice button-->
   <!-- Options and filter dropdown button-->
   <div class="invoice-filter-action mr-3">
-    <a href="javascript:void(0)" class="btn waves-effect waves-light invoice-export border-round z-depth-4">
-      <i class="material-icons">picture_as_pdf</i>
-      <span class="hide-on-small-only">Imprimir</span>
-    </a>
+    <form method="post" action="{{ url('/home/print') }}/{{ $id_caja }}" enctype="multipart/form-data" id="formMain" name="formMain">
+      {{ csrf_field() }}
+      
+      <button class="btn waves-effect waves-light invoice-export border-round z-depth-4">
+        <i class="material-icons">picture_as_pdf</i>
+        <span class="hide-on-small-only"><i class="fa fa-print"></i>
+        </span>Imprimir
+      </button>
+
+      <input hidden id="id_caja" name="id_caja" value="{{ $id_caja }}" type="text">
+      <input hidden id="fecha" name="fecha" value="{{ $fecha }}" type="text">
+      <input hidden id="cerrada" name="cerrada" value="{{ $cerrada }}" type="text">
+    </form>
   </div>
   
   <!-- create agregar button-->
@@ -151,8 +160,11 @@
           </td>
 
           <div hidden>
-            @if ($novedad->cuenta == 0 or $novedad->cuenta == 5)
+            @if ($novedad->cuenta == 0)
               {{ $saldo = $saldo - $novedad->importe }}
+            @endif
+            @if ($novedad->cuenta == 5)
+              {{ $saldo = $saldo + $novedad->importe }}
             @endif
 
             @if ($novedad->cuenta == 2)

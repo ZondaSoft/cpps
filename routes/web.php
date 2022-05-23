@@ -63,15 +63,11 @@ Route::post('/home/edit/{id}', 'HomeController@update');
 Route::get('/home/search', 'CajaController@search')->name('home.search');
 Route::get('/home/search', 'CajaController@search')->name('home.search');
 Route::get('/home/{id?}/search/', 'CajaController@search')->name('home.search');
+Route::post('/home/print/{id}', 'CajaController@printpdf')->name('home.print');
 
 Route::get('/home/{id?}/{direction?}/search/', 'HomeController@search')->name('search');
 Route::get('/home/delete/{id}', 'HomeController@delete');
 Route::post('/home/delete/{id}', 'HomeController@baja');
-Route::get('/home/ddjjdomicilio/{id?}', 'HomeController@ddjjdomicilio');
-Route::get('/home/map/{id}', 'HomeController@map');
-Route::get('/home/importar', 'HomeController@importar');
-Route::get('/home/{id?}/importar', 'HomeController@importar');
-Route::post('/home/importar', 'ImportController@importlegajos');
 
 
 Route::get('/orden-add', 'CajaController@add')->name('orden.add');

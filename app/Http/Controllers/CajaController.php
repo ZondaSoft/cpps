@@ -40,31 +40,53 @@ class CajaController extends Controller
         $cuenta = 0;
         $id_caja = 0;
 
-        //------------------------------------------------------------------------
-        // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
-        //------------------------------------------------------------------------
-        $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+        if ($id != null) {
+            $id_caja = $id;
 
-        if ($cajaAbierta == null) {
-            // Busco ultima caja cerrada
-            $ultimaCaja = Fza020::orderBy('id','asc')->first();
+            $cajaAbierta = Fza020::Where('id', $id)->first();
+            
+            if ($cajaAbierta != null) {
+                $id_caja = $cajaAbierta->id;
+                $fecha = $cajaAbierta->fecha;
+                $cerrada = $cajaAbierta->cerrada;
+            } else {
+                $cajaAbierta = Fza020::orderBy('id','asc')->first();
 
-            // No hay cajas anteriores ? ABRO 1ER CAJA
-            if ($ultimaCaja == null) {
-                $legajo = new Fza020;
-                $legajo->id = 1;
-                $id_caja = 1;
-                $legajo->fecha = Carbon::Now()->format('d/m/Y');
-                $legajo->apertura = 0.00;
-                $legajo->cierre = 0.00;
-
-                return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
-                    'legajoNew','legajo','agregar','edicion','active'));            
+                if ($cajaAbierta != null) {
+                    $id_caja = $cajaAbierta->id;
+                    $fecha = $cajaAbierta->fecha;
+                    $cerrada = $cajaAbierta->cerrada;
+                }
             }
-    
         } else {
-            $id_caja = $cajaAbierta->id;
-            $fecha = $cajaAbierta->fecha;
+            //------------------------------------------------------------------------
+            // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
+            //------------------------------------------------------------------------
+            $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+
+            if ($cajaAbierta == null) {
+                // Busco ultima caja cerrada
+                $ultimaCaja = Fza020::orderBy('id','asc')->first();
+
+                // No hay cajas anteriores ? ABRO 1ER CAJA
+                if ($ultimaCaja == null) {
+                    $legajo = new Fza020;
+                    $legajo->id = 1;
+                    $id_caja = 1;
+                    $legajo->fecha = Carbon::Now()->format('d/m/Y');
+                    $cerrada = $cajaAbierta->cerrada;
+                    $legajo->apertura = 0.00;
+                    $legajo->cierre = 0.00;
+
+                    return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                        'legajoNew','legajo','agregar','edicion','active'));            
+                }
+        
+            } else {
+                $id_caja = $cajaAbierta->id;
+                $fecha = $cajaAbierta->fecha;
+                $cerrada = $cajaAbierta->cerrada;
+            }
         }
 
 
@@ -128,7 +150,7 @@ class CajaController extends Controller
         if ($apertura == null) {
             // Si no hay cajas abierta vaya a la ultima usada aunque este cerrada
             $apertura = Fza020::orderBy('id', 'asc')->first();
-
+            
             if ($apertura != null) {
                 
                 $id_caja = $apertura->id;
@@ -191,7 +213,11 @@ class CajaController extends Controller
         } else {
             $id_caja = $cajaAbierta->id;
             $fecha = $cajaAbierta->fecha;
+
+            return redirect('/home/' . $id_caja)->with('success', 'El comprobante fue creado con éxito');
         }
+
+        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
     }
 
 
@@ -631,4 +657,147 @@ class CajaController extends Controller
 
         return view('home.search')->with(compact('legajos', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
+
+
+
+    public function printpdf(Request $request, $id)
+    {
+        $pdf = \App::make('dompdf.wrapper');
+
+        $codsector = null;
+        $cod_nov = null;
+        $cerrada = false;
+        $fecha = null;
+        $legajo = null;
+        $novedad = null;
+        $agregar = true;
+        $edicion = true;
+        $active = 1;
+        $anterior = 0;
+        $cuenta = 0;
+        $id_caja = 0;
+        $cajaAbierta = [];
+
+        if ($id != null) {
+            $id_caja = $id;
+
+            $cajaAbierta = Fza020::Where('id', $id)->first();
+
+            if ($cajaAbierta != null) {
+                $id_caja = $cajaAbierta->id;
+                $fecha = $cajaAbierta->fecha;
+            } else {
+                $cajaAbierta = Fza020::orderBy('id','asc')->first();
+
+                if ($cajaAbierta != null) {
+                    $id_caja = $cajaAbierta->id;
+                    $fecha = $cajaAbierta->fecha;
+                }
+            }
+        } else {
+            //------------------------------------------------------------------------
+            // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
+            //------------------------------------------------------------------------
+            $cajaAbierta = Fza020::WhereNull('cerrada')->first();
+
+            if ($cajaAbierta == null) {
+                // Busco ultima caja cerrada
+                $ultimaCaja = Fza020::orderBy('id','asc')->first();
+
+                // No hay cajas anteriores ? ABRO 1ER CAJA
+                if ($ultimaCaja == null) {
+                    $legajo = new Fza020;
+                    $legajo->id = 1;
+                    $id_caja = 1;
+                    $legajo->fecha = Carbon::Now()->format('d/m/Y');
+                    $legajo->apertura = 0.00;
+                    $legajo->cierre = 0.00;
+
+                    return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                        'legajoNew','legajo','agregar','edicion','active'));            
+                }
+        
+            } else {
+                $id_caja = $cajaAbierta->id;
+                $fecha = $cajaAbierta->fecha;
+            }
+        }
+
+
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 26;
+        $novedad = null;
+        $order = null;
+        $fecha_orig = null;
+        $fecha5 = null;
+        $novedades = null;
+        
+        //$fecha_orig = Carbon::parse( Carbon::now() )->format('d/m/Y');
+
+        //if ($nrolegajo != null) {
+        //  $legajoNew->legajo = $id;
+        // Busco el legajo seleccionado
+        //  $legajoNew->detalle = $legajoNew->Apynom;
+        //}
+        //$legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
+        //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
+
+        // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
+        //config()->set('database.connections.your_connection.strict', false);
+        
+        //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+        $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            ->Where('cuenta', 0)
+            ->orWhere('cuenta', 5)
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->get();
+
+        $creditos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            ->where('cuenta', 1)
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->get();
+
+        $debitos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            ->where('cuenta', 2)
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->get();
+        
+        $bancos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            ->where('cuenta', 3)
+            ->orWhere('cuenta', 4)
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->get();
+
+        
+        $cheques = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            ->where('cuenta', 6)
+            ->orderBy('fecha','asc')
+            ->orderBy('id','asc')
+            ->get();
+
+        $desde = $request->input('id_caja');
+        $hasta = $request->input('fecha');
+        $cerrada = $request->input('cerrada');
+
+        //->join('mdl003s', function ($join) {
+        //    $join->on('mdl060s.prestador', '=', 'mdl003s.id');
+        //  })
+
+        // ->orderBy('mdl060s.fecha')
+
+        // Tamano hoja
+        //$pdf->setPaper('A4', 'landscape');
+
+        // Cargar view
+        $pdf->loadview('cajas.print', compact('cajaAbierta', 'novedades', 'debitos', 'creditos', 'bancos', 'cheques', 'desde', 'hasta', 'cerrada'));
+        
+        // Generar el PDF al navegador
+
+        return $pdf->stream();
+   }
 }

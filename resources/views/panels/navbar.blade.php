@@ -9,7 +9,7 @@
           data-search="template-list">
         <ul class="search-list collection display-none"></ul> --}}
         <div class="white-text">
-        <h5 style="color: #FFFFFF">Caja Diaria @if ($cerrada == true) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
+        <h5 style="color: #FFFFFF">Caja Diaria @if ($cerrada == true or $cerrada == 1) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
         </div>
 
       </div>
