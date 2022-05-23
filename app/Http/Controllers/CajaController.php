@@ -78,7 +78,7 @@ class CajaController extends Controller
                     $legajo->apertura = 0.00;
                     $legajo->cierre = 0.00;
 
-                    return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cuenta',
+                    return view('caja-apertura')->with(compact('novedad','id_caja','fecha','cerrada','cuenta',
                         'legajoNew','legajo','agregar','edicion','active'));            
                 }
         
