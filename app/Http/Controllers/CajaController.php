@@ -74,7 +74,7 @@ class CajaController extends Controller
                     $legajo->id = 1;
                     $id_caja = 1;
                     $legajo->fecha = Carbon::Now()->format('d/m/Y');
-                    $cerrada = $cajaAbierta->cerrada;
+                    $cerrada = null;
                     $legajo->apertura = 0.00;
                     $legajo->cierre = 0.00;
 
