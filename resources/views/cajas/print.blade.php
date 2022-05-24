@@ -47,11 +47,11 @@
                   Número</th>
                 <th style="width: 60px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Fecha</th>
-                <th style="width: 150px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px;text-align: center">
+                <th style="width: 140px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px;text-align: center">
                   Cuenta</th>
                 <th style="width: 150px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Concepto</th>
-                <th style="width: 120px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px;text-align: center">
+                <th style="width: 120px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px;text-align: left">
                   Comentarios</th>
                 <th style="width: 70px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Importe</th>
@@ -68,7 +68,7 @@
                   &nbsp;{{ date('d/m/Y', strtotime($cajaAbierta->fecha)) }}
                 </td>
                 <td>
-                  APERTURA / SALDO INICIAL
+                  SALDO INICIAL
                 </td>
                 <td>
                 </td>
@@ -99,9 +99,7 @@
                       &nbsp;{{ date('d/m/Y', strtotime($novedad->fecha)) }}
                     </td>
                     <td style="text-align: left">
-                      @if ($novedad->cuenta == 0) Ingresos en efectivo @endif
-                      @if ($novedad->cuenta == 1) Tarjeta Credito (Ingresos)) @endif
-                      @if ($novedad->cuenta == 2) Tarjeta Debito (Ingresos) @endif
+                      @if ($novedad->cuenta == 0) Egresos en efectivo @endif
                       @if ($novedad->cuenta == 5) Ingresos en efectivo @endif
                     </td>
                     <td>
@@ -111,7 +109,9 @@
                       {{ $novedad->comentarios }}
                     </td>
                     <td style="text-align: right">
+                      @if ($novedad->cuenta == 0)(@endif
                       {{ number_format($novedad->importe,2) }}
+                      @if ($novedad->cuenta == 0))@endif
                     </td>
 
                     @php
@@ -309,8 +309,8 @@
                     &nbsp;{{ date('d/m/Y', strtotime($banco->fecha)) }}
                   </td>
                   <td style="text-align: left">
-                    @if ($banco->cuenta == 3) Transf. Bancaria Galicia (Ingresos) @endif
-                    @if ($banco->cuenta == 4) Transf. Bancaria Macro (Ingresos) @endif
+                    @if ($banco->cuenta == 3) Transf.Banco Galicia (Ingresos) @endif
+                    @if ($banco->cuenta == 4) Transf.Banco Macro (Ingresos) @endif
                   </td>
                   <td>
                     {{ $banco->concepto }} - {{ substr($banco->nomConcepto,0,20) }}

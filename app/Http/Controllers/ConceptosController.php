@@ -5,6 +5,7 @@ use App\Models\Datoempr;
 use App\Models\Cpa010;
 use App\Models\Fza002;
 use App\Models\Fza020;
+use App\Models\Fza030;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 
@@ -337,4 +338,137 @@ class ConceptosController extends Controller
 
         return view('conceptos.search')->with(compact('legajos', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
+
+
+    public function print()
+    {
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 10;
+        $fecha = null;
+        $id_caja = 0;
+        $nrolegajo = 0;
+        $cerrada = false;
+        $ddesde = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $dhasta = Carbon::parse(Carbon::today())->format('d/m/Y');
+        
+        $legajo = Cpa010::Where('codigo', '>', 0)
+                ->orderBy('codigo')
+                ->first();      // find($id);
+
+        // Datos de la empresa
+        $empresa = Datoempr::first();      // find($id);
+        //if ($empresa == null) {
+        //    return redirect('/empresa/');
+        //}
+
+        // Si a pesar de todos los controles $legajo es null es porque no hay registros
+        if ($legajo == null)
+            $legajo = new Cpa010;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura != null) {
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        }
+
+        $origen = Fza030::orderBy('fecha')->first();
+        if ($origen != null) {
+            $ddesde = Carbon::parse($origen->fecha)->format('d/m/Y');
+        }
+        
+        $origen = Fza030::orderBy('fecha', 'Desc')->first();
+        if ($origen != null) {
+            $dhasta = Carbon::parse($origen->fecha)->format('d/m/Y');
+        }
+
+        $conceptos = Cpa010::orderBy('codigo')->get();
+
+        return view('conceptos.print')->with(compact(
+            'empresa',
+            'legajo',
+            'conceptos',
+            'agregar',
+            'edicion',
+            'active',
+            'fecha',
+            'id_caja',
+            'cerrada',
+            'ddesde',
+            'dhasta'
+        ));
+    }
+
+    public function printpdf(Request $request)
+    {
+        $pdf = \App::make('dompdf.wrapper');
+
+        $codsector = null;
+        $cod_nov = null;
+        $cerrada = false;
+        $fecha = null;
+        $legajo = null;
+        $novedad = null;
+        $agregar = true;
+        $edicion = true;
+        $active = 1;
+        $anterior = 0;
+        $cuenta = 0;
+        $id_caja = 0;
+        $cajaAbierta = [];
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 26;
+        $novedad = null;
+        $order = null;
+        $fecha_orig = null;
+        $fecha5 = null;
+        $novedades = null;
+        
+        //$fecha_orig = Carbon::parse( Carbon::now() )->format('d/m/Y');
+
+        //if ($nrolegajo != null) {
+        //  $legajoNew->legajo = $id;
+        // Busco el legajo seleccionado
+        //  $legajoNew->detalle = $legajoNew->Apynom;
+        //}
+        //$legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
+        //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
+
+        // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
+        //config()->set('database.connections.your_connection.strict', false);
+        
+        //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+        $concepto1 = $request->input('concepto');
+        $concepto2 = $request->input('concepto2');
+        
+        $novedades = Fza030::where('concepto', $concepto1)
+            ->orderBy('fecha','asc')
+            ->orderBy('numero','asc')
+            ->get();
+            
+        $desde = $request->input('ddesde');
+        $hasta = $request->input('dhasta');
+        $cerrada = $request->input('cerrada');
+
+        //->join('mdl003s', function ($join) {
+        //    $join->on('mdl060s.prestador', '=', 'mdl003s.id');
+        //  })
+
+        // ->orderBy('mdl060s.fecha')
+
+        // Tamano hoja
+        //$pdf->setPaper('A4', 'landscape');
+
+        // Cargar view
+        $pdf->loadview('conceptos.printpdf', compact('cajaAbierta', 'novedades', 'desde', 'hasta', 'cerrada'));
+        
+        // Generar el PDF al navegador
+
+        return $pdf->stream();
+   }
 }

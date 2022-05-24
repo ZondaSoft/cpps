@@ -163,8 +163,9 @@
           
           <td>
             <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              @if ($novedad->cuenta == 0)-@endif 
+              @if ($novedad->cuenta == 0)(@endif
               ${{ number_format($novedad->importe,2) }}
+              @if ($novedad->cuenta == 0))@endif
             </span>
           </td>
 

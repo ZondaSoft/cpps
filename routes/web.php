@@ -97,6 +97,8 @@ Route::get('/conceptos/{id?}/search/', 'ConceptosController@search')->name('sear
 Route::get('/conceptos/{id?}/{direction?}/search/', 'ConceptosController@search')->name('conceptos.search');
 Route::get('/conceptos/delete/{id}', 'ConceptosController@delete');
 Route::post('/conceptos/delete/{id}', 'ConceptosController@baja');
+Route::get('/conceptos-print', 'ConceptosController@print');
+Route::post('/conceptos/print', 'ConceptosController@printpdf');
 Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');
 Route::get('/conceptos/map/{id}', 'ConceptosController@map');
 Route::get('/conceptos/importar', 'ConceptosController@importar');

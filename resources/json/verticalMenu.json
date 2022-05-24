@@ -31,12 +31,6 @@
       "icon": "local_printshop",
       "submenu": [
         {
-          "url": "cajas-print",
-          "name": "Cajas",
-          "i18n": "Cajas",
-          "slug": "eCommerce-products-page"
-        },
-        {
           "url": "conceptos-print",
           "name": "Conceptos",
           "i18n": "Conceptos",
