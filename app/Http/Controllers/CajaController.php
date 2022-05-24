@@ -116,7 +116,7 @@ class CajaController extends Controller
         $novedades = Fza030::Where('id_caja', $id_caja)
             ->orderBy('fecha','asc')
             ->orderBy('numero','asc')
-            ->paginate(9)
+            ->paginate(20)
             ->appends(request()->query());
         
         //->orderBy('fecha','asc')
