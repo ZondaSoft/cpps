@@ -396,6 +396,7 @@ class CajaController extends Controller
         // dd($request->all());
         $legajo = Fza030::find($id);
 
+        $legajo->cuenta = $request->input('cuenta');
         $legajo->concepto = $request->input('concepto');
         $legajo->tipo = $request->input('tipo');
         $legajo->importe = $request->input('importe');
