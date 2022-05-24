@@ -76,7 +76,7 @@
               <div class="col m6 s6 input-field">
                   <select id="cuenta" name="cuenta"
                   {{ $edicion?'':'disabled' }}
-                  {{ $agregar?'enabled autofocus=""':'disabled' }} >
+                  {{ $agregar?'enabled autofocus=""':'' }} >
                       <option value = 0 @if ( old('cuenta',$legajo->cuenta)  == 0)  selected   @endif  >Egresos en efectivo</option>
                       <option value = 1 @if ( old('cuenta',$legajo->cuenta)  == 1)  selected   @endif  >Tarjeta credito (Ingresos)</option>
                       <option value = 2 @if ( old('cuenta',$legajo->cuenta)  == 2)  selected   @endif  >Tarjeta debito (Ingresos)</option>
