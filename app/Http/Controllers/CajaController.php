@@ -115,7 +115,7 @@ class CajaController extends Controller
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
         $novedades = Fza030::Where('id_caja', $id_caja)
             ->orderBy('fecha','asc')
-            ->orderBy('id','asc')
+            ->orderBy('numero','asc')
             ->paginate(9)
             ->appends(request()->query());
         
