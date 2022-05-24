@@ -113,7 +113,7 @@ class CajaController extends Controller
         //config()->set('database.connections.your_connection.strict', false);
         
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
-        $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $novedades = Fza030::Where('id_caja', $id_caja)
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->paginate(9)
@@ -747,26 +747,26 @@ class CajaController extends Controller
         //config()->set('database.connections.your_connection.strict', false);
         
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
-        $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $novedades = Fza030::Where('id_caja', $id_caja)     // Fza030::search($codsector, $cod_nov, $fecha, $order)
             ->Where('cuenta', 0)
             ->orWhere('cuenta', 5)
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
 
-        $creditos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $creditos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 1)
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
 
-        $debitos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $debitos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 2)
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
         
-        $bancos = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $bancos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 3)
             ->orWhere('cuenta', 4)
             ->orderBy('fecha','asc')
@@ -774,7 +774,7 @@ class CajaController extends Controller
             ->get();
 
         
-        $cheques = Fza030::search($codsector, $cod_nov, $fecha, $order)
+        $cheques = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 6)
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')

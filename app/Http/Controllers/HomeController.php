@@ -35,6 +35,7 @@ class HomeController extends Controller
         $edicion = true;
         $active = 1;
         $cuenta = 0;
+        $id_caja = 0;
 
         //------------------------------------------------------------------------
         // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
@@ -51,36 +52,11 @@ class HomeController extends Controller
                 $legajo->fecha = Carbon::Now()->format('d/m/Y');
                 $legajo->apertura = 0.00;
                 $legajo->cierre = 0.00;
+                $id_caja = 1;
             }
 
             return view('caja-apertura')->with(compact('novedad','dni','fecha','cuenta',
                 'legajoNew','legajo','agregar','edicion','active'));
-        }
-
-
-        if ($request->has('cod_nov2')) {
-            $cod_nov = $request->query('cod_nov2');
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $dni = (\Session::get('legajo_add'));
-
-            // Traigo datos almacenados en la sesion (ApyNom)
-            $apynom = (\Session::get('legajo_name_add'));
-
-            if ($apynom != null) {
-                $legajoNew->detalle = $apynom;
-            }
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $fecha = (\Session::get('fecha_add'));
-
-            if ($fecha != null) {
-                $legajoNew->fecha = $fecha;
-            }
-
-            // Creo la session con el helper
-            \Session::put('cod_nov_new',$legajoNew->cod_nov);
-            \Session::put('cod_nov_name_new',$legajoNew->CodNovName);
         }
 
 
@@ -142,7 +118,7 @@ class HomeController extends Controller
                 //config()->set('database.connections.your_connection.strict', false);
 
                 if ($order == 2 or $order == null) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)   // Fza030::search($codsector, $cod_nov, $fecha, $order)
                       ->orderBy('numero','asc')
                       ->paginate(9)
                       ->appends(request()->query());
@@ -150,7 +126,7 @@ class HomeController extends Controller
                       //->orderBy('fecha','asc')
                       
                 } elseif ($order == 1 or $order == 0) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)
                       ->orderBy('fecha','desc')
                       ->paginate(9)
                       ->appends(request()->query());
@@ -158,7 +134,7 @@ class HomeController extends Controller
                       //->orderBy('fecha','desc')
 
                 } elseif ($order == 3) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)
                       ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());
@@ -166,7 +142,7 @@ class HomeController extends Controller
                       //->orderBy('fecha','asc')
                       
                 } elseif ($order == 4) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)
                       ->orderBy('fecha','desc')
                       ->paginate(9)
                       ->appends(request()->query());
@@ -174,12 +150,12 @@ class HomeController extends Controller
                       //->orderBy('fecha','desc')
                       
                 } elseif ($order == 9) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)
                       ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());
                 } elseif ($order == 10) {
-                  $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                  $novedades = Fza030::Where('id_caja', $id_caja)
                       ->paginate(9)
                       ->appends(request()->query());
                 }
@@ -199,7 +175,7 @@ class HomeController extends Controller
                     // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
                     //config()->set('database.connections.mysql.strict', false);
                     
-                    $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+                    $novedades = Fza030::Where('id_caja', $id_caja)
                         ->orderBy('ciente','asc')
                         ->paginate(9)
                         ->appends(request()->query());
@@ -213,7 +189,7 @@ class HomeController extends Controller
             //config()->set('database.connections.your_connection.strict', false);
             
             //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
-            $novedades = Fza030::search($codsector, $cod_nov, $fecha, $order)
+            $novedades = Fza030::Where('id_caja', $id_caja)
                       ->orderBy('fecha','asc')
                       ->paginate(9)
                       ->appends(request()->query());

@@ -85,7 +85,9 @@
           <!-- data table responsive icons -->
           <th></th>
           <!-- data table checkbox -->
-          <th></th>
+          <th>
+            <span>Tipo</span>
+          </th>
           <th>
             <span>Nro.</span>
           </th>
@@ -111,7 +113,7 @@
           <td></td>
           <td></td>
           <td>
-              <a href="{{asset('apertura') . '/' . $apertura->id }}">{{ $apertura->id }}</a>
+              {{-- <a href="{{asset('apertura') . '/' . $apertura->id }}">{{ $apertura->id }}</a> --}}
           </td>
           <td>{{ date('d/m/Y', strtotime($apertura->fecha)) }}</td>
           <td><span class="invoice-customer">APERTURA / SALDO INICIAL</span></td>
@@ -134,7 +136,13 @@
         @foreach ($novedades as $novedad)
         <tr>
           <td></td>
-          <td></td>
+          <td> @if ($novedad->tipo == 0) Fac @endif 
+            @if ($novedad->tipo == 1) Rec @endif 
+            @if ($novedad->tipo == 2) ND @endif
+            @if ($novedad->tipo == 3) NC @endif
+            @if ($novedad->tipo == 4) Ti @endif
+            @if ($novedad->tipo == 5) Tr @endif
+            @if ($novedad->tipo == 6) Ot @endif </td>
           <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
               <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="#">{{ $novedad->numero }}</a>
           </td>

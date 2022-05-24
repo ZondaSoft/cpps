@@ -131,10 +131,10 @@
             <div class="row mb-1">
               <div class="col m3 s3 input-field">
                 <select id="tipo" name="tipo" {{ $edicion?'enabled':'disabled' }}>
-                    <option value = 0 @if ( old('tipo',$legajo->tipo)  == 0)  selected   @endif  >Factura</option>
-                    <option value = 1 @if ( old('tipo',$legajo->tipo)  == 1)  selected   @endif  >Ticket</option>
-                    <option value = 2 @if ( old('tipo',$legajo->tipo)  == 2)  selected   @endif  >Nota debito</option>
-                    <option value = 3 @if ( old('tipo',$legajo->tipo)  == 3)  selected   @endif  >Nota de credito</option>
+                    <option value = 0 @if ( old('tipo',$legajo->tipo)  == 0)  selected   @endif  >Factura/Ticket</option>
+                    <option value = 1 @if ( old('tipo',$legajo->tipo)  == 1)  selected   @endif  >Recibo</option>
+                    <option value = 2 @if ( old('tipo',$legajo->tipo)  == 2)  selected   @endif  >Nota de débito</option>
+                    <option value = 3 @if ( old('tipo',$legajo->tipo)  == 3)  selected   @endif  >Nota de crédito</option>
                     <option value = 4 @if ( old('tipo',$legajo->tipo)  == 4)  selected   @endif  >Ticket posnet</option>
                     <option value = 5 @if ( old('tipo',$legajo->tipo)  == 5)  selected   @endif  >Transferencia Bancaria</option>
                     <option value = 6 @if ( old('tipo',$legajo->tipo)  == 6)  selected   @endif  >Otros</option>
@@ -188,42 +188,6 @@
         <!-- Form -->
       </form>
     </div>
-    <!-- invoice action  -->
-    {{-- <div class="col xl3 m4 s12">
-      <div class="card invoice-action-wrapper mb-10">
-        <div class="card-content">
-          <div class="invoice-action-btn">
-            <a class="btn indigo waves-effect waves-light display-flex align-items-center justify-content-center">
-              <i class="material-icons mr-4">check</i>
-              <span class="responsive-text">Grabar</span>
-            </a>
-          </div>
-          <div class="invoice-action-btn">
-            <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-              <span class="responsive-text">Descargar</span>
-            </a>
-          </div>
-          <div class="row invoice-action-btn">
-            <div class="col s6 preview">
-              <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                <span class="responsive-text">Preview</span>
-              </a>
-            </div>
-            <div class="col s6 save">
-              <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                <span class="responsive-text">Cancelar</span>
-              </a>
-            </div>
-          </div>
-          <div class="invoice-action-btn">
-            <a class="btn waves-effect waves-light display-flex align-items-center justify-content-center">
-              <i class="material-icons mr-3">attach_money</i>
-              <span class="responsive-text">Facturar</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div> --}}
   </div>
 </section>
 @endsection

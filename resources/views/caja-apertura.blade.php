@@ -122,42 +122,6 @@
         <!-- Form -->
       </form>
     </div>
-    <!-- invoice action  -->
-    {{-- <div class="col xl3 m4 s12">
-      <div class="card invoice-action-wrapper mb-10">
-        <div class="card-content">
-          <div class="invoice-action-btn">
-            <a class="btn indigo waves-effect waves-light display-flex align-items-center justify-content-center">
-              <i class="material-icons mr-4">check</i>
-              <span class="responsive-text">Grabar</span>
-            </a>
-          </div>
-          <div class="invoice-action-btn">
-            <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-              <span class="responsive-text">Descargar</span>
-            </a>
-          </div>
-          <div class="row invoice-action-btn">
-            <div class="col s6 preview">
-              <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                <span class="responsive-text">Preview</span>
-              </a>
-            </div>
-            <div class="col s6 save">
-              <a class="btn btn-light-indigo btn-block waves-effect waves-light">
-                <span class="responsive-text">Cancelar</span>
-              </a>
-            </div>
-          </div>
-          <div class="invoice-action-btn">
-            <a class="btn waves-effect waves-light display-flex align-items-center justify-content-center">
-              <i class="material-icons mr-3">attach_money</i>
-              <span class="responsive-text">Facturar</span>
-            </a>
-          </div>
-        </div>
-      </div>
-    </div> --}}
   </div>
 </section>
 @endsection
