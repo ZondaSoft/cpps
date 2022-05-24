@@ -61,11 +61,11 @@
             
               
             <div class="col xl3 m3 input-field">
-              <input id="numero" name="numero" type="text" placeholder="00000000" class="validate" 
+              <input id="numero" name="numero" type="text" placeholder="0000-00000000" class="validate" 
                 value="{{ old('numero',$legajo->numero) }}"
                 {{ $edicion?'':'disabled' }}
                 {{ $agregar?'enabled autofocus=""':'disabled' }}
-                maxlength="8" autocomplete='off'
+                maxlength="14" autocomplete='off'
                 required
                 data-error=".errorTxt1">
               <label for="numero">Nro. comprobante</label>
