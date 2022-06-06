@@ -135,18 +135,19 @@
                   </div>
 
 
-                  <div class="col xl2 m1 input-field">
-                    <input id="ddesde" name="ddesde" type="text" placeholder="dd/mm/aaaa" class="datepicker validate" 
+                  <div class="col xl2 m3 input-field">
+                    <input id="ddesde" name="ddesde" type="date" placeholder="dd/mm/aaaa" class=""
                       value="{{ old('ddesde',$ddesde) }}"
                       maxlength="10" autocomplete='off'
                       required
-                      data-error=".errorTxt4">
+                      data-error=".errorTxt4"
+                      >
                     <label for="ddesde">Desde fecha</label>
                     <small class="errorTxt4"></small>
                   </div>
 
-                  <div class="col xl2 m1 input-field">
-                    <input id="dhasta" name="dhasta" type="text" placeholder="dd/mm/aaaa" class="datepicker validate" 
+                  <div class="col xl2 m3 input-field">
+                    <input id="dhasta" name="dhasta" type="date" placeholder="dd/mm/aaaa" class="" 
                       value="{{ old('dhasta',$dhasta) }}"
                       maxlength="10" autocomplete='off'
                       required
@@ -183,5 +184,26 @@
 
 {{-- page scripts --}}
 @section('page-script')
-<script src="{{asset('js/scripts/page-users.js')}}"></script>
+{{-- <script src="{{asset('js/scripts/page-users.js')}}"></script> --}}
+<script src="{{asset('js/scripts/app-invoice.js')}}"></script>
+
+<script>
+  
+  $(document).ready(function(){
+    $('.datepicker').datepicker();
+  });
+
+  function dateChange1(element) {
+    alert('Click!!')
+
+    $(".datepicker").datepicker({
+      autoClose: true,
+      defaultDate: new Date(currYear,1,31),
+      // setDefaultDate: new Date(2000,01,31),
+      maxDate: new Date(currYear,12,31),
+      yearRange: [1928, currYear],
+      format: "dd/mm/yyyy"    
+    });
+  }
+</script>
 @endsection

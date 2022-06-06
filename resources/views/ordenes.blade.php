@@ -26,43 +26,61 @@
     <form method="post" action="{{ url('/home/print') }}/{{ $id_caja }}" enctype="multipart/form-data" id="formMain" name="formMain">
       {{ csrf_field() }}
       
-      <button class="btn waves-effect waves-light invoice-export border-round z-depth-4">
+      <div class="col s12">
+        <ul id="dropdown2" class="dropdown-content">
+          <li><button class="btn-flat mb-1 waves-effect waves-light mr-1" onclick="pdfexport(this)">Imprimir<span class="badge">1</span></button></li>
+          <li><button class="btn-flat mb-1 waves-effect waves-light mr-1" onclick="excel(this)">Exportar a excel<span class="badge">1</span></button></li>
+          {{-- <li><a href="#!">Exportar a excel<span class="badge">1</span></a></li> --}}
+        </ul>
+        <a class="btn dropdown-trigger waves-effect waves-light invoice-export border-round z-depth-4" href="#!" data-target="dropdown2">Imprimir<i
+            class="material-icons right">arrow_drop_down</i></a>
+      </div>
+
+      {{-- <button class="btn waves-effect waves-light invoice-export border-round z-depth-4">
         <i class="material-icons">picture_as_pdf</i>
         <span class="hide-on-small-only"><i class="fa fa-print"></i>
         </span>Imprimir
-      </button>
+      </button> --}}
+
+      {{-- <button class="btn waves-effect waves-light invoice-export border-round z-depth-4">
+        <i class="material-icons">picture_as_pdf</i>
+        <span class="hide-on-small-only"><i class="fa fa-print"></i>
+        </span>Excel
+      </button> --}}
 
       <input hidden id="id_caja" name="id_caja" value="{{ $id_caja }}" type="text">
       <input hidden id="fecha" name="fecha" value="{{ $fecha }}" type="text">
       <input hidden id="cerrada" name="cerrada" value="{{ $cerrada }}" type="text">
+
+      <!-- create agregar button-->
+      @if ($cerrada == false)
+      <div class="invoice-create-btn" style="margin-left: -5px">
+        <a href="{{asset('orden-add')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+          <i class="material-icons">add</i>
+          <span class="hide-on-small-only">Agregar</span>
+        </a>
+      </div>
+
+      <!-- create cierre de caja button-->
+      
+      <div class="invoice-create-btn" style="margin-left: 15px">
+        <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4" >  {{-- onclick="showModalBorrar()" --}}
+          <i class="material-icons">vpn_key</i>
+          <span class="hide-on-small-only">Cerrar caja</span>
+        </a>
+      </div>
+    @else
+      <div class="invoice-create-btn">
+        <a href="{{asset('orden-abrir')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+          <i class="material-icons">add</i>
+          <span class="hide-on-small-only">Abrir nueva caja</span>
+        </a>
+      </div>
+    @endif
     </form>
   </div>
   
-  <!-- create agregar button-->
-  @if ($cerrada == false)
-    <div class="invoice-create-btn">
-      <a href="{{asset('orden-add')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
-        <i class="material-icons">add</i>
-        <span class="hide-on-small-only">Agregar...</span>
-      </a>
-    </div>
-
-    <!-- create cierre de caja button-->
-    
-    <div class="invoice-create-btn" style="margin-left: 15px">
-      <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4 modal-trigger" >  {{-- onclick="showModalBorrar()" --}}
-        <i class="material-icons">vpn_key</i>
-        <span class="hide-on-small-only">Cerrar caja</span>
-      </a>
-    </div>
-  @else
-    <div class="invoice-create-btn">
-      <a href="{{asset('orden-abrir')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
-        <i class="material-icons">add</i>
-        <span class="hide-on-small-only">Abrir nueva caja</span>
-      </a>
-    </div>
-  @endif
+  
 
   <!-- <div class="filter-btn"> -->
     <!-- Dropdown Trigger -->
@@ -277,7 +295,22 @@
 @section('page-script')
 
 <script>
-  $('#modal1').modal('open');
+  //$('#modal1').modal('open');
+
+  // Salida del informe a PDF
+  function pdfexport(e) {
+    //var id_caja = document.getElementById('id_caja').value
+
+    document.getElementById('formMain').action="{{ url('/home/print/') }}";
+    
+  }
+
+  // Salida del informe a Excel
+  function excel(e) {
+
+    document.getElementById('formMain').action="{{ url('/home/excel/') }}";
+
+  }
 </script>
 
 <script src="{{asset('js/scripts/app-invoice.js')}}"></script>

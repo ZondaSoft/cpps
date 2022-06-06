@@ -32,8 +32,8 @@
       "submenu": [
         {
           "url": "conceptos-print",
-          "name": "Conceptos",
-          "i18n": "Conceptos",
+          "name": "de Conceptos",
+          "i18n": "de Conceptos",
           "slug": "eCommerce-pricing"
         }
       ]

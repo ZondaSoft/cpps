@@ -5,22 +5,30 @@
       "icon": "more_horiz"
     },
     {
-      "url": "home",
+      "url": "javascript:void(0)",
       "name": "Caja Diaria",
       "i18n": "Caja Diaria",
-      "class": "waves-effect waves-cyan",
+      "class": "collapsible-header waves-effect waves-cyan",
       "icon": "mail_outline",
       "slug": "app-email",
-      "tag": "",
-      "tagcustom": "badge   accent-2 float-right mr-2"
-    },
-    {
-      "url": "conceptos",
-      "name": "Conceptos",
-      "i18n": "Conceptos",
-      "class": "waves-effect waves-cyan",
-      "icon": "assignment",
-      "slug": "conceptos"
+      "submenu": [
+        {
+          "url": "home",
+          "name": "Visualizar caja",
+          "i18n": "Visualizar caja",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "Visualizar caja"
+        },
+        {
+          "url": "conceptos",
+          "name": "Conceptos",
+          "i18n": "Conceptos",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "eCommerce-pricing"
+        }
+      ]
     },
     {
       "url": "javascript:void(0)",
@@ -31,10 +39,11 @@
       "icon": "local_printshop",
       "submenu": [
         {
-          "url": "conceptos-print",
-          "name": "Conceptos",
-          "i18n": "Conceptos",
-          "slug": "eCommerce-pricing"
+          "url": "print-concepts",
+          "name": "de Conceptos",
+          "i18n": "de Conceptos",
+          "class": "waves-effect waves-cyan",
+          "slug": "de Conceptos"
         }
       ]
     },

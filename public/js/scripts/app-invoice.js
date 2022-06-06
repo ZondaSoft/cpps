@@ -25,7 +25,7 @@ $(document).ready(function () {
         '<"top display-flex  mb-2"<"action-filters"f><"actions action-btns display-flex align-items-center">><"clear">rt<"bottom"p>',
       language: {
         search: "",
-        searchPlaceholder: "Buscar Comprobante"
+        searchPlaceholder: "Buscar Comprobante..."
       },
       select: {
         style: "multi",

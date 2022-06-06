@@ -20,11 +20,13 @@
             <span class="flag-icon flag-icon-gb"></span>
           </a>
         </li> --}}
+        
         <li class="hide-on-med-and-down">
+          @if ($iconSearch == true)
           <a class="waves-effect waves-block waves-light" href="{{\Request::url()}}/search">
-            {{-- {{ asset('/search') }} --}}
             <i class="material-icons">search</i>
           </a>
+          @endif
         </li>
         <li class="hide-on-med-and-down">
           <a class="waves-effect waves-block waves-light toggle-fullscreen" href="javascript:void(0);">
@@ -32,9 +34,11 @@
           </a>
         </li>
         <li class="hide-on-large-only search-input-wrapper">
-          <a class="waves-effect waves-block waves-light search-button" href="javascript:search(0);">
+          @if ($iconSearch == true)
+          <a class="waves-effect waves-block waves-light search-button" href="{{\Request::url()}}/search">
             <i class="material-icons">search</i>
           </a>
+          @endif
         </li>
         <li>
           <a class="waves-effect waves-block waves-light notification-button" href="javascript:void(0);"

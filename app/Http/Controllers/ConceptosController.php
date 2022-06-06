@@ -26,6 +26,7 @@ class ConceptosController extends Controller
         $id_caja = 0;
         $nrolegajo = 0;
         $cerrada = false;
+        $iconSearch = true;
 
         if ($id == null) {
             $legajo = Cpa010::Where('codigo', '>', 0)
@@ -112,6 +113,7 @@ class ConceptosController extends Controller
             'legajo',
             'agregar',
             'edicion',
+            'iconSearch',
             'active',
             'fecha',
             'id_caja',
@@ -130,6 +132,7 @@ class ConceptosController extends Controller
         $fecha = null;
         $id_caja = 0;
         $cerrada = false;
+        $iconSearch = false;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -142,6 +145,7 @@ class ConceptosController extends Controller
         }
 
         $legajo = new Cpa010;      // find($id);     // dd($legajo);
+        $legajo->codigo = '2900';
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
@@ -152,6 +156,7 @@ class ConceptosController extends Controller
             'agregar',
             'edicion',
             'active',
+            'iconSearch',
             'fecha',
             'id_caja',
             'cerrada'
@@ -195,6 +200,7 @@ class ConceptosController extends Controller
     {
         $id_caja = 0;
         $fecha = null;
+        $iconSearch = false;
 
         if ($id == 0) {
             return redirect('/conceptos');
@@ -227,6 +233,7 @@ class ConceptosController extends Controller
             'legajo',
             'agregar',
             'edicion',
+            'iconSearch',
             'active',
             'cerrada',
             'id_caja',
@@ -325,6 +332,7 @@ class ConceptosController extends Controller
         $id_caja = 0;
         $cerrada = false;
         $fecha = null;
+        $iconSearch = false;
 
         //$legajos = Cpa010::paginate(5);
         $legajos = Cpa010::name($request->get('name'))
@@ -336,7 +344,7 @@ class ConceptosController extends Controller
 
         $name = $request->get('name');
 
-        return view('conceptos.search')->with(compact('legajos', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
+        return view('conceptos.search')->with(compact('legajos', 'iconSearch', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
 
 
@@ -351,6 +359,8 @@ class ConceptosController extends Controller
         $cerrada = false;
         $ddesde = Carbon::parse(Carbon::today())->format('d/m/Y');
         $dhasta = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $iconSearch = false;
+
         
         $legajo = Cpa010::Where('codigo', '>', 0)
                 ->orderBy('codigo')
@@ -378,12 +388,12 @@ class ConceptosController extends Controller
 
         $origen = Fza030::orderBy('fecha')->first();
         if ($origen != null) {
-            $ddesde = Carbon::parse($origen->fecha)->format('d/m/Y');
+            $ddesde = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
         }
         
         $origen = Fza030::orderBy('fecha', 'Desc')->first();
         if ($origen != null) {
-            $dhasta = Carbon::parse($origen->fecha)->format('d/m/Y');
+            $dhasta = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
         }
 
         $conceptos = Cpa010::orderBy('codigo')->get();
@@ -392,6 +402,7 @@ class ConceptosController extends Controller
             'empresa',
             'legajo',
             'conceptos',
+            'iconSearch',
             'agregar',
             'edicion',
             'active',

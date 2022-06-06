@@ -91,8 +91,8 @@
               <div class="col xl1 m1 input-field">
               </div>
 
-              <div class="col xl2 m1 input-field">
-                <input id="fecha" name="fecha" type="text" placeholder="dd/mm/aaaa" class="datepicker validate" 
+              <div class="col xl2 m3 input-field">
+                <input id="fecha" name="fecha" type="date" placeholder="dd/mm/aaaa" class="" 
                   value="{{ old('fecha',$legajo->fecha) }}"
                   {{ $edicion?'':'disabled' }}
                   {{ $agregar?'enabled autofocus=""':'disabled' }}

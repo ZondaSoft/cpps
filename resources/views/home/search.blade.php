@@ -46,6 +46,7 @@
                               <tr>
                                  <th data-field="id">Nro.</th>
                                  <th data-field="name">Fecha</th>
+                                 <th data-field="price">Importe apertura</th>
                                  <th data-field="name">Cerrada ?</th>
                                  <th data-field="price"></th>
                               </tr>
@@ -60,6 +61,11 @@
                                     <td style="height: 10px;">
                                        {{ date('d/m/Y', strtotime($legajo->fecha)) }}
                                     </td>
+
+                                    <td style="height: 10px;">
+                                       {{ $legajo->apertura }}
+                                    </td style="height: 10px;">
+
                                     <td style="height: 10px;">
                                        @if ($legajo->cerrada == 1)
                                           Si

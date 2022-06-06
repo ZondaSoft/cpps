@@ -9242,7 +9242,7 @@ var $jscomp$this = this;
     // Close when date is selected
     autoClose: false,
     // the default output format for the input field value
-    format: 'mmm dd, yyyy',
+    format: 'dd/mm/yyyy',
     // Used to create date object from current input string
     parse: null,
     // The initial date to view when first opened

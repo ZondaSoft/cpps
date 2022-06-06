@@ -63,7 +63,9 @@ Route::post('/home/edit/{id}', 'HomeController@update');
 Route::get('/home/search', 'CajaController@search')->name('home.search');
 Route::get('/home/search', 'CajaController@search')->name('home.search');
 Route::get('/home/{id?}/search/', 'CajaController@search')->name('home.search');
-Route::post('/home/print/{id}', 'CajaController@printpdf')->name('home.print');
+//Route::get('/home/print/{id}', 'CajaController@printpdf')->name('home.print');
+Route::post('/home/print/', 'CajaController@printpdf')->name('home.print');
+Route::post('/home/excel/', 'CajaController@excel')->name('home.excel');
 
 Route::get('/home/{id?}/{direction?}/search/', 'HomeController@search')->name('search');
 Route::get('/home/delete/{id}', 'HomeController@delete');
@@ -97,7 +99,7 @@ Route::get('/conceptos/{id?}/search/', 'ConceptosController@search')->name('sear
 Route::get('/conceptos/{id?}/{direction?}/search/', 'ConceptosController@search')->name('conceptos.search');
 Route::get('/conceptos/delete/{id}', 'ConceptosController@delete');
 Route::post('/conceptos/delete/{id}', 'ConceptosController@baja');
-Route::get('/conceptos-print', 'ConceptosController@print');
+Route::get('/print-concepts', 'ConceptosController@print')->name('conceptos.print');
 Route::post('/conceptos/print', 'ConceptosController@printpdf');
 Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');
 Route::get('/conceptos/map/{id}', 'ConceptosController@map');
