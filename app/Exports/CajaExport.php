@@ -118,31 +118,27 @@ class CajaExport implements FromQuery, WithHeadings, WithEvents         //FromCo
         $consulta = DB::table('fza030s')
             ->select(DB::raw('tipo,numero,fecha,cuenta,concepto,comentarios,importe'))
             ->where('id_caja', $this->id_caja)
-            ->orderBy('fecha');
+            ->orderBy('id','asc');
 
         $creditos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 1)
-            ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
 
         $debitos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 2)
-            ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
         
         $bancos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 3)
             ->orWhere('cuenta', 4)
-            ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
 
         
         $cheques = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 6)
-            ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
 

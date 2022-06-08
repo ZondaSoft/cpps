@@ -97,13 +97,13 @@
     </ul> --}}
   <!-- </div> -->
   <div class="responsive-table">
-    <table class="table invoice-data-table white border-radius-4 pt-1">
+    <table id="mainTable" class="table invoice-data-table white border-radius-4 pt-1">
       <thead>
         <tr>
           <!-- data table responsive icons -->
           <th></th>
           <!-- data table checkbox -->
-          <th>
+          <th class="sorting_asc" tabindex="0">
             <span>Tipo</span>
           </th>
           <th>
@@ -153,14 +153,15 @@
         </tr>
         @foreach ($novedades as $novedad)
         <tr>
-          <td></td>
+          <td>{{ $novedad->id }}</td>
           <td> @if ($novedad->tipo == 0) Fac @endif 
             @if ($novedad->tipo == 1) Rec @endif 
             @if ($novedad->tipo == 2) ND @endif
             @if ($novedad->tipo == 3) NC @endif
             @if ($novedad->tipo == 4) Ti @endif
             @if ($novedad->tipo == 5) Tr @endif
-            @if ($novedad->tipo == 6) Ot @endif </td>
+            @if ($novedad->tipo == 6) Ot @endif 
+          </td>
           <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
               <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="#">{{ $novedad->numero }}</a>
           </td>
@@ -182,16 +183,16 @@
           <td>
             <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
               @if ($novedad->cuenta == 0)(@endif
-              ${{ number_format($novedad->importe,2) }}
+                ${{ number_format($novedad->importe,2) }}
               @if ($novedad->cuenta == 0))@endif
             </span>
           </td>
 
           <div hidden>
-            @if ($novedad->cuenta == 0)
+            @if ($novedad->cuenta === 0)
               {{ $saldo = $saldo - $novedad->importe }}
             @endif
-            @if ($novedad->cuenta == 5)
+            @if ($novedad->cuenta === 5)
               {{ $saldo = $saldo + $novedad->importe }}
             @endif
 
@@ -296,7 +297,6 @@
 
 <script>
   //$('#modal1').modal('open');
-
   // Salida del informe a PDF
   function pdfexport(e) {
     //var id_caja = document.getElementById('id_caja').value

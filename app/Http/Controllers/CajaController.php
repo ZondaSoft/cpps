@@ -108,12 +108,12 @@ class CajaController extends Controller
         $novedades = null;
         
         $novedades = Fza030::Where('id_caja', $id_caja)
-            ->orderBy('fecha','asc')
-            ->orderBy('numero','asc')
+            ->orderBy('id','asc')
             ->paginate(20)
             ->appends(request()->query());
         
-        //->orderBy('fecha','asc')
+            // ->orderBy('fecha','asc')
+            // ->orderBy('numero','asc')
 
         $id_crud = 2;
 
@@ -138,6 +138,8 @@ class CajaController extends Controller
             // "TARJAS-INFORMES"
             //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
         }
+
+        //dd($novedades);
 
         return view('ordenes')->with(compact('novedad','apertura','id_caja','cod_nov','fecha','legajo',
             'legajoNew','iconSearch', 'agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));

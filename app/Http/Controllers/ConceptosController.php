@@ -454,18 +454,19 @@ class ConceptosController extends Controller
         //config()->set('database.connections.your_connection.strict', false);
         
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+        $desde = $request->input('ddesde');
+        $hasta = $request->input('dhasta');
+        $cerrada = $request->input('cerrada');
         $concepto1 = $request->input('concepto');
         $concepto2 = $request->input('concepto2');
         
         $novedades = Fza030::where('concepto', $concepto1)
+            ->whereBetween('fecha', [$desde, $hasta])
             ->orderBy('fecha','asc')
             ->orderBy('numero','asc')
             ->get();
             
-        $desde = $request->input('ddesde');
-        $hasta = $request->input('dhasta');
-        $cerrada = $request->input('cerrada');
-
+        
         //->join('mdl003s', function ($join) {
         //    $join->on('mdl060s.prestador', '=', 'mdl003s.id');
         //  })

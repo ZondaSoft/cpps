@@ -20,7 +20,7 @@ $(document).ready(function () {
         },
         { "orderable": false, "targets": 8 },
       ],
-      order: [2, 'asc'],
+      order: [0, 'asc'],
       dom:
         '<"top display-flex  mb-2"<"action-filters"f><"actions action-btns display-flex align-items-center">><"clear">rt<"bottom"p>',
       language: {

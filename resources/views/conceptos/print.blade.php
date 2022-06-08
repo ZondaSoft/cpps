@@ -58,11 +58,11 @@
         <div class="row">
         <div class="col s12 display-flex content-end mt-2">
           <div class="m6 s6 display-flex content-end">
-            <h5 style="margin-top: 7px;margin-bottom: 14px;">Imprimir Conceptos</h5>
+            <h5 style="margin-top: 7px;margin-bottom: 14px;onclick="excel(this)"">Imprimir Conceptos</h5>
           </div>
           <div class="col m6 s6">
-            <button class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/conceptos/print') }}" >Imprimir</button>
-            <button class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/conceptos/excel') }}/{{ $legajo->id }}" style="font-color: withe">Excel</button>
+            <button class="waves-effect waves-light btn mb-1 mr-1">Imprimir</button>
+            <button class="waves-effect waves-light red green btn mb-1 mr-1" style="font-color: withe" onclick="excel(this)">Excel</button>
           </div>
         </div>
         </div>
@@ -204,6 +204,20 @@
       yearRange: [1928, currYear],
       format: "dd/mm/yyyy"    
     });
+  }
+
+  function pdfexport(e) {
+    //var id_caja = document.getElementById('id_caja').value
+
+    document.getElementById('formMain').action="{{ url('/home/print') }}";
+    
+  }
+
+  // Salida del informe a Excel
+  function excel(e) {
+
+    document.getElementById('formMain').action="{{ url('/home/excel/') }}";
+
   }
 </script>
 @endsection
