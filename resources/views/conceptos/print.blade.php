@@ -50,24 +50,24 @@
   <div class="card">
     <div class="card-content" style="padding-top: 0px;">
       <!-- users edit account form start -->
-      <form method="post" action="{{ asset( url('/conceptos/print') ) }}" enctype="multipart/form-data">
-      
-
+      <form id="formMain" method="post" action="{{ url('/conceptos/print') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="row">
         <div class="col s12 display-flex content-end mt-2">
           <div class="m6 s6 display-flex content-end">
-            <h5 style="margin-top: 7px;margin-bottom: 14px;onclick="excel(this)"">Imprimir Conceptos</h5>
+            <h5 style="margin-top: 7px;margin-bottom: 14px;">Imprimir Conceptos</h5>
           </div>
           <div class="col m6 s6">
-            <button class="waves-effect waves-light btn mb-1 mr-1">Imprimir</button>
-            <button class="waves-effect waves-light red green btn mb-1 mr-1" style="font-color: withe" onclick="excel(this)">Excel</button>
+            <button class="waves-effect waves-light btn mb-1 mr-1" onclick="pdfexport(this)">
+              Imprimir
+            </button>
+            <button class="waves-effect waves-light red green btn mb-1 mr-1" style="font-color: withe" onclick="excel(this)">
+              Excel
+            </button>
           </div>
         </div>
         </div>
-
-      
 
         <div class="divider mb-3"></div>
 
@@ -208,16 +208,12 @@
 
   function pdfexport(e) {
     //var id_caja = document.getElementById('id_caja').value
-
-    document.getElementById('formMain').action="{{ url('/home/print') }}";
-    
+    document.getElementById('formMain').action="{{ url('/conceptos/print') }}";
   }
 
   // Salida del informe a Excel
   function excel(e) {
-
-    document.getElementById('formMain').action="{{ url('/home/excel/') }}";
-
+    document.getElementById('formMain').action="{{ url('/conceptos/excel/') }}";
   }
 </script>
 @endsection

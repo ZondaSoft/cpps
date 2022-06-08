@@ -101,11 +101,13 @@ Route::get('/conceptos/delete/{id}', 'ConceptosController@delete');
 Route::post('/conceptos/delete/{id}', 'ConceptosController@baja');
 Route::get('/print-concepts', 'ConceptosController@print')->name('conceptos.print');
 Route::post('/conceptos/print', 'ConceptosController@printpdf');
-Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');
-Route::get('/conceptos/map/{id}', 'ConceptosController@map');
-Route::get('/conceptos/importar', 'ConceptosController@importar');
-Route::get('/conceptos/{id?}/importar', 'ConceptosController@importar');
-Route::post('/conceptos/importar', 'ImportController@importlegajos');
+Route::post('/conceptos/excel', 'ConceptosController@excel');
+
+// Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');
+// Route::get('/conceptos/map/{id}', 'ConceptosController@map');
+// Route::get('/conceptos/importar', 'ConceptosController@importar');
+// Route::get('/conceptos/{id?}/importar', 'ConceptosController@importar');
+// Route::post('/conceptos/importar', 'ImportController@importlegajos');
 
 
 Route::get('/api/clientes', 'OrdenesController@getClientes')

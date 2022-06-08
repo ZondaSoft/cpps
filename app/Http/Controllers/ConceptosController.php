@@ -6,7 +6,11 @@ use App\Models\Cpa010;
 use App\Models\Fza002;
 use App\Models\Fza020;
 use App\Models\Fza030;
+Use Maatwebsite\Excel\Sheet;
 use Carbon\Carbon;
+use DB;
+use App\Exports\CajaExport;
+use App\Exports\ConceptosExport;
 use Illuminate\Http\Request;
 
 class ConceptosController extends Controller
@@ -33,8 +37,6 @@ class ConceptosController extends Controller
                 ->orderBy('codigo')
                 ->first();      // find($id);
 
-            //dd($legajo);
-
             if ($legajo != null) {
                 $id = $legajo->id;
                 $nrolegajo = $legajo->codigo;
@@ -44,7 +46,7 @@ class ConceptosController extends Controller
             if ($legajo == null) {
                 $legajo = Cpa010::Where('codigo', '>', 0)
                     ->orderBy('codigo')
-                    ->first();      // first(); // find($id);     // dd($legajo);   // $legajo = new Cpa010;
+                    ->first();
             }
 
             if ($legajo != null) {
@@ -145,7 +147,13 @@ class ConceptosController extends Controller
         }
 
         $legajo = new Cpa010;      // find($id);     // dd($legajo);
-        $legajo->codigo = '2900';
+        $legajo->codigo = '0';
+
+        $codAnterior = DB::table('cpa010s')->latest('id')->first();
+
+        if ($codAnterior != null) {
+            $legajo->codigo = $codAnterior->codigo + 1;
+        }
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
@@ -482,5 +490,17 @@ class ConceptosController extends Controller
         // Generar el PDF al navegador
 
         return $pdf->stream();
-   }
+    }
+
+
+    public function excel(Request $request)
+    {
+        $desde = $request->input('ddesde');
+        $hasta = $request->input('dhasta');
+        $cerrada = $request->input('cerrada');
+        $concepto1 = $request->input('concepto');
+        $concepto2 = $request->input('concepto2');
+
+        return \Excel::download(new ConceptosExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
+    }
 }

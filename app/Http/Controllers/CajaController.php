@@ -787,8 +787,6 @@ class CajaController extends Controller
     }
 
 
-
-
     public function excel(Request $request)
     {
         //$pdf = \App::make('dompdf.wrapper');
