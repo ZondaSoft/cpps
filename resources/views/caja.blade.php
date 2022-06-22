@@ -23,7 +23,7 @@
   <!-- create invoice button-->
   <!-- Options and filter dropdown button-->
   <div class="invoice-filter-action mr-3">
-    <form method="post" action="{{ url('/home/print') }}/{{ $id_caja }}" enctype="multipart/form-data" id="formMain" name="formMain">
+    <form method="post" action="{{ url('/cajas/print') }}/{{ $id_caja }}" enctype="multipart/form-data" id="formMain" name="formMain">
       {{ csrf_field() }}
       
       <div class="col s12">
@@ -299,16 +299,16 @@
   //$('#modal1').modal('open');
   // Salida del informe a PDF
   function pdfexport(e) {
-    //var id_caja = document.getElementById('id_caja').value
+    var id_caja = document.getElementById('id_caja').value
 
-    document.getElementById('formMain').action="{{ url('/home/print/') }}";
+    document.getElementById('formMain').action="{{ url('/cajas/print/') }}";
     
   }
 
   // Salida del informe a Excel
   function excel(e) {
 
-    document.getElementById('formMain').action="{{ url('/home/excel/') }}";
+    document.getElementById('formMain').action="{{ url('/cajas/excel/') }}";
 
   }
 </script>

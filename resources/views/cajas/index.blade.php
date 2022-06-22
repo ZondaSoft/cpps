@@ -51,9 +51,9 @@
     <div class="card-content" style="padding-top: 0px;">
       <!-- users edit account form start -->
       @if($agregar == true)
-      <form method="post" action="{{ asset( url('/home/add') ) }}" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/cajas/add') ) }}" enctype="multipart/form-data">
       @else
-      <form method="post" action="{{ asset( url('/home/edit/'.$legajo->id) ) }}" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/cajas/edit/'.$legajo->id) ) }}" enctype="multipart/form-data">
       @endif
 
         {{ csrf_field() }}
@@ -69,14 +69,14 @@
                 <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
                   Guardar cambios</button>
                 
-                <a href="{{ asset( url('/home') ) }}" class="btn btn-labeled btn-danger mb-2">
+                <a href="{{ asset( url('/cajas') ) }}" class="btn btn-labeled btn-danger mb-2">
                     <span class="btn-label"><i class="fa fa-times"></i>
                     </span>Cancelar
                 </a>
               </div>
             @else
-              <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/home/add') }}" >Agregar</a>
-              <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/home/edit') }}/{{ $legajo->id }}" style="font-color: withe">Editar</a>
+              <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/cajas/add') }}" >Agregar</a>
+              <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/cajas/edit') }}/{{ $legajo->id }}" style="font-color: withe">Editar</a>
               <a title="Dar de Baja al cliente actual" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
                   <em class="icon-trash" style="color: white"></em> &nbsp;Baja cliente
               </a>
@@ -290,7 +290,7 @@
                 <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
                   Guardar cambios</button>
                 
-                <a href="{{ asset( url('/home') ) }}" class="btn btn-labeled btn-danger mb-2">
+                <a href="{{ asset( url('/cajas') ) }}" class="btn btn-labeled btn-danger mb-2">
                     <span class="btn-label"><i class="fa fa-times"></i>
                     </span>Cancelar
                 </a>

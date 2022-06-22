@@ -18,9 +18,9 @@
     <div class="col xl12 m12 s12">
       <!-- Form -->
       @if($agregar == true)
-      <form method="post" action="{{ asset( url('/orden-abrir') ) }}" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/caja-abrir') ) }}" enctype="multipart/form-data">
       @else
-      <form method="post" action="{{ asset( url('/ordenes/editapertura/'.$legajo->id) ) }}" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/cajas/editapertura/'.$legajo->id) ) }}" enctype="multipart/form-data">
       @endif
         
       {{ csrf_field() }}

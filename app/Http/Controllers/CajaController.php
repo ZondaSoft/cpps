@@ -37,7 +37,7 @@ class CajaController extends Controller
         $legajoReadOnly = '';
         $agregar = true;
         $edicion = true;
-        $active = 1;
+        $active = 50;
         $anterior = 0;
         $cuenta = 0;
         $id_caja = 0;
@@ -63,15 +63,15 @@ class CajaController extends Controller
                 }
             }
         } else {
-            //------------------------------------------------------------------------
-            // Controlo si hay caja abierta y voy a ella sino voy a apertura de caja
-            //------------------------------------------------------------------------
+            //-----------------------------------------------------------------------------------
+            // Controlo si hay caja abierta y voy a ella sino voy a la ultima caja encontrada
+            //------------------------------------------------------------------------------------
             $apertura = Fza020::WhereNull('cerrada')->first();
 
             if ($apertura == null) {
-                // Busco ultima caja cerrada
-                $ultimaCaja = Fza020::orderBy('id','asc')->first();
-                $apertura == $ultimaCaja;
+                // Busco ultima caja
+                $ultimaCaja = Fza020::orderBy('id','desc')->first();
+                $apertura = $ultimaCaja;
 
                 // No hay cajas anteriores ? ABRO 1ER CAJA
                 if ($apertura == null) {
@@ -87,6 +87,10 @@ class CajaController extends Controller
 
                     return view('caja-apertura')->with(compact('novedad','apertura','id_caja','fecha','cerrada','cuenta',
                         'legajoNew','legajo','iconSearch','agregar','edicion','active'));            
+                } else {
+                    $id_caja = $apertura->id;
+                    $fecha = $apertura->fecha;
+                    $cerrada = $apertura->cerrada;
                 }
         
             } else {
@@ -97,10 +101,9 @@ class CajaController extends Controller
             }
         }
 
-
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 26;
+        $active = 50;
         $novedad = null;
         $order = null;
         $fecha_orig = null;
@@ -141,7 +144,7 @@ class CajaController extends Controller
 
         //dd($novedades);
 
-        return view('ordenes')->with(compact('novedad','apertura','id_caja','cod_nov','fecha','legajo',
+        return view('caja')->with(compact('novedad','apertura','id_caja','cod_nov','fecha','legajo',
             'legajoNew','iconSearch', 'agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
     }
 
@@ -154,7 +157,7 @@ class CajaController extends Controller
         //------------------------------------------------------------------------
         $agregar = true;
         $edicion = false;
-        $active = true;
+        $active = 50;
         $cerrada = false;
         $legajoNew = null;
         $cuenta = null;
@@ -186,15 +189,21 @@ class CajaController extends Controller
             $id_caja = $cajaAbierta->id;
             $fecha = $cajaAbierta->fecha;
 
-            return redirect('/home/' . $id_caja)->with('success', 'El comprobante fue creado con éxito');
+            return redirect('/cajas/' . $id_caja)->with('success', 'El comprobante fue creado con éxito');
         }
 
-        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+        return redirect('/cajas/')->with('success', 'El comprobante fue creado con éxito');
     }
 
 
     public function add()
     {
+        $novedad = null;
+        $cuenta = 0;
+        $legajoNew = [];
+        $agregar = false;
+        $edicion = true;
+        $active = 1;
         $fechaActual = null;
         $id_caja = 0;
         $fecha = null;
@@ -230,7 +239,7 @@ class CajaController extends Controller
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Modificar, Borrar
         $agregar = True;
-        $active = 1;
+        $active = 50;
 
         $conceptos = Cpa010::orderBy('detalle')->get();
         
@@ -289,23 +298,24 @@ class CajaController extends Controller
 
         $comprobante->save();   // INSERT INTO - SQL
 
-        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+        return redirect('/cajas/')->with('success', 'El comprobante fue creado con éxito');
     }
 
 
     public function edit($id = 0)
     {
         if ($id == 0) {
-            return redirect('/home');
+            return redirect('/cajas');
         }
 
         $fecha = null;
         $id_caja = 0;
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 1;
+        $active = 50;
         $cerrada = false;
         $iconSearch = false;
+        $novedad = null;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -329,7 +339,7 @@ class CajaController extends Controller
         
         $legajo = Fza030::find($id);
         if ($legajo == null) {
-            return redirect('/home');
+            return redirect('/cajas');
         }
 
         
@@ -382,7 +392,7 @@ class CajaController extends Controller
 
         // dd($legajo->cod_centro);
 
-        return redirect('/home/' . $id);
+        return redirect('/cajas/' . $id);
     }
 
 
@@ -397,7 +407,7 @@ class CajaController extends Controller
         $id_caja = 0;
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 1;
+        $active = 50;
         $cerrada = false;
         $iconSearch = true;
 
@@ -448,7 +458,7 @@ class CajaController extends Controller
 
         $legajo->delete();
 
-        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+        return redirect('/cajas/')->with('success', 'El comprobante fue creado con éxito');
     }
 
 
@@ -481,7 +491,7 @@ class CajaController extends Controller
 
         $comprobante->save();   // INSERT INTO - SQL
 
-        return redirect('/home/')->with('success', 'Apertura éxitosa');
+        return redirect('/cajas/')->with('success', 'Apertura éxitosa');
     }
 
 
@@ -551,7 +561,7 @@ class CajaController extends Controller
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
-        $active = 1;
+        $active = 50;
 
         return view('caja-cerrar')->with(compact(
             'legajo',
@@ -592,7 +602,7 @@ class CajaController extends Controller
 
         // Si no hay aperturas redirijo a apertura
         if ($apertura == null) {
-            return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+            return redirect('/cajas/')->with('success', 'El comprobante fue creado con éxito');
 
         } else {
 
@@ -614,7 +624,7 @@ class CajaController extends Controller
         
         $apertura->update($request->only('cierre', 'tarjetaDebito', 'cerrada'));
 
-        return redirect('/home/')->with('success', 'El comprobante fue creado con éxito');
+        return redirect('/cajas/')->with('success', 'El comprobante fue creado con éxito');
     }
 
 
@@ -622,7 +632,7 @@ class CajaController extends Controller
 
     public function search(Request $request)
     {
-        $active = 1;
+        $active = 50;
         $id_caja = 0;
         $cerrada = false;
         $fecha = null;
@@ -656,7 +666,7 @@ class CajaController extends Controller
         $novedad = null;
         $agregar = true;
         $edicion = true;
-        $active = 1;
+        $active = 50;
         $anterior = 0;
         $cuenta = 0;
         $id_caja = 0;
@@ -708,10 +718,9 @@ class CajaController extends Controller
             }
         }
 
-
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 26;
+        $active = 50;
         $novedad = null;
         $order = null;
         $fecha_orig = null;
@@ -732,12 +741,16 @@ class CajaController extends Controller
         //config()->set('database.connections.your_connection.strict', false);
         
         //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+
         $novedades = Fza030::Where('id_caja', $id_caja)     // Fza030::search($codsector, $cod_nov, $fecha, $order)
-            ->Where('cuenta', 0)
-            ->orWhere('cuenta', 5)
+            ->Where('cuenta', [0, 5])
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
+        
+            //->orWhere('cuenta', 5)
+            
+            //dd($novedades, $id_caja);
 
         $creditos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 1)

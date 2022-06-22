@@ -1,35 +1,22 @@
 <?php
 
 namespace App\Http\Controllers;
-use App\Models\Datoempr;
-use App\Models\Cpa010;
-use App\Models\Fza002;
-use App\Models\Fza020;
-use App\Models\Fza030;
-Use Maatwebsite\Excel\Sheet;
-use Carbon\Carbon;
-use DB;
-use App\Exports\CajaExport;
-use App\Exports\ConceptosExport;
+
 use Illuminate\Http\Request;
 
-class ConceptosController extends Controller
+class ObrasAdminController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
 
-    
     public function index($id = null, $direction = null)
     {
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 51;
         $fecha = null;
-        $id_caja = 0;
-        $nrolegajo = 0;
-        $cerrada = false;
         $iconSearch = true;
 
         if ($id == null) {

@@ -118,7 +118,7 @@ class HomeController extends Controller
 
         //dd($apertura);
 
-        return view('ordenes')->with(compact('novedad','apertura','dni','cod_nov','fecha','legajo',
+        return view('home')->with(compact('novedad','apertura','dni','cod_nov','fecha','legajo',
             'legajoNew','agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5'));
     }
 

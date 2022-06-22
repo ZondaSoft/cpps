@@ -9,7 +9,20 @@
           data-search="template-list">
         <ul class="search-list collection display-none"></ul> --}}
         <div class="white-text">
-        <h5 style="color: #FFFFFF">Caja Diaria @if ($cerrada == true or $cerrada == 1) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
+        <h5 style="color: #FFFFFF">
+          @if ($active == 35)
+            Obras Sociales -> Carga de Ordenes
+          @endif
+          @if ($active == 50)
+            Caja Diaria @if ($cerrada == true or $cerrada == 1) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
+          @endif  
+          @if ($active == 51)
+            Conceptos de caja
+          @endif
+          @if ($active == 52)
+            Informes de caja
+          @endif
+          <small>({{ $active }})</small>
         </div>
 
       </div>
@@ -162,7 +175,7 @@
           </a>
         </li>
         <li>
-          <a class="grey-text text-darken-1" href="{{asset('user-login')}}">
+          <a class="grey-text text-darken-1" href="{{asset('/')}}">
             <i class="material-icons">keyboard_tab</i>
             Cerrar
           </a>

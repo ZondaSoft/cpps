@@ -40,85 +40,6 @@ class OrdenesController extends Controller
             \Session::put('fecha_add','');
         }
 
-        //-------------------------------------------------------------------------
-        //    Si se paso la vble dni usada en el nro. de legajo en los modales
-        //-------------------------------------------------------------------------
-        if ($request->has('dni')) {
-            $dni = $request->query('dni');
-
-            $legajo = Vta001::where('codigo',$dni)->first();
-
-			if ($legajo != null) {
-                $legajoNew->detalle = $legajo->detalle . ' ' . $legajo->nom_com;
-                //$legajoNew->sector = $legajo->codsector;
-            }
-
-            $legajoNew->legajo = $dni;
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $novedad = (\Session::get('cod_nov_new'));
-
-            if ($novedad != null) {
-                $legajoNew->cod_nov = $novedad;
-            }
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $fecha = (\Session::get('fecha_add'));
-
-            if ($fecha != null) {
-                $legajoNew->fecha = $fecha;
-            } else {
-                // Si la fecha no fue traida por la sesion carho fecha de hoy
-                $legajoNew->fecha = Carbon::Now()->format('d/m/Y');
-            }
-
-            // Traigo datos almacenados en la sesion (ApyNom)
-            //$apynom_object = (\Session::get('legajo_name_add'));
-            //$apynom = $apynom_object[0];
-
-            //if ($apynom_object != null) {
-            //    $legajoNew->detalle = $apynom;
-            //}
-
-            // Creo la session con el helper
-            \Session::put('legajo_add',$legajoNew->legajo);
-            \Session::put('legajo_name_add',$legajoNew->detalle);
-        } else {
-            $legajo = new Vta001;
-			$legajo->id = 0;
-			$legajo->detalle = '';
-        }
-
-        if ($request->has('cod_nov2')) {
-            $cod_nov = $request->query('cod_nov2');
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $dni = (\Session::get('legajo_add'));
-
-            if ($dni != null) {
-                $legajoNew->legajo = $dni;
-            }
-
-            // Traigo datos almacenados en la sesion (ApyNom)
-            $apynom = (\Session::get('legajo_name_add'));
-
-            if ($apynom != null) {
-                $legajoNew->detalle = $apynom;
-            }
-
-            // Traigo datos almacenados en la sesion (Nro.legajo)
-            $fecha = (\Session::get('fecha_add'));
-
-            if ($fecha != null) {
-                $legajoNew->fecha = $fecha;
-            }
-
-            // Creo la session con el helper
-            \Session::put('cod_nov_new',$legajoNew->cod_nov);
-            \Session::put('cod_nov_name_new',$legajoNew->CodNovName);
-        }
-
-
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 26;
@@ -142,114 +63,7 @@ class OrdenesController extends Controller
         //$legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
         //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
 
-        if ($periodo != null) {
-            $periodo2 = substr($periodo->periodo,0,4) . substr($periodo->periodo,5,2);
-            
-            /*----------------------------------------------------*/
-            /*                Carga de filtros
-            /*----------------------------------------------------*/
-            if ($request->has('dni2') or $request->has('cod_nov2') or $request->has('fecha5') or $request->has('cliente')) {
-                $dni = $request->query('dni2');
-				$cod_nov = $request->query('cod_nov2');
-                $fecha_orig = $request->query('fecha5');
-                $order = $request->query('order');
-
-				if ($legajo == null) {
-					$legajo = Vta001::where('codigo',$dni)->first();
-				} else {
-					if ($legajo->id == 0) {
-						$legajo = Vta001::where('codigo',$dni)->first();
-
-						if ($legajo == null) {
-							$legajo = new Vta001;
-							$legajo->id = 0;
-							$legajo->detalle = '';
-						}
-					}
-				}
-
-                if ($fecha_orig != "") {
-                    $date = str_replace('/', '-', $fecha_orig);
-                    $fecha = Carbon::createFromFormat("d-m-Y", $date)->toDateString();
-                }
-
-                // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
-                //config()->set('database.connections.your_connection.strict', false);
-
-                if ($order == 2 or $order == null) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('numero','asc')
-                      ->paginate(9)
-                      ->appends(request()->query());
-
-                      //->orderBy('fecha','asc')
-                      
-                } elseif ($order == 1 or $order == 0) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','desc')
-                      ->paginate(9)
-                      ->appends(request()->query());
-
-                      //->orderBy('fecha','desc')
-
-                } elseif ($order == 3) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','asc')
-                      ->paginate(9)
-                      ->appends(request()->query());
-
-                      //->orderBy('fecha','asc')
-                      
-                } elseif ($order == 4) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','desc')
-                      ->paginate(9)
-                      ->appends(request()->query());
-
-                      //->orderBy('fecha','desc')
-                      
-                } elseif ($order == 9) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->orderBy('cliente','asc')
-                      ->paginate(9)
-                      ->appends(request()->query());
-                } elseif ($order == 10) {
-                  $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                      ->paginate(9)
-                      ->appends(request()->query());
-                }
-
-                $fecha = $fecha_orig;
-
-                $novedades->periodo = $periodo->periodo;
-                
-            } else {
-                //-----------------------------------------------------------
-                //       CONTROL Y FILTRO SEGUN PERMISO DE USUARIO
-                //-----------------------------------------------------------
-                //if (auth()->user()->rol == "CARGA-TARJA-INFORMES") {
-                //} else {
-                    
-                    // Sin filtros -> levanto todo el periodo - dax
-                    // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
-                    //config()->set('database.connections.mysql.strict', false);
-                    
-                    $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
-                        ->orderBy('ciente','asc')
-                        ->paginate(9)
-                        ->appends(request()->query());
-
-                        //->orderBy('fecha','asc')
-                //}
-            }
-
-        } else  {
-            // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
-            //config()->set('database.connections.your_connection.strict', false);
-            
-            $periodo2 = "";
-
-            //$novedades = Tal030::orderBy('fecha')->where('id',0)->paginate(9);
+        //$novedades = Tal030::orderBy('fecha')->where('id',0)->paginate(9);
             $novedades = Tal030::search($dni, $codsector, $cod_nov, $fecha, $order)
                       ->orderBy('cliente','asc')
                       ->paginate(9)
@@ -258,8 +72,7 @@ class OrdenesController extends Controller
             //->orderBy('fecha','asc')
 
             $novedades->periodo = "  /    ";
-        }
-
+        
         $id_crud = 2;
 
         // Combos de tablas anexas              //$legajos   = Vta001::orderBy('codigo')->Where('codigo','>',0)->get();
@@ -287,7 +100,7 @@ class OrdenesController extends Controller
         //dd(session()->pull('origen_novedad'));
         \Session::put('origen_novedad',2);
         
-        return view('ordenes')->with(compact('novedad','dni','cod_nov','fecha','legajo',
+        return view('obras.ordenes')->with(compact('novedad','dni','cod_nov','fecha','legajo',
             'legajoNew','agregar','edicion','active','novedades','periodo','periodo2','legajos', 'order','id_crud', 'legajoReadOnly','fecha5'));
     }
 

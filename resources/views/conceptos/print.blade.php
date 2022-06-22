@@ -56,7 +56,7 @@
         <div class="row">
         <div class="col s12 display-flex content-end mt-2">
           <div class="m6 s6 display-flex content-end">
-            <h5 style="margin-top: 7px;margin-bottom: 14px;">Imprimir Conceptos</h5>
+            <h5 style="margin-top: 7px;margin-bottom: 14px;">Informe por Conceptos</h5>
           </div>
           <div class="col m6 s6">
             <button class="waves-effect waves-light btn mb-1 mr-1" onclick="pdfexport(this)">

@@ -1,5 +1,11 @@
 <?php
 return [
+    "Profesionales"=> "Profesionales",
+    "Configuración"=> "Configuración",
+    "Obras Sociales"=> "Obras Sociales",
+    "Planes de Obras Sociales"=> "Planes de Obras Sociales",
+    "Carga de Ordenes"=> "Carga de Ordenes",
+    "Facturación a O.S."=> "Facturación a O.S.",
     "Caja Diaria"=> "Caja Diaria",
     "Proveedores"=> "Proveedores",
     "Clientes"=> "Clientes",

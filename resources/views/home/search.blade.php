@@ -21,7 +21,7 @@
             
             <h4 class="card-title">Buscar cajas</h4>
 
-            <form method="get" action="{{ asset( url('home/search') ) }}" enctype="multipart/form-data" class="form-group mb-2">
+            <form method="get" action="{{ asset( url('cajas/search') ) }}" enctype="multipart/form-data" class="form-group mb-2">
 
                <!-- <input class="form-control mb-2" type="text" placeholder="Texto a buscar..." autofocus=""> -->
                <input id="name" name="name" type="text" placeholder="Texto a buscar..." class="form-control mb-1" 
@@ -72,7 +72,7 @@
                                        @endif
                                     </td>
                                     <td style="height: 10px;">
-                                       <a class="mb-0 btn waves-effect waves-light cyan" href="\home\{{ $legajo->id }}">Seleccionar</a>
+                                       <a class="mb-0 btn waves-effect waves-light cyan" href="\cajas\{{ $legajo->id }}">Seleccionar</a>
                                     </td>
                                  </tr>
                               @endforeach

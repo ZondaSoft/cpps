@@ -54,7 +54,7 @@
               </div>
 
               <div class="col m2 s2 save">
-                <a class="btn btn-light-indigo btn-block waves-effect waves-light" href="{{ asset('/home') }}">
+                <a class="btn btn-light-indigo btn-block waves-effect waves-light" href="{{ asset('/cajas') }}">
                   <span class="responsive-text">Cancelar</span>
                 </a>
               </div>

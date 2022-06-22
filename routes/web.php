@@ -32,7 +32,7 @@ use App\Http\Controllers\ChartController;
 */
 
 Route::get('/', function () {
-    //Auth::logout();
+    Auth::logout();
     return view('auth.login');	// view('welcome');
 });
 
@@ -51,27 +51,79 @@ Route::get('/', function () {
 
 require __DIR__.'/auth.php';
 
+//--------------------------------------
+//              OOSS
+//--------------------------------------
 Route::get('/home/{id?}/{direction?}', 'CajaController@index')
     ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
     ->name('home');
-Route::get('/home/add', 'HomeController@add')
+Route::get('/home/add', 'CajaController@add')
     ->name('home.add');
-Route::post('/home/add', 'HomeController@store');
-Route::get('/home/edit/{id?}', 'HomeController@edit')->name('home.edit')->where('id', '[0-9]+');
-Route::post('/home/edit/{id}', 'HomeController@update');
+Route::post('/home/add', 'CajaController@store');
+Route::get('/home/edit/{id?}', 'CajaController@edit')->name('home.edit')->where('id', '[0-9]+');
+Route::post('/home/edit/{id}', 'CajaController@update');
+Route::get('/home/search', 'CajaController@search')->name('obras.search');
 
-Route::get('/home/search', 'CajaController@search')->name('home.search');
-Route::get('/home/search', 'CajaController@search')->name('home.search');
-Route::get('/home/{id?}/search/', 'CajaController@search')->name('home.search');
-//Route::get('/home/print/{id}', 'CajaController@printpdf')->name('home.print');
-Route::post('/home/print/', 'CajaController@printpdf')->name('home.print');
-Route::post('/home/excel/', 'CajaController@excel')->name('home.excel');
+Route::get('/obras/search', 'CajaController@search')->name('obras.search');
+Route::get('/obras/{id?}/search/', 'CajaController@search')->name('obras.search');
+Route::get('/obras/{id?}/{direction?}/search/', 'CajaController@search')->name('search');
 
-Route::get('/home/{id?}/{direction?}/search/', 'HomeController@search')->name('search');
-Route::get('/home/delete/{id}', 'HomeController@delete');
-Route::post('/home/delete/{id}', 'HomeController@baja');
+//Route::get('/obras/print/{id}', 'CajaController@printpdf')->name('obras.print');
+Route::post('/obras/print/', 'CajaController@printpdf')->name('obras.print');
+Route::post('/obras/excel/', 'CajaController@excel')->name('obras.excel');
+Route::get('/obras/delete/{id}', 'CajaController@delete');
+Route::post('/obras/delete/{id}', 'CajaController@baja');
+
+//--------------------------------------
+//              OOSS admin
+//--------------------------------------
+Route::get('/obras-admin/{id?}/{direction?}', 'ObrasAdminController@index')
+    ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
+    ->name('obras-admin');
+Route::get('/obras-admin/add', 'ObrasAdminController@add')
+    ->name('obras-admin.add');
+Route::post('/obras-admin/add', 'ObrasAdminController@store');
+Route::get('/obras-admin/edit/{id?}', 'ObrasAdminController@edit')->name('obras-admin.edit')->where('id', '[0-9]+');
+Route::post('/obras-admin/edit/{id}', 'ObrasAdminController@update');
+
+Route::get('/obras-admin/search', 'ObrasAdminController@search')->name('obras-admin.search');
+Route::get('/obras-admin/search', 'ObrasAdminController@search')->name('obras-admin.search');
+Route::get('/obras-admin/{id?}/search/', 'ObrasAdminController@search')->name('obras-admin.search');
+//Route::get('/obras-admin/print/{id}', 'ObrasAdminController@printpdf')->name('obras-admin.print');
+Route::post('/obras-admin/print/', 'ObrasAdminController@printpdf')->name('obras-admin.print');
+Route::post('/obras-admin/excel/', 'ObrasAdminController@excel')->name('obras-admin.excel');
+
+Route::get('/obras-admin/{id?}/{direction?}/search/', 'ObrasAdminController@search')->name('search');
+Route::get('/obras-admin/delete/{id}', 'ObrasAdminController@delete');
+Route::post('/obras-admin/delete/{id}', 'ObrasAdminController@baja');
 
 
+//-------------------------------------------
+//                Cajas
+//-------------------------------------------
+Route::get('/cajas/{id?}/{direction?}', 'CajaController@index')
+    ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
+    ->name('cajas');
+Route::get('/cajas/add', 'HomeController@add')
+    ->name('cajas.add');
+Route::post('/cajas/add', 'HomeController@store');
+Route::get('/cajas/edit/{id?}', 'HomeController@edit')->name('cajas.edit')->where('id', '[0-9]+');
+Route::post('/cajas/edit/{id}', 'HomeController@update');
+
+Route::get('/cajas/search', 'CajaController@search')->name('cajas.search');
+Route::get('/cajas/search', 'CajaController@search')->name('cajas.search');
+Route::get('/cajas/{id?}/search/', 'CajaController@search')->name('cajas.search');
+//Route::get('/cajas/print/{id}', 'CajaController@printpdf')->name('cajas.print');
+Route::post('/cajas/print/', 'CajaController@printpdf')->name('cajas.print');
+Route::post('/cajas/excel/', 'CajaController@excel')->name('cajas.excel');
+
+Route::get('/cajas/{id?}/{direction?}/search/', 'CajaController@search')->name('search');
+Route::get('/cajas/delete/{id}', 'HomeController@delete');
+Route::post('/cajas/delete/{id}', 'HomeController@baja');
+
+//-------------------------------------
+//         Comprobantes de cajas
+//-------------------------------------
 Route::get('/orden-add', 'CajaController@add')->name('orden.add');
 Route::post('/orden-add', 'CajaController@store');
 Route::get('/orden-add/edit/{id}', 'CajaController@edit')->name('orden.edit');

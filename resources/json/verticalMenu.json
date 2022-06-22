@@ -5,6 +5,66 @@
       "icon": "more_horiz"
     },
     {
+      "url": "/profesionales",
+      "name": "Profesionales",
+      "i18n": "Profesionales",
+      "class": "waves-effect waves-cyan",
+      "icon": "accessibility",
+      "slug": "app-email"
+    },
+    {
+      "url": "javascript:void(0)",
+      "name": "Configuración",
+      "i18n": "Configuración",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "icon": "settings",
+      "slug": "app-email",
+      "submenu": [
+        {
+          "url": "/obras-admin",
+          "name": "Obras Sociales",
+          "i18n": "Obras Sociales",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "Obras Sociales"
+        },
+        {
+          "url": "home",
+          "name": "Planes de Obras Sociales",
+          "i18n": "Planes de Obras Sociales",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "Planes de Obras Sociales"
+        }
+      ]
+    },
+    {
+      "url": "javascript:void(0)",
+      "name": "Obras Sociales",
+      "i18n": "Obras Sociales",
+      "class": "collapsible-header waves-effect waves-cyan",
+      "icon": "computer",
+      "slug": "app-email",
+      "submenu": [
+        {
+          "url": "home",
+          "name": "Carga de Ordenes",
+          "i18n": "Carga de Ordenes",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "Carga de Ordenes"
+        },
+        {
+          "url": "facturacion",
+          "name": "Facturación a O.S.",
+          "i18n": "Facturación a O.S.",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "eCommerce-pricing"
+        }
+      ]
+    },
+    {
       "url": "javascript:void(0)",
       "name": "Caja Diaria",
       "i18n": "Caja Diaria",
@@ -13,7 +73,7 @@
       "slug": "app-email",
       "submenu": [
         {
-          "url": "home",
+          "url": "cajas",
           "name": "Visualizar caja",
           "i18n": "Visualizar caja",
           "class": "waves-effect waves-cyan",
