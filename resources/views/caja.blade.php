@@ -55,7 +55,7 @@
       <!-- create agregar button-->
       @if ($cerrada == false)
       <div class="invoice-create-btn" style="margin-left: -5px">
-        <a href="{{asset('orden-add')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+        <a href="{{asset('orden-add')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
           <i class="material-icons">add</i>
           <span class="hide-on-small-only">Agregar</span>
         </a>

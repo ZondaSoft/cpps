@@ -196,7 +196,7 @@ class CajaController extends Controller
     }
 
 
-    public function add()
+    public function add(Request $request, $id_caja = null)
     {
         $novedad = null;
         $cuenta = 0;
@@ -205,13 +205,17 @@ class CajaController extends Controller
         $edicion = true;
         $active = 1;
         $fechaActual = null;
-        $id_caja = 0;
         $fecha = null;
         $cerrada = false;
         $iconSearch = false;
-
+        
         // 1ro buscamos la apertura de la caja actual
-        $apertura = Fza020::whereNull('cerrada')->first();
+        if ($id_caja == null) {
+            $apertura = Fza020::whereNull('cerrada')->first();
+        } else {
+            
+            $apertura = Fza020::where('id', $id_caja)->first();
+        }
 
         // Si no hay aperturas redirijo a apertura
         if ($apertura == null) {
@@ -219,9 +223,10 @@ class CajaController extends Controller
             $legajo->fecha = Carbon::Now()->format('d/m/Y');
             $legajo->apertura = 0.00;
             $legajo->cierre = 0.00;
-
+            
             return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
                 'legajoNew','legajo','agregar','edicion','active','iconSearch'));
+            
         } else {
 
             $fechaActual = $apertura->fecha;
@@ -507,8 +512,15 @@ class CajaController extends Controller
         $bancarios = 0;
         $cheques = 0;
         $fecha = null;
+        $agregar = True;
+        $edicion = True;
+        $active = 1;
+        $iconSearch = False;
         $cerrada = false;
         $iconSearch = false;
+        $novedad = [];
+        $cuenta = 0;
+        $legajoNew = [];
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -521,7 +533,7 @@ class CajaController extends Controller
             $legajo->cierre = 0.00;
 
             return view('caja-apertura')->with(compact('novedad','fecha','cuenta',
-                'legajoNew','legajo','agregar','edicion','active'));
+                'legajoNew','legajo','agregar','edicion','iconSearch','active'));
         } else {
 
             $fechaActual = $apertura->fecha;
@@ -747,11 +759,11 @@ class CajaController extends Controller
             ->orderBy('fecha','asc')
             ->orderBy('id','asc')
             ->get();
-        
+            
             //->orWhere('cuenta', 5)
             
             //dd($novedades, $id_caja);
-
+            
         $creditos = Fza030::Where('id_caja', $id_caja)
             ->where('cuenta', 1)
             ->orderBy('fecha','asc')

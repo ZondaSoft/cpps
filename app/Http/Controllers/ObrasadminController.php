@@ -4,24 +4,36 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-class ObrasAdminController extends Controller
+use App\Models\Datoempr;
+use App\Models\Vta001;
+use App\Models\Fza002;
+use App\Models\Fza030;  // Movimientos
+use App\Models\Fza020;  // Head de movimientos
+use App\Models\Cpps01;  // Profesionals
+use Carbon\Carbon;
+use DB;
+
+class ObrasadminController extends Controller
 {
     public function __construct()
     {
         $this->middleware('auth');
     }
-
+    
     public function index($id = null, $direction = null)
     {
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 51;
+        $active = 10;
         $fecha = null;
+        $id_caja = 0;
+        $nrolegajo = 0;
+        $cerrada = false;
         $iconSearch = true;
 
         if ($id == null) {
-            $legajo = Cpa010::Where('codigo', '>', 0)
-                ->orderBy('codigo')
+            $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                ->orderBy('mat_prov_cole')
                 ->first();      // find($id);
 
             if ($legajo != null) {
@@ -29,10 +41,10 @@ class ObrasAdminController extends Controller
                 $nrolegajo = $legajo->codigo;
             }
         } else {
-            $legajo = Cpa010::find($id);
+            $legajo = Cpps01::find($id);
             if ($legajo == null) {
-                $legajo = Cpa010::Where('codigo', '>', 0)
-                    ->orderBy('codigo')
+                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                    ->orderBy('mat_prov_cole')
                     ->first();
             }
 
@@ -49,39 +61,39 @@ class ObrasAdminController extends Controller
 
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
-            $legajo = new Cpa010;
+            $legajo = new Cpps01;
 
         // Si la var. $direction muestra que el cursor s    e mueve (-1)
         if ($direction == -1) {
-            $legajo = Cpa010::where('codigo', '<', $nrolegajo)
-                ->Where('codigo', '>', 0)
+            $legajo = Cpps01::where('codigo', '<', $nrolegajo)
+                ->Where('mat_prov_cole', '>', 0)
                 ->orderBy('codigo', 'desc')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpa010::Where('codigo', '>', 0)
-                    ->orderBy('codigo')
+                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                    ->orderBy('mat_prov_cole')
                     ->first();
         }
 
         // Si la var. $direction muestra que el cursor se mueve (+1)
         if ($direction == 1) {
-            $legajo = Cpa010::where('codigo', '>', $nrolegajo)
-                ->Where('codigo', '>', 0)
-                ->orderBy('codigo')
+            $legajo = Cpps01::where('mat_prov_cole', '>', $nrolegajo)
+                ->Where('mat_prov_cole', '>', 0)
+                ->orderBy('mat_prov_cole')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpa010::latest('id')
-                    ->where('codigo', '>', 0)
+                $legajo = Cpps01::latest('id')
+                    ->where('mat_prov_cole', '>', 0)
                     ->first();
         }
 
 
         // Si la var. $direction muestra que el cursor se mueve al final
         if ($direction == 9) {
-            $legajo = Cpa010::latest('codigo')
-                ->where('codigo', '>', 0)
+            $legajo = Cpps01::latest('codigo')
+                ->where('mat_prov_cole', '>', 0)
                 ->first();
         }
 
@@ -97,7 +109,7 @@ class ObrasAdminController extends Controller
 
         $now = Carbon::now();
 
-        return view('conceptos.index')->with(compact(
+        return view('obras.index')->with(compact(
             'empresa',
             'legajo',
             'agregar',
@@ -133,20 +145,12 @@ class ObrasAdminController extends Controller
             $id_caja = $apertura->id;
         }
 
-        $legajo = new Cpa010;      // find($id);     // dd($legajo);
-        $legajo->codigo = '0';
-
-        $codAnterior = DB::table('cpa010s')->latest('id')->first();
-
-        if ($codAnterior != null) {
-            $legajo->codigo = $codAnterior->codigo + 1;
-        }
-
+        $legajo = new Cpps01;      // find($id);     // dd($legajo);
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
-        $active = 51;
+        $active = 10;
 
-        return view('conceptos.index')->with(compact(
+        return view('obras.index')->with(compact(
             'legajo',
             'agregar',
             'edicion',
@@ -163,31 +167,62 @@ class ObrasAdminController extends Controller
     {
         // Validaciones
         $messages = [
-            'codigo.required' => 'El Código del cliente es obligatorio',
-            'codigo.unique' => 'El Código del cliente ya existe',
-            'detalle.required' => 'La razón social es obligatorio',
-            'detalle.min' => 'La razón social debe tener más de 2 letras'
+            'mat_prov_cole.required' => 'El Nro. de matricula es obligatoria',
+            'mat_prov_cole.unique' => 'El Nro. de matricula ya existe',
+            'nom_ape.required' => 'El nombre y apellido es obligatorio',
+            'nom_ape.min' => 'El nombre y apellido debe tener más de 2 letras'
         ];
 
         $rules = [
-            'codigo' => 'required|unique:vta001s',
-            'detalle' => 'required|min:2'
+            'mat_prov_cole' => 'required|unique:cpps01s',
+            'nom_ape' => 'required|min:2'
         ];
 
         $this->validate($request, $rules, $messages);
 
-        $legajo = new Cpa010();
+        $legajo = new Cpps01();
         //$request->all();
-        //$legajo = Cpa010::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
+        //$legajo = Cpps01::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
         
-        $legajo->cuenta = $request->input('cuenta');
-        $legajo->codigo = $request->input('codigo');
-        $legajo->detalle = $request->input('detalle');
+        $legajo->mat_prov_cole = $request->input('mat_prov_cole');
+        $legajo->nom_ape = $request->input('nom_ape');
+        $legajo->sexo = $request->input('sexo');
+        $legajo->lugar_nacimiento = $request->input('lugar_nacimiento');
+        $legajo->nacionalidad = $request->input('nacionalidad');
+        $legajo->tipo_doc = $request->input('tipo_doc');
+        $legajo->num_doc = $request->input('num_doc');
+        $legajo->cond_iva = $request->input('cond_iva');
+        $legajo->cuit = $request->input('cuit');
+        
+        $legajo->universidad = $request->input('universidad');
+        $legajo->especialidad = $request->input('especialidad'); 
+        $legajo->mat1 = $request->input('mat1'); 
+        $legajo->mat2 = $request->input('mat2'); 
+        $legajo->mat3 = $request->input('mat3'); 
+        $legajo->mat4 = $request->input('mat4'); 
+        $legajo->mat5 = $request->input('mat5'); 
+
+        $legajo->cat_soc = $request->input('cat_soc'); 
+        $legajo->forma_cobro = $request->input('forma_cobro'); 
+        $legajo->cod_banco = $request->input('cod_banco'); 
+        $legajo->cta_bancaria = $request->input('cta_bancaria'); 
+        $legajo->cbu = $request->input('cbu'); 
+        $legajo->cuota_col_deb_auto = $request->input('cuota_col_deb_auto'); 
+        $legajo->seg_mala_prax = $request->input('seg_mala_prax'); 
+        $legajo->seg_mala_prax_deb_auto = $request->input('seg_mala_prax_deb_auto'); 
+        $legajo->cuota_col = $request->input('cuota_col'); 
+        $legajo->caja_SS = $request->input('caja_SS'); 
+        $legajo->categ_ss = $request->input('categ_ss'); 
+        $legajo->caja_reg_ss = $request->input('caja_reg_ss'); 
+
+        $legajo->activo = true;
 
         $legajo->save();   // INSERT INTO - SQL
 
-        if ($legajo->codigo > 0)
-            return redirect('/conceptos/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
+        if ($legajo->mat_prov_cole > 0)
+            return redirect('/profesionales/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
+
+        return redirect('/profesionales/');
     }
 
 
@@ -198,17 +233,17 @@ class ObrasAdminController extends Controller
         $iconSearch = false;
 
         if ($id == 0) {
-            return redirect('/conceptos');
+            return redirect('/profesionales');
         }
         
-        $legajo = Cpa010::find($id);
+        $legajo = Cpps01::find($id);
         if ($legajo == null) {
-            return redirect('/conceptos');
+            return redirect('/profesionales');
         }
 
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 51;
+        $active = 10;
         $cerrada = false;
 
         // $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
@@ -224,7 +259,7 @@ class ObrasAdminController extends Controller
             $familiares = new Sue002;
         } */
 
-        return view('conceptos.index')->with(compact(
+        return view('obras.index')->with(compact(
             'legajo',
             'agregar',
             'edicion',
@@ -242,14 +277,12 @@ class ObrasAdminController extends Controller
     {
         // Validaciones
         $messages = [
-            'cuenta.required' => 'El Código de cuenta es obligatorio',
-            'detalle.required' => 'La descripción es obligatoria',
-            'detalle.min' => 'La Razon social debe tener más de 2 letras'
+            'nom_ape.required' => 'El nombre y apellido es obligatorio',
+            'nom_ape.min' => 'El nombre y apellido debe tener más de 2 letras'
         ];
 
         $rules = [
-            'cuenta' => 'required',
-            'detalle' => 'required|min:2'
+            'nom_ape' => 'required|min:2'
         ];
 
         // Validacion de campos
@@ -257,46 +290,44 @@ class ObrasAdminController extends Controller
 
         // Grabar en bbdd los cambios del form de alta
         // dd($request->all());
-        $legajo = Cpa010::find($id);
+        $legajo = Cpps01::find($id);
 
-        $legajo->cuenta = $request->input('cuenta');
-        //$legajo->codigo = $request->input('codigo');
-        $legajo->detalle = $request->input('detalle');
+        $legajo->nom_ape = $request->input('nom_ape');
         
 
         $legajo->update($request->only('detalle', 'cuenta'));
 
         // dd($legajo->cod_centro);
 
-        return redirect('/conceptos/' . $id);
+        return redirect('/profesionales/' . $id);
     }
 
 
     public function delete($id)
     {
-        $legajo = Cpa010::find($id);
+        $legajo = Cpps01::find($id);
         if ($legajo == null) {
             return "{\"result\":\"cancel\",\"id\":\"$legajo->id\"}";
         }
 
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 51;
+        $active = 10;
         $cerrada = false;
 
         $images = null;
 
         return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"}";
-        //return redirect("/conceptos/");
+        //return redirect("/profesionales/");
     }
 
     public function baja(Request $request, $id = null)
     {
         // return "Mostrar form de edit $id";
-        $legajo = Cpa010::find($id);
+        $legajo = Cpps01::find($id);
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $active = 51;
+        $active = 10;
 
         $images = null;
 
@@ -317,29 +348,29 @@ class ObrasAdminController extends Controller
         }
 
         // return "{\"result\":\"ok\",\"id\":\"$legajo->id\"}";
-        return redirect("/conceptos/");
+        return redirect("/profesionales/");
     }
 
 
     public function search(Request $request)
     {
-        $active = 51;
+        $active = 10;
         $id_caja = 0;
         $cerrada = false;
         $fecha = null;
         $iconSearch = false;
 
-        //$legajos = Cpa010::paginate(5);
-        $legajos = Cpa010::name($request->get('name'))
+        //$legajos = Cpps01::paginate(5);
+        $legajos = Cpps01::name($request->get('name'))
             ->where('codigo', '!=', null)
-            ->orderBy('codigo')
+            ->orderBy('mat_prov_cole')
             ->paginate(10);
 
         //dd($legajos);
 
         $name = $request->get('name');
 
-        return view('conceptos.search')->with(compact('legajos', 'iconSearch', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
+        return view('obras.search')->with(compact('legajos', 'iconSearch', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
     }
 
 
@@ -357,8 +388,8 @@ class ObrasAdminController extends Controller
         $iconSearch = false;
 
         
-        $legajo = Cpa010::Where('codigo', '>', 0)
-                ->orderBy('codigo')
+        $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                ->orderBy('mat_prov_cole')
                 ->first();      // find($id);
 
         // Datos de la empresa
@@ -369,7 +400,7 @@ class ObrasAdminController extends Controller
 
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
-            $legajo = new Cpa010;
+            $legajo = new Cpps01;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -391,9 +422,9 @@ class ObrasAdminController extends Controller
             $dhasta = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
         }
 
-        $conceptos = Cpa010::orderBy('codigo')->get();
+        $conceptos = Cpps01::orderBy('mat_prov_cole')->get();
 
-        return view('conceptos.print')->with(compact(
+        return view('obras.print')->with(compact(
             'empresa',
             'legajo',
             'conceptos',
@@ -421,7 +452,7 @@ class ObrasAdminController extends Controller
         $novedad = null;
         $agregar = true;
         $edicion = true;
-        $active = 51;
+        $active = 10;
         $anterior = 0;
         $cuenta = 0;
         $id_caja = 0;
@@ -447,7 +478,7 @@ class ObrasAdminController extends Controller
         // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
         //config()->set('database.connections.your_connection.strict', false);
         
-        //$novedades = Cpa010::orderBy('fecha')->where('id',0)->paginate(9);
+        //$novedades = Cpps01::orderBy('fecha')->where('id',0)->paginate(9);
         $desde = $request->input('ddesde');
         $hasta = $request->input('dhasta');
         $cerrada = $request->input('cerrada');
@@ -471,7 +502,7 @@ class ObrasAdminController extends Controller
         //$pdf->setPaper('A4', 'landscape');
 
         // Cargar view
-        $pdf->loadview('conceptos.printpdf', compact('cajaAbierta', 'novedades', 'desde', 'hasta', 'cerrada'));
+        $pdf->loadview('obras.printpdf', compact('cajaAbierta', 'novedades', 'desde', 'hasta', 'cerrada'));
         
         // Generar el PDF al navegador
 
@@ -487,6 +518,6 @@ class ObrasAdminController extends Controller
         $concepto1 = $request->input('concepto');
         $concepto2 = $request->input('concepto2');
 
-        return \Excel::download(new ConceptosExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
+        return \Excel::download(new ProfesionalesExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
     }
 }

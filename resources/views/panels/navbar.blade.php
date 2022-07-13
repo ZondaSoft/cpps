@@ -8,8 +8,14 @@
         <input class="header-search-input z-depth-2" type="text" name="Search" placeholder="Busqueda rápida."
           data-search="template-list">
         <ul class="search-list collection display-none"></ul> --}}
-        <div class="white-text">
+        <div class="white-text" style="width: 400px;">
         <h5 style="color: #FFFFFF">
+          @if ($active == 1)
+            Profesionales
+          @endif
+          @if ($active == 10)
+            Obras sociales
+          @endif
           @if ($active == 35)
             Obras Sociales -> Carga de Ordenes
           @endif

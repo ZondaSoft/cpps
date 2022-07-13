@@ -81,7 +81,7 @@
             <div class="col xl1 m1 input-field">
             </div>
             
-            <div class="col xl2 m3 input-field">
+            <div class="col xl3 m3 s3 input-field">
                 <input id="fecha" name="fecha" type="date" placeholder="dd/mm/aaaa" class="" 
                   value="{{ old('fecha',$legajo->fecha) }}"
                   maxlength="8" autocomplete='off'

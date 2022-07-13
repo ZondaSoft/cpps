@@ -29,7 +29,7 @@
           "slug": "Obras Sociales"
         },
         {
-          "url": "home",
+          "url": "planes",
           "name": "Planes de Obras Sociales",
           "i18n": "Planes de Obras Sociales",
           "class": "waves-effect waves-cyan",
@@ -47,7 +47,7 @@
       "slug": "app-email",
       "submenu": [
         {
-          "url": "home",
+          "url": "carga-ordenes",
           "name": "Carga de Ordenes",
           "i18n": "Carga de Ordenes",
           "class": "waves-effect waves-cyan",
