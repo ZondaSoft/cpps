@@ -13,7 +13,7 @@
           @if ($active == 1)
             Profesionales
           @endif
-          @if ($active == 10)
+          @if ($active == 10 or $active == 12)
             Obras sociales
           @endif
           @if ($active == 35)

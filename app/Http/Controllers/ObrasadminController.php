@@ -5,11 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Datoempr;
-use App\Models\Vta001;
-use App\Models\Fza002;
-use App\Models\Fza030;  // Movimientos
-use App\Models\Fza020;  // Head de movimientos
-use App\Models\Cpps01;  // Profesionals
+use App\Models\Cpps07;  // Profesionals
+use App\Models\Cpps11;  // Convenios
+use App\Models\Cpps12;  // tabla pivote os->convenios
 use Carbon\Carbon;
 use DB;
 
@@ -28,28 +26,27 @@ class ObrasadminController extends Controller
         $fecha = null;
         $id_caja = 0;
         $nrolegajo = 0;
-        $cerrada = false;
         $iconSearch = true;
 
         if ($id == null) {
-            $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
-                ->orderBy('mat_prov_cole')
+            $legajo = Cpps07::Where('cod_os', '>', 0)
+                ->orderBy('cod_os')
                 ->first();      // find($id);
 
             if ($legajo != null) {
                 $id = $legajo->id;
-                $nrolegajo = $legajo->codigo;
+                $nrolegajo = $legajo->cod_os;
             }
         } else {
-            $legajo = Cpps01::find($id);
+            $legajo = Cpps07::find($id);
             if ($legajo == null) {
-                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
-                    ->orderBy('mat_prov_cole')
+                $legajo = Cpps07::Where('cod_os', '>', 0)
+                    ->orderBy('cod_os')
                     ->first();
             }
 
             if ($legajo != null) {
-                $nrolegajo = $legajo->codigo;
+                $nrolegajo = $legajo->cod_os;
             }
         }
 
@@ -61,51 +58,44 @@ class ObrasadminController extends Controller
 
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
-            $legajo = new Cpps01;
+            $legajo = new Cpps07;
 
         // Si la var. $direction muestra que el cursor s    e mueve (-1)
         if ($direction == -1) {
-            $legajo = Cpps01::where('codigo', '<', $nrolegajo)
-                ->Where('mat_prov_cole', '>', 0)
+            $legajo = Cpps07::where('codigo', '<', $nrolegajo)
+                ->Where('cod_os', '>', 0)
                 ->orderBy('codigo', 'desc')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
-                    ->orderBy('mat_prov_cole')
+                $legajo = Cpps07::Where('cod_os', '>', 0)
+                    ->orderBy('cod_os')
                     ->first();
         }
 
         // Si la var. $direction muestra que el cursor se mueve (+1)
         if ($direction == 1) {
-            $legajo = Cpps01::where('mat_prov_cole', '>', $nrolegajo)
-                ->Where('mat_prov_cole', '>', 0)
-                ->orderBy('mat_prov_cole')
+            $legajo = Cpps07::where('cod_os', '>', $nrolegajo)
+                ->Where('cod_os', '>', 0)
+                ->orderBy('cod_os')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpps01::latest('id')
-                    ->where('mat_prov_cole', '>', 0)
+                $legajo = Cpps07::latest('id')
+                    ->where('cod_os', '>', 0)
                     ->first();
         }
 
 
         // Si la var. $direction muestra que el cursor se mueve al final
         if ($direction == 9) {
-            $legajo = Cpps01::latest('codigo')
-                ->where('mat_prov_cole', '>', 0)
+            $legajo = Cpps07::latest('codigo')
+                ->where('cod_os', '>', 0)
                 ->first();
         }
 
-        // 1ro buscamos la apertura de la caja actual
-        $apertura = Fza020::whereNull('cerrada')->first();
-
-        // Si no hay aperturas redirijo a apertura
-        if ($apertura != null) {
-            $fechaActual = $apertura->fecha;
-            $fecha = $apertura->fecha;
-            $id_caja = $apertura->id;
-        }
+        $convenios = Cpps11::orderBy('cod_conv')->get();
+        $conv_os = Cpps12::where('cod_os', $legajo->cod_os)->get();
 
         $now = Carbon::now();
 
@@ -118,7 +108,8 @@ class ObrasadminController extends Controller
             'active',
             'fecha',
             'id_caja',
-            'cerrada'
+            'convenios',
+            'conv_os'
         ));
     }
 
@@ -132,23 +123,17 @@ class ObrasadminController extends Controller
         $fechaActual = null;
         $fecha = null;
         $id_caja = 0;
-        $cerrada = false;
         $iconSearch = false;
 
-        // 1ro buscamos la apertura de la caja actual
-        $apertura = Fza020::whereNull('cerrada')->first();
 
-        // Si no hay aperturas redirijo a apertura
-        if ($apertura != null) {
-            $fechaActual = $apertura->fecha;
-            $fecha = $apertura->fecha;
-            $id_caja = $apertura->id;
-        }
-
-        $legajo = new Cpps01;      // find($id);     // dd($legajo);
+        $legajo = new Cpps07;      // find($id);     // dd($legajo);
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
         $active = 10;
+
+
+        $convenios = Cpps11::orderBy('cod_conv')->get();
+        $conv_os = [];
 
         return view('obras.index')->with(compact(
             'legajo',
@@ -158,7 +143,8 @@ class ObrasadminController extends Controller
             'iconSearch',
             'fecha',
             'id_caja',
-            'cerrada'
+            'convenios',
+            'conv_os'
         ));
     }
 
@@ -167,62 +153,49 @@ class ObrasadminController extends Controller
     {
         // Validaciones
         $messages = [
-            'mat_prov_cole.required' => 'El Nro. de matricula es obligatoria',
-            'mat_prov_cole.unique' => 'El Nro. de matricula ya existe',
-            'nom_ape.required' => 'El nombre y apellido es obligatorio',
-            'nom_ape.min' => 'El nombre y apellido debe tener más de 2 letras'
+            'cod_os.required' => 'El código de la obra social es obligatorio',
+            'cod_os.unique' => 'El código ya existe',
+            'desc_os.required' => 'El nombre de la obra social es obligatorio',
+            'desc_os.min' => 'El nombre debe tener más de 2 letras'
         ];
 
         $rules = [
-            'mat_prov_cole' => 'required|unique:cpps01s',
-            'nom_ape' => 'required|min:2'
+            'cod_os' => 'required|unique:cpps07s',
+            'desc_os' => 'required|min:2'
         ];
 
         $this->validate($request, $rules, $messages);
 
-        $legajo = new Cpps01();
+        $legajo = new Cpps07();
         //$request->all();
-        //$legajo = Cpps01::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
+        //$legajo = Cpps07::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
         
-        $legajo->mat_prov_cole = $request->input('mat_prov_cole');
-        $legajo->nom_ape = $request->input('nom_ape');
-        $legajo->sexo = $request->input('sexo');
-        $legajo->lugar_nacimiento = $request->input('lugar_nacimiento');
-        $legajo->nacionalidad = $request->input('nacionalidad');
-        $legajo->tipo_doc = $request->input('tipo_doc');
-        $legajo->num_doc = $request->input('num_doc');
-        $legajo->cond_iva = $request->input('cond_iva');
+        $legajo->cod_os = $request->input('cod_os');
+        $legajo->desc_os = $request->input('desc_os');
+        $legajo->estado_os = $request->input('estado_os');
+        //$legajo->fcha_alta = $request->input('fcha_alta');
+        $legajo->contacto = $request->input('contacto');
+        $legajo->direccion_os = $request->input('direccion_os');
+        $legajo->cp = $request->input('cp');
+        $legajo->localidad = $request->input('localidad');
+        $legajo->provincia = $request->input('provincia'); 
+        $legajo->telefono1 = $request->input('telefono1'); 
+        $legajo->telefono2 = $request->input('telefono2'); 
+        $legajo->telefono3 = $request->input('telefono3');
+        $legajo->observacion = $request->input('observacion'); 
+        $legajo->req_paciente = $request->input('req_paciente');
+        $legajo->porcent_nino = $request->input('porcent_nino');
+        if ($legajo->porcent_nino == null) {
+            $legajo->porcent_nino = 0;
+        }
         $legajo->cuit = $request->input('cuit');
-        
-        $legajo->universidad = $request->input('universidad');
-        $legajo->especialidad = $request->input('especialidad'); 
-        $legajo->mat1 = $request->input('mat1'); 
-        $legajo->mat2 = $request->input('mat2'); 
-        $legajo->mat3 = $request->input('mat3'); 
-        $legajo->mat4 = $request->input('mat4'); 
-        $legajo->mat5 = $request->input('mat5'); 
-
-        $legajo->cat_soc = $request->input('cat_soc'); 
-        $legajo->forma_cobro = $request->input('forma_cobro'); 
-        $legajo->cod_banco = $request->input('cod_banco'); 
-        $legajo->cta_bancaria = $request->input('cta_bancaria'); 
-        $legajo->cbu = $request->input('cbu'); 
-        $legajo->cuota_col_deb_auto = $request->input('cuota_col_deb_auto'); 
-        $legajo->seg_mala_prax = $request->input('seg_mala_prax'); 
-        $legajo->seg_mala_prax_deb_auto = $request->input('seg_mala_prax_deb_auto'); 
-        $legajo->cuota_col = $request->input('cuota_col'); 
-        $legajo->caja_SS = $request->input('caja_SS'); 
-        $legajo->categ_ss = $request->input('categ_ss'); 
-        $legajo->caja_reg_ss = $request->input('caja_reg_ss'); 
-
-        $legajo->activo = true;
 
         $legajo->save();   // INSERT INTO - SQL
 
-        if ($legajo->mat_prov_cole > 0)
-            return redirect('/profesionales/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
+        if ($legajo->cod_os > 0)
+            return redirect('/obras-admin/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
 
-        return redirect('/profesionales/');
+        return redirect('/obras-admin/');
     }
 
 
@@ -233,19 +206,20 @@ class ObrasadminController extends Controller
         $iconSearch = false;
 
         if ($id == 0) {
-            return redirect('/profesionales');
+            return redirect('/obras-admin');
         }
         
-        $legajo = Cpps01::find($id);
+        $legajo = Cpps07::find($id);
         if ($legajo == null) {
-            return redirect('/profesionales');
+            return redirect('/obras-admin');
         }
 
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 10;
-        $cerrada = false;
 
+        $convenios = Cpps11::orderBy('cod_conv')->get();
+        
         // $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
         // $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
         // $legajo->fecha_vto = Carbon::parse($legajo->fecha_vto)->format('d/m/Y');
@@ -254,7 +228,7 @@ class ObrasadminController extends Controller
         //$bancos = Fza002::orderBy('detalle')->get();
 
         /* if ($legajo != null) {
-            $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->codigo)->get();
+            $familiares = Sue002::orderBy('paren')->Where('legajo', '=', $legajo->cod_os)->get();
         } else {
             $familiares = new Sue002;
         } */
@@ -265,9 +239,9 @@ class ObrasadminController extends Controller
             'edicion',
             'iconSearch',
             'active',
-            'cerrada',
             'id_caja',
-            'fecha'
+            'fecha',
+            'convenios'
             
         ));    // Abrir form de modificacion
     }
@@ -277,12 +251,12 @@ class ObrasadminController extends Controller
     {
         // Validaciones
         $messages = [
-            'nom_ape.required' => 'El nombre y apellido es obligatorio',
-            'nom_ape.min' => 'El nombre y apellido debe tener más de 2 letras'
+            'desc_os.required' => 'La descripción es obligatoria',
+            'desc_os.min' => 'La descripción debe tener más de 2 letras'
         ];
 
         $rules = [
-            'nom_ape' => 'required|min:2'
+            'desc_os' => 'required|min:2'
         ];
 
         // Validacion de campos
@@ -290,22 +264,36 @@ class ObrasadminController extends Controller
 
         // Grabar en bbdd los cambios del form de alta
         // dd($request->all());
-        $legajo = Cpps01::find($id);
+        $legajo = Cpps07::find($id);
 
-        $legajo->nom_ape = $request->input('nom_ape');
+        $legajo->desc_os = $request->input('desc_os');
+        $legajo->estado_os = $request->input('estado_os');
+        //$legajo->fcha_alta = $request->input('fcha_alta');
+        $legajo->contacto = $request->input('contacto');
+        $legajo->direccion_os = $request->input('direccion_os');
+        $legajo->cp = $request->input('cp');
+        $legajo->localidad = $request->input('localidad');
+        $legajo->provincia = $request->input('provincia'); 
+        $legajo->telefono1 = $request->input('telefono1'); 
+        $legajo->telefono2 = $request->input('telefono2'); 
+        $legajo->telefono3 = $request->input('telefono3');
+        $legajo->observacion = $request->input('observacion'); 
+        $legajo->req_paciente = $request->input('req_paciente');
+        $legajo->porcent_nino = $request->input('porcent_nino');
+        $legajo->cuit = $request->input('cuit');
         
 
-        $legajo->update($request->only('detalle', 'cuenta'));
+        $legajo->update($request->only('desc_os', 'cuenta'));
 
         // dd($legajo->cod_centro);
 
-        return redirect('/profesionales/' . $id);
+        return redirect('/obras-admin/' . $id);
     }
 
 
     public function delete($id)
     {
-        $legajo = Cpps01::find($id);
+        $legajo = Cpps07::find($id);
         if ($legajo == null) {
             return "{\"result\":\"cancel\",\"id\":\"$legajo->id\"}";
         }
@@ -313,18 +301,17 @@ class ObrasadminController extends Controller
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 10;
-        $cerrada = false;
-
+        
         $images = null;
 
-        return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"}";
-        //return redirect("/profesionales/");
+        return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->cod_os\",\"detalle\":\"$legajo->detalle\",\"}";
+        //return redirect("/obras-admin/");
     }
 
     public function baja(Request $request, $id = null)
     {
         // return "Mostrar form de edit $id";
-        $legajo = Cpps01::find($id);
+        $legajo = Cpps07::find($id);
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 10;
@@ -348,7 +335,7 @@ class ObrasadminController extends Controller
         }
 
         // return "{\"result\":\"ok\",\"id\":\"$legajo->id\"}";
-        return redirect("/profesionales/");
+        return redirect("/obras-admin/");
     }
 
 
@@ -356,21 +343,20 @@ class ObrasadminController extends Controller
     {
         $active = 10;
         $id_caja = 0;
-        $cerrada = false;
         $fecha = null;
         $iconSearch = false;
 
-        //$legajos = Cpps01::paginate(5);
-        $legajos = Cpps01::name($request->get('name'))
+        //$legajos = Cpps07::paginate(5);
+        $legajos = Cpps07::name($request->get('name'))
             ->where('codigo', '!=', null)
-            ->orderBy('mat_prov_cole')
+            ->orderBy('cod_os')
             ->paginate(10);
 
         //dd($legajos);
 
         $name = $request->get('name');
 
-        return view('obras.search')->with(compact('legajos', 'iconSearch', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
+        return view('obras.search')->with(compact('legajos', 'iconSearch', 'active', 'name', 'id_caja', 'fecha'));
     }
 
 
@@ -388,8 +374,8 @@ class ObrasadminController extends Controller
         $iconSearch = false;
 
         
-        $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
-                ->orderBy('mat_prov_cole')
+        $legajo = Cpps07::Where('cod_os', '>', 0)
+                ->orderBy('cod_os')
                 ->first();      // find($id);
 
         // Datos de la empresa
@@ -400,7 +386,7 @@ class ObrasadminController extends Controller
 
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
-            $legajo = new Cpps01;
+            $legajo = new Cpps07;
 
         // 1ro buscamos la apertura de la caja actual
         $apertura = Fza020::whereNull('cerrada')->first();
@@ -422,7 +408,7 @@ class ObrasadminController extends Controller
             $dhasta = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
         }
 
-        $conceptos = Cpps01::orderBy('mat_prov_cole')->get();
+        $conceptos = Cpps07::orderBy('mat_prov_cole')->get();
 
         return view('obras.print')->with(compact(
             'empresa',
@@ -478,7 +464,7 @@ class ObrasadminController extends Controller
         // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
         //config()->set('database.connections.your_connection.strict', false);
         
-        //$novedades = Cpps01::orderBy('fecha')->where('id',0)->paginate(9);
+        //$novedades = Cpps07::orderBy('fecha')->where('id',0)->paginate(9);
         $desde = $request->input('ddesde');
         $hasta = $request->input('dhasta');
         $cerrada = $request->input('cerrada');

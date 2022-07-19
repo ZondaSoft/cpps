@@ -151,6 +151,18 @@
                     <label for="detalle">Descripción *</label>
                     <small class="errorTxt3"></small>
                   </div>
+
+                  <div class="col m2 s3 input-field">
+                    <input id="fecha_mat1" name="fecha_mat1" type="date" placeholder="dd/mm/aaaa" class="" 
+                      value="{{ old('fecha_mat1',$legajo->fecha_mat1) }}"
+                      maxlength="10" autocomplete='off'
+                      data-error=".errorTxt7"
+                      {{ $edicion?'':'disabled' }}>
+                    <label for="fecha_mat1">Fecha matriculación</label>
+                    <small class="errorTxt7"></small>
+                  </div>
+
+                  
                 </div>
               </div>
 

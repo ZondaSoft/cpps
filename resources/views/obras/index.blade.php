@@ -30,7 +30,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','Editar profesionales')
+@section('title','Editar Obras sociales')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -69,7 +69,7 @@
                 <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
                   Guardar cambios</button>
                 
-                <a href="{{ asset( url('/profesionales') ) }}" class="btn btn-labeled btn-danger mb-2">
+                <a href="{{ asset( url('/obras-admin') ) }}" class="btn btn-labeled btn-danger mb-2">
                     <span class="btn-label"><i class="fa fa-times"></i>
                     </span>Cancelar
                 </a>
@@ -118,20 +118,20 @@
                       value="{{ old('cod_os',$legajo->cod_os) }}"
                       {{ $edicion?'':'disabled' }}
                       {{ $agregar?'enabled autofocus=""':'disabled' }}
-                      maxlength="15" autocomplete='off'
+                      maxlength="6" autocomplete='off'
                       required
                       data-error=".errorTxt1">
                     <label for="cod_os">Código *</label>
                     <small class="errorTxt1"></small>
                   </div>
                   
-                  <div class="col s8 input-field">
+                  <div class="col m8 s8 input-field">
                     <input id="desc_os" name="desc_os" type="text" class="validate" 
                       value="{{ old('desc_os',$legajo->desc_os) }}"
                       {{ $edicion?'enabled':'disabled' }}
                       required maxlength="50" autocomplete='off'
                       data-error=".errorTxt2">
-                    <label for="desc_os">Nombre obra social *</label>
+                    <label for="desc_os">Descripción obra social *</label>
                     <small class="errorTxt2"></small>
                   </div>
 
@@ -144,35 +144,35 @@
                   </div>
 
                   <div class="col m3 s3 input-field">
-                    <input id="fcha_alta" name="fcha_alta" type="date" placeholder="dd/mm/aaaa" class="" 
-                      value="{{ old('fcha_alta',$legajo->fcha_alta) }}"
+                    <input id="fecha_alta" name="fecha_alta" type="date" placeholder="dd/mm/aaaa" class="" 
+                      value="{{ old('fecha_alta',$legajo->fecha_alta) }}"
                       maxlength="10" autocomplete='off'
                       data-error=".errorTxt4"
                       {{ $edicion?'':'disabled' }}>
-                    <label for="fcha_alta">Fecha alta</label>
+                    <label for="fecha_alta">Fecha alta</label>
                     <small class="errorTxt4"></small>
                   </div>
 
-                  <div class="col m5 s5 input-field">
+                  <div class="col m6 s6 input-field">
                     <input id="contacto" name="contacto" type="text" step="1" class="validate" 
                       value="{{ old('contacto',$legajo->contacto) }}"
                       {{ $edicion?'':'disabled' }}
-                      maxlength="40" autocomplete='off' required
-                      data-error=".errorTxt5">
-                    <label for="contacto">Contacto</label>
-                    <small class="errorTxt5"></small>
-                  </div>
-
-                  <div class="col m5 s5 input-field">
-                    <input id="direccion_os" name="direccion" type="text" step="1" class="validate" 
-                      value="{{ old('direccion',$legajo->direccion) }}"
-                      {{ $edicion?'':'disabled' }}
-                      maxlength="40" autocomplete='off' required
+                      maxlength="40" autocomplete='off'
                       data-error=".errorTxt6">
-                    <label for="direccion">Domicilio</label>
+                    <label for="contacto">Contacto</label>
                     <small class="errorTxt6"></small>
                   </div>
 
+                  <div class="col m5 s5 input-field">
+                    <input id="direccion_os" name="direccion_os" type="text" step="1" class="validate" 
+                      value="{{ old('direccion_os',$legajo->direccion_os) }}"
+                      {{ $edicion?'':'disabled' }}
+                      maxlength="40" autocomplete='off'
+                      data-error=".errorTxt6">
+                    <label for="direccion_os">Domicilio</label>
+                    <small class="errorTxt6"></small>
+                  </div>
+                  
                   
                   <div class="col m4 s4 input-field">
                     <input id="cp" name="cp" type="text" class="validate" 
@@ -254,7 +254,7 @@
                           <div class="collapsible-header waves-light gradient-45deg-light-blue-cyan lightrn-1 white-text">
                             <i class="material-icons">toll</i> Facturación - Cálculos
                           </div>
-                          <div class="collapsible-body ">
+                          <div class="collapsible-body" style="display: block;">
 
                             <div class="row">
                               <div class="col m3 s3 input-field">
@@ -262,7 +262,7 @@
                                   <option value="No" @if ($legajo->req_paciente == "No")  selected   @endif  >No</option>
                                   <option value="Si" @if ($legajo->req_paciente == "Si")  selected   @endif  >Si</option>
                                 </select>
-                                <label>Categoria del profesional</label>
+                                <label>Solicita nombre de paciente en ordenes ?</label>
                               </div>
 
                               
@@ -270,56 +270,96 @@
 
                             <div class="row">
                               <div class="col m3 s3 input-field">
-                                <select id="forma_cobro" name="forma_cobro" {{ $edicion?'enabled':'disabled' }}>
-                                  <option value="0" @if ($legajo->forma_cobro == "0")  selected   @endif  >Contado Efectivo</option>
-                                  <option value="1" @if ($legajo->forma_cobro == "1")  selected   @endif  >Transferencia con envio</option>
-                                  <option value="2" @if ($legajo->forma_cobro == "2")  selected   @endif  >Transferencia con AR</option>
-                                </select>
-                                <label>Forma de cobro</label>
-                              </div>
-                              
-                              <div class="col m5 s5 input-field">
-                                <select id="cod_banco" name="cod_banco" {{ $edicion?'enabled':'disabled' }}>
-                                  <option value="00007" @if ($legajo->cod_banco == "00007")  selected   @endif  >BANCO DE GALICIA Y BUENOS AIRES S.A.U.</option>
-                                  <option value="00011" @if ($legajo->cod_banco == "00011")  selected   @endif  >BANCO DE LA NACION ARGENTINA</option>
-                                  <option value="00285" @if ($legajo->cod_banco == "00285")  selected   @endif  >BANCO MACRO S.A.</option>
-                                  <option value="00017" @if ($legajo->cod_banco == "00017")  selected   @endif  >BANCO BBVA ARGENTINA S.A.</option>
-                                </select>
-                                <label>Banco</label>
-                              </div>
-                            </div>
-                                
-                            <div class="row">
-                              <div class="col m3 s3 input-field">
-                                <input id="cta_bancaria" name="cta_bancaria" type="text" class="validate" 
-                                  value="{{ old('cta_bancaria',$legajo->cta_bancaria) }}"
+                                <input id="porcent_nino" name="porcent_nino" type="number" step="0.01" class="validate" 
+                                  value="{{ old('porcent_nino',$legajo->porcent_nino) }}"
                                   {{ $edicion?'enabled':'disabled' }}
                                   maxlength="30" autocomplete='off'
                                   data-error=".errorTxt5">
-                                <label for="mat2">Nro.Cuenta Bancaria</label>
+                                <label for="mat2">% adicional Niños</label>
                                 <small class="errorTxt5"></small>
                               </div>
 
-                              <div class="col m4 s4 input-field">
-                                <input id="cbu" name="cbu" type="number" class="validate" 
-                                  value="{{ old('cbu',$legajo->cbu) }}"
-                                  {{ $edicion?'enabled':'disabled' }}
-                                  maxlength="22" autocomplete='off'
+                              <div class="col m3 s3 input-field">
+                                <input id="cuit" name="cuit" type="text" class="validate" 
+                                  value="{{ old('cuit',$legajo->cuit) }}"
+                                  {{ $edicion?'':'disabled' }}
+                                  maxlength="13" autocomplete='off'
                                   data-error=".errorTxt5">
-                                <label for="mat2">CBU - Clave Bancaria Uniforme</label>
+                                <label for="cuit">CUIT</label>
                                 <small class="errorTxt5"></small>
                               </div>
                             </div>
           
                           </div>
                       </li>
-
-                      
-
                     </ul>
                   </div>
 
-                  
+
+                  <!-- CONVENIOS -->
+                  <div class="col s12" style="padding-right: 0px;padding-left: 0px" id="convenios" name="convenios">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <div class="collapsible-header waves-light gradient-45deg-purple-deep-orange lightrn-1 white-text">
+                            <i class="material-icons">toll</i> Convenios asociados
+                          </div>
+                          <div class="collapsible-body" style="display: block;">
+
+                            <div class="row">
+                              
+                              <!-- START table-responsive-->
+                              <div class="col s12">
+                                <table class="bordered">
+                                  <thead>
+                                      <tr>
+                                        <th data-field="id">Código</th>
+                                        <th data-field="name">Descripción</th>
+                                        <th data-field="name">Observaciones</th>
+                                        <th data-field="name">Categoria por antiguedad</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @foreach ($conv_os as $convenio)
+                                        <tr style="height: 10px;">
+                                            <td style="height: 10px;">
+                                              {{ $convenio->cod_conv }}
+                                            </td style="height: 10px;">
+
+                                            <td style="height: 10px;">
+                                              {{ $convenio->NomConvenio }}
+                                            </td>
+
+                                            <td style="height: 10px;">
+                                              {{ $convenio->ObservacionConv }}
+                                            </td>
+
+                                            <td style="height: 10px;">
+                                              @if ($convenio->cod_categoria == 0)
+                                                  A
+                                              @endif
+                                              @if ($convenio->cod_categoria == 1)
+                                                  B
+                                              @endif
+                                              @if ($convenio->cod_categoria == 2)
+                                                  C
+                                              @endif
+                                              
+                                            </td>
+                                        </tr>
+                                      @endforeach
+                                  </tbody>
+                                </table>
+
+                                {{-- <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/obras-admin/add') }}" >Agregar convenio</a> --}}
+
+                            </div>
+                            <!-- END table-responsive-->
+
+                            </div>
+                          </div>
+                      </li>
+                    </ul>
+                  </div>
                 </div>
               </div>
 
@@ -329,16 +369,13 @@
                 <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
                   Guardar cambios</button>
                 
-                <a href="{{ asset( url('/profesionales') ) }}" class="btn btn-labeled btn-danger mb-2">
+                <a href="{{ asset( url('/obras-admin') ) }}" class="btn btn-labeled btn-danger mb-2">
                     <span class="btn-label"><i class="fa fa-times"></i>
                     </span>Cancelar
                 </a>
               </div>
               @endif
             </div>
-
-
-          
           <!-- users edit account form ends -->
         </div>
         
@@ -346,6 +383,66 @@
       <!-- </div> -->
 
       </form>
+
+      {{-- <button data-target="modal1" class="btn modal-trigger">Agregar convenio</button> --}}
+      <a class="waves-effect waves-light btn modal-trigger mb-2 mr-1" href="#modal1">Agregar convenio</a>
+
+      <div id="modal1" class="modal">
+        <div class="modal-content">
+          <h5>Agregar convenio</h5>
+            <!-- START table-responsive-->
+            <div class="col s12">
+              <table class="bordered">
+                <thead>
+                    <tr>
+                      <th data-field="id">Código</th>
+                      <th data-field="name">Descripción</th>
+                      <th data-field="name">Observaciones</th>
+                      <th data-field="name">Seleccionar</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach ($convenios as $convenio)
+                      <tr style="height: 10px;">
+                          <td style="height: 10px;">
+                            {{ $convenio->cod_conv }}
+                          </td style="height: 10px;">
+
+                          <td style="height: 10px;">
+                            {{ $convenio->desc_conv }}
+                          </td>
+
+                          <td style="height: 10px;">
+                            {{ $convenio->observacion_conv }}
+                          </td>
+
+                          <td style="height: 10px;alignment: center">
+                            <p class="mb-1">
+                              {{-- checked="checked" --}}
+                              <label>
+                                <input type="checkbox" class="filled-in">
+                                <span></span>
+                              </label>
+                            </p>
+                          </td>
+                      </tr>
+                    @endforeach
+                </tbody>
+              </table>
+
+              {{-- <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/obras-admin/add') }}" >Agregar convenio</a> --}}
+
+          </div>
+          <!-- END table-responsive-->
+        
+          <p>...</p>
+        </div>
+        <div class="modal-footer">
+          <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Cancelar</a>
+          <a href="/obras-admin" class="modal-action modal-close waves-effect waves-green btn-flat ">Grabar</a>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>
@@ -361,4 +458,5 @@
 {{-- page scripts --}}
 @section('page-script')
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
+<script src="{{asset('js/scripts/advance-ui-modals.js')}}"></script>
 @endsection

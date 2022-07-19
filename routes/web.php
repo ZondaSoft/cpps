@@ -98,6 +98,52 @@ Route::get('/obras-admin/{id?}/{direction?}/search/', 'CajaController@search')->
 Route::get('/obras-admin/delete/{id}', 'ObrasadminController@delete');
 Route::post('/obras-admin/delete/{id}', 'ObrasadminController@baja');
 
+//-------------------------------------------
+//                Convenios
+//-------------------------------------------
+Route::get('/convenios/{id?}/{direction?}', 'ConveniosController@index')
+    ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
+    ->name('convenios');
+Route::get('/convenios/add', 'ConveniosController@add')
+    ->name('convenios.add');
+Route::post('/convenios/add', 'ConveniosController@store');
+Route::get('/convenios/edit/{id?}', 'ConveniosController@edit')->name('convenios.edit')->where('id', '[0-9]+');
+Route::post('/convenios/edit/{id}', 'ConveniosController@update');
+
+Route::get('/convenios/search', 'ConveniosController@search')->name('convenios.search');
+Route::get('/convenios/search', 'ConveniosController@search')->name('convenios.search');
+Route::get('/convenios/{id?}/search/', 'ConveniosController@search')->name('convenios.search');
+//Route::get('/convenios/print/{id}', 'ConveniosController@printpdf')->name('convenios.print');
+Route::post('/convenios/print/', 'ConveniosController@printpdf')->name('convenios.print');
+Route::post('/convenios/excel/', 'ConveniosController@excel')->name('convenios.excel');
+
+Route::get('/convenios/{id?}/{direction?}/search/', 'ConveniosController@search')->name('search');
+Route::get('/convenios/delete/{id}', 'ConveniosController@delete');
+Route::post('/convenios/delete/{id}', 'ConveniosController@baja');
+
+//-------------------------------------------
+//                Nomencladores
+//-------------------------------------------
+Route::get('/nomenclador/{id?}/{direction?}', 'NomencladorController@index')
+    ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
+    ->name('nomenclador');
+Route::get('/nomenclador/add', 'NomencladorController@add')
+    ->name('nomenclador.add');
+Route::post('/nomenclador/add', 'NomencladorController@store');
+Route::get('/nomenclador/edit/{id?}', 'NomencladorController@edit')->name('nomenclador.edit')->where('id', '[0-9]+');
+Route::post('/nomenclador/edit/{id}', 'NomencladorController@update');
+
+Route::get('/nomenclador/search', 'NomencladorController@search')->name('nomenclador.search');
+Route::get('/nomenclador/search', 'NomencladorController@search')->name('nomenclador.search');
+Route::get('/nomenclador/{id?}/search/', 'NomencladorController@search')->name('nomenclador.search');
+//Route::get('/nomenclador/print/{id}', 'NomencladorController@printpdf')->name('nomenclador.print');
+Route::post('/nomenclador/print/', 'NomencladorController@printpdf')->name('nomenclador.print');
+Route::post('/nomenclador/excel/', 'NomencladorController@excel')->name('nomenclador.excel');
+
+Route::get('/nomenclador/{id?}/{direction?}/search/', 'NomencladorController@search')->name('search');
+Route::get('/nomenclador/delete/{id}', 'NomencladorController@delete');
+Route::post('/nomenclador/delete/{id}', 'NomencladorController@baja');
+
 //--------------------------------------
 //              OOSS
 //--------------------------------------
@@ -120,6 +166,31 @@ Route::post('/obras/print/', 'CajaController@printpdf')->name('obras.print');
 Route::post('/obras/excel/', 'CajaController@excel')->name('obras.excel');
 Route::get('/obras/delete/{id}', 'CajaController@delete');
 Route::post('/obras/delete/{id}', 'CajaController@baja');
+
+//-------------------------------------------
+//                Ordenes
+//-------------------------------------------
+Route::get('/carga-ordenes/{id?}/{direction?}', 'OrdenesController@index')
+    ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
+    ->name('convenios');
+Route::get('/carga-ordenes/add', 'OrdenesController@add')
+    ->name('convenios.add');
+Route::post('/carga-ordenes/add', 'OrdenesController@store');
+Route::get('/carga-ordenes/edit/{id?}', 'OrdenesController@edit')->name('convenios.edit')->where('id', '[0-9]+');
+Route::post('/carga-ordenes/edit/{id}', 'OrdenesController@update');
+
+Route::get('/carga-ordenes/search', 'OrdenesController@search')->name('convenios.search');
+Route::get('/carga-ordenes/search', 'OrdenesController@search')->name('convenios.search');
+Route::get('/carga-ordenes/{id?}/search/', 'OrdenesController@search')->name('convenios.search');
+//Route::get('/carga-ordenes/print/{id}', 'OrdenesController@printpdf')->name('convenios.print');
+Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
+Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
+
+Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@search')->name('search');
+Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
+Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
+
+
 
 
 //-------------------------------------------
@@ -186,7 +257,7 @@ Route::post('/conceptos/excel', 'ConceptosController@excel');
 // Route::post('/conceptos/importar', 'ImportController@importlegajos');
 
 
-Route::get('/api/clientes', 'OrdenesController@getClientes')
-    ->name('clientes');
-Route::get('/api/vehiculos/{idCliente?}', 'OrdenesController@getVehiculos')
-    ->name('clientes');
+// Route::get('/api/clientes', 'OrdenesController@getClientes')
+//     ->name('clientes');
+// Route::get('/api/vehiculos/{idCliente?}', 'OrdenesController@getVehiculos')
+//     ->name('clientes');
