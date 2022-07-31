@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 
 use App\Models\Datoempr;
-use App\Models\Cpps07;  // Profesionals
+use App\Models\Cpps07;  // Obras sociales
 use App\Models\Cpps11;  // Convenios
 use App\Models\Cpps12;  // tabla pivote os->convenios
 use Carbon\Carbon;

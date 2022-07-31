@@ -361,6 +361,35 @@ class OrdenesController extends Controller
     }
 
 
+    public function search2(Request $request)
+    {
+        $active = 1;
+        $id_caja = 0;
+        $cerrada = false;
+        $fecha = null;
+        $iconSearch = false;
+
+        //$legajos = Cpps01::paginate(5);
+        $legajos = Cpps07::name($request->get('name'))
+            ->where('cod_os', '!=', null)
+            ->orderBy('cod_os')
+            ->paginate(10);
+
+        //dd($legajos);
+
+        $name = $request->get('name');
+
+        return view('ordenes.search2')->with(compact('legajos', 'iconSearch', 'active', 'name', 'cerrada', 'id_caja', 'fecha'));
+    }
+
+    public function search3(Request $request) {
+
+        $data = Cpps07::get();
+
+        return json_encode($data);
+    }
+
+
     public function print()
     {
         $agregar = False;

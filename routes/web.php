@@ -19,6 +19,7 @@ use App\Http\Controllers\BasicTableController;
 use App\Http\Controllers\DataTableController;
 use App\Http\Controllers\FormController;
 use App\Http\Controllers\ChartController;
+use App\Http\Controllers\PostController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,6 +36,9 @@ Route::get('/', function () {
     Auth::logout();
     return view('auth.login');	// view('welcome');
 });
+
+Route::get('search', [PostController::class, 'index']);
+Route::get('res-search', [PostController::class, 'search']);
 
 /* Route::get('/home', function () {
     return view('home');
@@ -190,7 +194,8 @@ Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@searc
 Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
 Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
 
-
+// Route::get('/search', 'OrdenesController@search2');
+// Route::post('/action', 'OrdenesController@search3');
 
 
 //-------------------------------------------

@@ -12,4 +12,18 @@ class Cpps07 extends Model
     protected $fillable = ['desc_os'];
 
     // protected $primaryKey = 'cod_os';
+
+    
+    public function scopeName($query, $name)
+    {
+        // dd("scope :" . $name);
+
+        if ($name != "")
+        {
+        $query->where(\DB::raw("CONCAT(cod_os,' ', desc_os )"), "LIKE" , "%$name%");
+
+        //dd($query);
+
+        }
+    }
 }
