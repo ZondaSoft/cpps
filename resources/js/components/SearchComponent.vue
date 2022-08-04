@@ -10,6 +10,14 @@
                 <li v-for="result in results" :key="result.id" v-text="result.desc_os"></li>
             </ul>
         </div>
+
+        <div class="col m8 s8 input-field">
+            <ul v-if="results.length > 0">
+                <li v-for="result in results" :key="result.id" v-text="result.desc_os"></li>
+            </ul>
+        </div>
+
+        
     </div>
 </template>
 <script>
