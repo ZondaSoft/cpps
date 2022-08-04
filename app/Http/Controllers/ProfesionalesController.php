@@ -353,11 +353,10 @@ class ProfesionalesController extends Controller
         $fecha = null;
         $iconSearch = false;
 
-        //$legajos = Cpps01::paginate(5);
         $legajos = Cpps01::name($request->get('name'))
-            ->where('codigo', '!=', null)
+            ->where('mat_prov_cole', '!=', null)
             ->orderBy('mat_prov_cole')
-            ->paginate(10);
+            ->paginate(12);
 
         //dd($legajos);
 

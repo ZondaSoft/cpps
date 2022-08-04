@@ -219,6 +219,7 @@ class ObrasadminController extends Controller
         $active = 10;
 
         $convenios = Cpps11::orderBy('cod_conv')->get();
+        $conv_os = Cpps12::where('cod_os', $legajo->cod_os)->get();
         
         // $legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
         // $legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
@@ -241,7 +242,8 @@ class ObrasadminController extends Controller
             'active',
             'id_caja',
             'fecha',
-            'convenios'
+            'convenios',
+            'conv_os'
             
         ));    // Abrir form de modificacion
     }
@@ -348,9 +350,9 @@ class ObrasadminController extends Controller
 
         //$legajos = Cpps07::paginate(5);
         $legajos = Cpps07::name($request->get('name'))
-            ->where('codigo', '!=', null)
+            ->where('cod_os', '!=', null)
             ->orderBy('cod_os')
-            ->paginate(10);
+            ->paginate(12);
 
         //dd($legajos);
 

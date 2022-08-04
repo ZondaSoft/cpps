@@ -12,4 +12,18 @@ class Cpps09 extends Model
     protected $fillable = ['cod_nemotecnico'];
 
     protected $primaryKey = 'id_nomen';
+
+
+    // Scope usado en las busquedas
+	public function scopeName($query, $name)
+	{
+		// dd("scope :" . $name);
+
+		if ($name != "")
+		{
+			$query->where(\DB::raw("CONCAT(cod_nomen,' ', cod_nemotecnico,' ', nom_prest)"), "LIKE" , "%$name%");
+
+			//dd($query);
+		}
+	}
 }

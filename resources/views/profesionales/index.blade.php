@@ -174,7 +174,7 @@
 
                   
                   <div class="col m2 s2 input-field">
-                    <input id="num_doc" name="num_doc" type="number" step="1" class="validate" 
+                    <input id="num_doc" name="num_doc" type="text" class="validate" maxlength="12"
                       value="{{ old('num_doc',$legajo->num_doc) }}"
                       {{ $edicion?'':'disabled' }}
                       {{ $agregar?'enabled autofocus=""':'disabled' }}

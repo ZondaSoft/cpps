@@ -340,7 +340,7 @@ class ConveniosController extends Controller
 
         //$legajos = Cpps11::paginate(5);
         $legajos = Cpps11::name($request->get('name'))
-            ->where('codigo', '!=', null)
+            ->where('cod_conv', '!=', null)
             ->orderBy('cod_conv')
             ->paginate(10);
 

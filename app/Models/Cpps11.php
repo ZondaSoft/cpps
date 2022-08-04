@@ -13,4 +13,18 @@ class Cpps11 extends Model
 
     protected $primaryKey = 'cod_conv';
 
+
+
+    // Scope usado en las busquedas
+	public function scopeName($query, $name)
+	{
+		// dd("scope :" . $name);
+
+		if ($name != "")
+		{
+			$query->where(\DB::raw("CONCAT(cod_conv,' ', desc_conv)"), "LIKE" , "%$name%");
+
+			//dd($query);
+		}
+	}
 }

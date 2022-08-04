@@ -10,4 +10,6 @@ class Vta001 extends Model
     use HasFactory;
     
     protected $fillable = ['detalle'];
+
+    
 }

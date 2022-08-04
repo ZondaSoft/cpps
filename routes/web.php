@@ -68,7 +68,6 @@ Route::get('/profesionales/edit/{id?}', 'ProfesionalesController@edit')->name('p
 Route::post('/profesionales/edit/{id}', 'ProfesionalesController@update');
 
 Route::get('/profesionales/search', 'ProfesionalesController@search')->name('profesionales.search');
-Route::get('/profesionales/search', 'ProfesionalesController@search')->name('profesionales.search');
 Route::get('/profesionales/{id?}/search/', 'ProfesionalesController@search')->name('profesionales.search');
 //Route::get('/profesionales/print/{id}', 'ProfesionalesController@printpdf')->name('profesionales.print');
 Route::post('/profesionales/print/', 'ProfesionalesController@printpdf')->name('profesionales.print');

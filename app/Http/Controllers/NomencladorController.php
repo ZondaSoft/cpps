@@ -316,9 +316,9 @@ class NomencladorController extends Controller
 
         //$legajos = Cpps09::paginate(5);
         $legajos = Cpps09::name($request->get('name'))
-            ->where('codigo', '!=', null)
-            ->orderBy('id_nomen')
-            ->paginate(10);
+            ->where('cod_nomen', '!=', null)
+            ->orderBy('cod_nomen')
+            ->paginate(12);
 
         //dd($legajos);
 
