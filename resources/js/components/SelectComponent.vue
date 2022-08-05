@@ -2,9 +2,9 @@
     <div class="col m7 s7 input-field" style="margin-top: 0px;">
         <div class="col m7 s7 input-field">
             <select v-model="selected_id" @change="loadObras">
-                <option value = "" selected>Seleccione una Obra Social</option>
-                <option v-for="(result, index) in obras" v-bind="index">
-                    @{{ result }}
+                <option value = "" selected>Seleccione una Obra</option>
+                <option v-for="result in obras" v-bind="result.id">
+                    @{{ result.desc_os }}
                 </option>
             </select>
             <label>Obra Social</label>

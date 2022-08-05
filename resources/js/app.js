@@ -16,10 +16,14 @@ window.Vue = require('vue').default;
  * Eg. ./components/ExampleComponent.vue -> <example-component></example-component>
  */
 
+ import vSelect from "vue-select";
+ import "vue-select/dist/vue-select.css";
+
 // const files = require.context('./', true, /\.vue$/i)
 // files.keys().map(key => Vue.component(key.split('/').pop().split('.')[0], files(key).default))
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
+Vue.component("v-select", vSelect);
 Vue.component('search-component', require('./components/SearchComponent.vue').default);
 Vue.component('select-component', require('./components/SelectComponent.vue').default);
 

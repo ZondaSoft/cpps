@@ -21,9 +21,9 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
-    public function get(Request $request)
+    public function getobras(Request $request)
     {
-        $posts = Cpps07::get();
+        $posts = Cpps07::select('desc_os')->get();
 
         return response()->json($posts);
     }
