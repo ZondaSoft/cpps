@@ -12,10 +12,19 @@ class PostController extends Controller
     {   
         return view('search');
     }
+
+
     public function search(Request $request)
     {
-        $posts=Cpps07::where('cod_os',$request->keywords)->get();
-        return response()->json($posts);
+        $posts = Cpps07::where('cod_os',$request->keywords)->get();
         
+        return response()->json($posts);
+    }
+
+    public function get(Request $request)
+    {
+        $posts = Cpps07::get();
+
+        return response()->json($posts);
     }
 }

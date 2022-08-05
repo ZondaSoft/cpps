@@ -39,7 +39,7 @@
 
 {{-- vendor styles --}}
 @section('vendor-style')
-<link rel="stylesheet" type="text/css" href="{{asset('vendors/select2/select2.min.css')}}">
+<link rel="stylesheet" type="text/css" href="{{asset('vendors/select2/select2.min.css?v2')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('vendors/select2/select2-materialize.css')}}">
 @endsection
 
@@ -130,17 +130,17 @@
                 </div>
 
                 <search-component></search-component>
+                <select-component></select-component>
                 
-                <div class="col m6 s6 input-field">
-                  <select id="det_os" name="det_os" 
-                      {{ $edicion?'enabled':'disabled' }}>
+                {{-- <div class="col m6 s6 input-field">
+                  <select id="det_os" name="det_os" >
                       <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
                       @foreach ($obras as $obra)
                         <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->cod_os }} - {{ $obra->desc_os }}</option>
                       @endforeach
                   </select>
                   <label>Obra Social</label>
-                </div>
+                </div> --}}
 
                 <div class="col m2 s2 input-field">
                   <input id="ordenes " name="ordenes" type="number" step="1" class="validate" 

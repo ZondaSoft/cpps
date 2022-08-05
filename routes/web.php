@@ -37,8 +37,12 @@ Route::get('/', function () {
     return view('auth.login');	// view('welcome');
 });
 
+//-----------------------------------------------------
+//          Rutas usadas en componenes vue.js
+//-----------------------------------------------------
 Route::get('search', [PostController::class, 'index']);
 Route::get('res-search', [PostController::class, 'search']);
+Route::get('get-oss', [PostController::class, 'get']);
 
 /* Route::get('/home', function () {
     return view('home');
