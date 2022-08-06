@@ -23,7 +23,7 @@ class PostController extends Controller
 
     public function getobras(Request $request)
     {
-        $posts = Cpps07::select('desc_os')->get();
+        $posts = Cpps07::select('id', 'cod_os', 'desc_os')->orderBy('desc_os')->get();
 
         return response()->json($posts);
     }

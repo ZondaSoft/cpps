@@ -127,7 +127,7 @@ class OrdenesController extends Controller
         $iconSearch = false;
 
         $legajo = new Cpps01;      // find($id);     // dd($legajo);
-        $legajo->periodo = '07/2022';
+        $legajo->periodo = '08/2022';
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;

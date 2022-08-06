@@ -26,6 +26,7 @@ window.Vue = require('vue').default;
 Vue.component("v-select", vSelect);
 Vue.component('search-component', require('./components/SearchComponent.vue').default);
 Vue.component('select-component', require('./components/SelectComponent.vue').default);
+Vue.component('vselect-component', require('./components/vSelectComponent.vue').default);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to

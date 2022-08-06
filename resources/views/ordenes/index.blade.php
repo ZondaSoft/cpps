@@ -112,8 +112,6 @@
       <div class="row">
         <div class="col s12" id="account">
           
-          <!-- users edit media object ends -->
-          
           <div class="row" id="app">
             <div class="s12 m12">
               <div class="form-row">
@@ -130,7 +128,8 @@
                 </div>
 
                 <search-component></search-component>
-                <select-component></select-component>
+                {{-- <select-component></select-component> --}}
+                <vselect-component></vselect-component>
                 
                 {{-- <div class="col m6 s6 input-field">
                   <select id="det_os" name="det_os" >
