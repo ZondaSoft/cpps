@@ -1,5 +1,5 @@
 <template>
-    <div class="col m7 s7 input-field" style="margin-top: 0px;">
+    <div class="col m6 s6 select-dropdown dropdown-trigger" style="margin-top: 0px;">
         <v-select
             v-model="selected_id"
             label="desc_os"

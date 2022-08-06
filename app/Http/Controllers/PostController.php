@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Facades\App\Repository\Posts;
+use App\Models\Cpps01;  // Professionals
 use App\Models\Cpps07;  // Obras sociales
 
 class PostController extends Controller
@@ -21,9 +22,18 @@ class PostController extends Controller
         return response()->json($posts);
     }
 
+
     public function getobras(Request $request)
     {
         $posts = Cpps07::select('id', 'cod_os', 'desc_os')->orderBy('desc_os')->get();
+
+        return response()->json($posts);
+    }
+
+
+    public function getProfessionals(Request $request)
+    {
+        $posts = Cpps01::select('id', 'mat_prov_cole', 'nom_ape')->orderBy('nom_ape')->get();
 
         return response()->json($posts);
     }

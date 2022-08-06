@@ -127,9 +127,9 @@
                   <small class="errorTxt1"></small>
                 </div>
 
-                <search-component></search-component>
+                {{-- <search-component></search-component> --}}
                 {{-- <select-component></select-component> --}}
-                <vselect-component></vselect-component>
+                <vselect-ooss></vselect-ooss>
                 
                 {{-- <div class="col m6 s6 input-field">
                   <select id="det_os" name="det_os" >
@@ -172,7 +172,6 @@
                         </div>
                         <div class="collapsible-body" style="display: block;padding-top: 15px;padding-bottom: 5px;">
                             <div class="row">
-                              
 
                               {{-- <div class="col m2 s2 input-field">
                                 <input id="matricula " name="matricula" type="number" step="1" class="validate" 
@@ -185,7 +184,7 @@
                                 <small class="errorTxt4"></small>
                               </div> --}}
 
-                              <div class="col m8 s8 input-field">
+                              {{-- <div class="col m8 s8 input-field">
                                 <select id="profesional" name="profesional" 
                                     {{ $edicion?'enabled':'disabled' }}>
                                     <option value = "" @if ( old('profesional',$legajo->profesional)  == "")  selected   @endif  >Seleccione un profesional</option>
@@ -193,7 +192,9 @@
                                       <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('profesional',$legajo->profesional)  == $profesional->profesional)         @endif  >{{ $profesional->mat_prov_cole }} - {{ $profesional->nom_ape }}</option>
                                     @endforeach
                                 </select>
-                                <label>Apellido y Nombre</label>
+                                <label>Apellido y Nombre</label> --}}
+
+                                <vselect-prof></vselect-prof>
                               </div>
                             </div>
                             
@@ -201,8 +202,6 @@
                     </li>
                   </ul>
                 </div>
-
-
 
                 <!-- FACTURACION -->
                 <div class="col s12" style="padding-right: 0px;padding-left: 0px">
@@ -236,7 +235,7 @@
                           </div>
 
                           <div class="row">
-                            <div class="col m1 s1 input-field">
+                            {{-- <div class="col m1 s1 input-field">
                               <select id="cuota_col" name="cuota_col" {{ $edicion?'enabled':'disabled' }}>
                                 <option value="0" @if ($legajo->cuota_col == "0")  selected   @endif  >SI se descuenta</option>
                                 <option value="1" @if ($legajo->cuota_col == "1")  selected   @endif  >NO se descuenta</option>
@@ -256,7 +255,9 @@
                                 <option value="" @if ($legajo->prestacion == "")  selected   @endif  >Seleccione prestación</option>
                               </select>
                               <label>Prestación</label>
-                            </div>
+                            </div> --}}
+                            
+                            <vselect-prof></vselect-prof>
                             
                             <div class="col m2 s2 input-field">
                               <input id="cantidad" name="cantidad" type="number" class="validate" 

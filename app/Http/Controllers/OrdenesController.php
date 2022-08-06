@@ -170,6 +170,8 @@ class OrdenesController extends Controller
         $legajo = new Cpps01();
         //$request->all();
         //$legajo = Cpps01::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
+
+        dd($request->input('profesionales'));
         
         $legajo->mat_prov_cole = $request->input('mat_prov_cole');
         $legajo->nom_ape = $request->input('nom_ape');

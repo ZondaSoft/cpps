@@ -43,6 +43,7 @@ Route::get('/', function () {
 Route::get('search', [PostController::class, 'index']);
 Route::get('res-search', [PostController::class, 'search']);
 Route::get('get-oss', [PostController::class, 'getobras']);
+Route::get('get-prof', [PostController::class, 'getProfessionals']);
 
 /* Route::get('/home', function () {
     return view('home');
