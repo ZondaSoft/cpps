@@ -115,7 +115,7 @@
           <div class="row" id="app">
             <div class="s12 m12">
               <div class="form-row">
-                <div class="col m2 s2 input-field" style="width: 100px;">
+                <div class="col m2 s2 input-field" style="width: 100px;margin-bottom: 0px;">
                   <input id="periodo" name="periodo" type="text" class="validate" 
                     value="{{ old('periodo',$legajo->periodo) }}"
                     {{ $edicion?'':'disabled' }}
@@ -127,11 +127,13 @@
                   <small class="errorTxt1"></small>
                 </div>
 
-                <search-ooss onchange="changeObra(this)"></search-ooss>
+                <input id="cod_os_original" name="cod_os_original" type="text" autocomplete="off" maxlength="10" value="{{ old('cod_os',$legajo->cod_os) }}" style="width: 100px;margin-bottom: 0px;" hidden>
+
+                <search-ooss style="width: 100px;margin-bottom: 0px;" onchange="changeObra(this)"></search-ooss>
                 {{-- <select-component></select-component> --}}
                 {{-- <vselect-ooss></vselect-ooss> --}}
                 
-                <div class="col m4 s4 input-field" style="padding-right: 0px;">
+                <div class="col m4 s4 input-field" style="padding-right: 0px;margin-bottom: 0px;">
                   <select id="det_os" name="det_os" onchange="changeObra2(this)">
                       <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
                       @foreach ($obras as $obra)
@@ -141,7 +143,7 @@
                   <label>Obra Social</label>
                 </div>
 
-                <div class="col m2 s2 input-field">
+                <div class="col m2 s2 input-field" style="margin-bottom: 0px;">
                   <input id="ordenes " name="ordenes" type="number" step="1" class="validate" 
                     value="{{ old('ordenes ',$legajo->ordenes ) }}"
                     {{ $edicion?'':'disabled' }}
@@ -152,8 +154,8 @@
                   <small class="errorTxt3"></small>
                 </div>
 
-                <div class="col m2 s2 input-field">
-                  <input id="importe " name="importe" type="number" step="0.1" class="validate" 
+                <div class="col m2 s2 input-field" style="margin-bottom: 0px;">
+                  <input id="importe " name="importe" type="number" step="0.1" class="validate"
                     value="{{ old('importe ',$legajo->importe ) }}"
                     {{ $edicion?'':'disabled' }}
                     {{ $agregar?'enabled autofocus=""':'disabled' }}
@@ -186,7 +188,7 @@
 
                               <search-professional onchange="changeProfessional(this)" value="{{ old('cod_prof') }}"></search-professional>
 
-                              <div class="col m8 s8 input-field">
+                              <div class="col m7 s7 input-field">
                                 <select id="profesional" name="profesional" 
                                     {{ $edicion?'enabled':'disabled' }} 
                                     onchange="changeProfessional2(this)" >
@@ -200,6 +202,9 @@
 
                                 {{-- <vselect-prof></vselect-prof> --}}
                               </div>
+
+                              
+
                             </div>
                             
                         </div>
@@ -214,7 +219,7 @@
                         <div class="collapsible-header waves-light gradient-45deg-light-blue-cyan lightrn-1 white-text" style="padding-bottom: 10px;padding-top: 10px;">
                           <i class="material-icons">toll</i> Orden
                         </div>
-                        <div class="collapsible-body" style="display: block;padding-top: 15px;padding-bottom: 5px;">
+                        <div class="collapsible-body" style="display: block;padding-top: 15px;padding-top: 5px;padding-bottom: 5px;">
 
                           <div class="row">
                             <div class="col m3 s3 input-field">
@@ -235,6 +240,18 @@
                                 data-error=".errorTxt5">
                               <label for="nom_afiliado">Afiliado</label>
                               <small class="errorTxt9"></small>
+                            </div>
+
+                            <div class="col m2 s2 input-field">
+                              {{-- <input id='fecha' type="text" class="datepicker mr-2 mb-1" placeholder="Elija fecha" value="{{ old('fecha',$orden->fecha) }}"> --}}
+                              <input id="fecha" name="fecha" type="date" placeholder="dd/mm/aaaa" class="" 
+                                    value="{{ old('fecha',$legajo->fecha) }}"
+                                    maxlength="10" autocomplete='off'
+                                    required
+                                    {{ $edicion?'enabled':'disabled' }}
+                                    data-error=".errorTxt2">
+                              <label for="fecha">Fecha Aut.</label>
+                              <small class="errorTxt2"></small>
                             </div>
                           </div>
 
@@ -261,13 +278,13 @@
                               <label>Prestación</label>
                             </div>
                             
-                            <div class="col m2 s2 input-field" style="width: 130px;">
+                            <div class="col m1 s1 input-field" style="width: 110px;">
                               <input id="cantidad" name="cantidad" type="number" class="validate" step="1"
                                 value="{{ old('cantidad',$legajo->cantidad) }}"
                                 {{ $edicion?'enabled':'disabled' }}
                                 maxlength="11" autocomplete='off'
-                                data-error=".errorTxt4" required>
-                              <label for="cantidad">Cantidad</label>
+                                data-error=".errorTxt4" required onchange="calcular()">
+                              <label for="cantidad" id="lblCantidad" name="lblCantidad">Cantidad</label>
                               <small class="errorTxt14"></small>
                             </div>
 
@@ -287,7 +304,7 @@
                                 {{ $edicion?'enabled':'disabled' }}
                                 maxlength="11" autocomplete='off'
                                 data-error=".errorTxt16" disabled>
-                              <label for="total">Total</label>
+                              <label for="total" id="lblTotal" name="lblTotal">Total</label>
                               <small class="errorTxt16"></small>
                             </div>
                           </div>
@@ -437,7 +454,20 @@ function buscoPrecio(e) {
 
       }
     });
-} 
+}
+
+
+function calcular(e) {
+  var precio = 0
+  var cantidad = 0
+
+  cantidad = document.getElementById("cantidad").value;
+  precio = document.getElementById("precio").value;
+
+  document.getElementById("total").value = precio * cantidad;
+  
+  $("#lblTotal").addClass('active');
+}
 
 </script>
 @endsection

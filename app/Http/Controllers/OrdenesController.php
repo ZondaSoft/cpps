@@ -9,6 +9,7 @@ use App\Models\Fza020;  // Head de movimientos
 use App\Models\Cpps01;  // Profesionales
 use App\Models\Cpps07;  // Obras sociales
 use App\Models\Cpps09;  // Nomencladores
+use App\Models\Cpps30;  // Ordenes
 use Carbon\Carbon;
 
 class OrdenesController extends Controller
@@ -100,8 +101,6 @@ class OrdenesController extends Controller
         $nomencladores = Cpps09::orderBy('cod_nomen')->get();
         $prestaciones = Cpps09::orderBy('nom_prest')->get();
 
-        $now = Carbon::now();
-
         return view('ordenes.index')->with(compact(
             'empresa',
             'legajo',
@@ -133,6 +132,8 @@ class OrdenesController extends Controller
 
         $legajo = new Cpps01;      // find($id);     // dd($legajo);
         $legajo->periodo = '08/2022';
+        $legajo->fecha = Carbon::Now()->format('Y-m-d');
+        $legajo->cod_os = '1050';
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
@@ -176,51 +177,34 @@ class OrdenesController extends Controller
 
         $this->validate($request, $rules, $messages);
 
-        $legajo = new Cpps01();
+        $legajo = new Cpps30();
         //$request->all();
         //$legajo = Cpps01::create($request->all()); // massives assignments : all() -> onLy() // only('name','description')
 
-        dd($request->input('profesionales'));
-        
-        $legajo->mat_prov_cole = $request->input('mat_prov_cole');
-        $legajo->nom_ape = $request->input('nom_ape');
-        $legajo->sexo = $request->input('sexo');
-        $legajo->lugar_nacimiento = $request->input('lugar_nacimiento');
-        $legajo->nacionalidad = $request->input('nacionalidad');
-        $legajo->tipo_doc = $request->input('tipo_doc');
-        $legajo->num_doc = $request->input('num_doc');
-        $legajo->cond_iva = $request->input('cond_iva');
-        $legajo->cuit = $request->input('cuit');
-        
-        $legajo->universidad = $request->input('universidad');
-        $legajo->especialidad = $request->input('especialidad'); 
-        $legajo->mat1 = $request->input('mat1'); 
-        $legajo->mat2 = $request->input('mat2'); 
-        $legajo->mat3 = $request->input('mat3'); 
-        $legajo->mat4 = $request->input('mat4'); 
-        $legajo->mat5 = $request->input('mat5'); 
-
-        $legajo->cat_soc = $request->input('cat_soc'); 
-        $legajo->forma_cobro = $request->input('forma_cobro'); 
-        $legajo->cod_banco = $request->input('cod_banco'); 
-        $legajo->cta_bancaria = $request->input('cta_bancaria'); 
-        $legajo->cbu = $request->input('cbu'); 
-        $legajo->cuota_col_deb_auto = $request->input('cuota_col_deb_auto'); 
-        $legajo->seg_mala_prax = $request->input('seg_mala_prax'); 
-        $legajo->seg_mala_prax_deb_auto = $request->input('seg_mala_prax_deb_auto'); 
-        $legajo->cuota_col = $request->input('cuota_col'); 
-        $legajo->caja_SS = $request->input('caja_SS'); 
-        $legajo->categ_ss = $request->input('categ_ss'); 
+        $legajo->periodo = $request->input('periodo');
+        $legajo->cod_os = $request->input('cod_os');
+        $legajo->ordenes = $request->input('ordenes'); 
+        $legajo->importe = $request->input('importe'); 
         $legajo->caja_reg_ss = $request->input('caja_reg_ss'); 
+        $legajo->mat_prov_cole = $request->input('mat_prov_cole'); 
+        $legajo->orden_nro = $request->input('orden_nro');
+        $legajo->nom_afiliado = $request->input('nom_afiliado');
+        $legajo->fecha = $request->input('fecha');
+        $legajo->id_nomen = $request->input('id_nomen');
+        $legajo->nomenclador = $request->input('nomenclador');
+        $legajo->prestacion = $request->input('prestacion');
+        $legajo->cantidad = $request->input('cantidad');
+        $legajo->precio = $request->input('precio');
+        $legajo->total = $request->input('total');
 
         $legajo->activo = true;
 
         $legajo->save();   // INSERT INTO - SQL
         
         if ($legajo->mat_prov_cole > 0)
-            return redirect('/profesionales/' . $legajo->id)->with('success', 'El cliente fue creado con éxito');
+            return redirect('/carga-ordenes/' . $legajo->id)->with('success', 'La orden ya fue registrada con éxito');
 
-        return redirect('/profesionales/');
+        return redirect('/carga-ordenes/');
     }
 
 

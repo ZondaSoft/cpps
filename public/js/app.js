@@ -5412,7 +5412,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      keywords: null,
+      keywords: document.getElementById("cod_os_original").value,
       results: [],
       account_id: null
     };
@@ -5680,7 +5680,10 @@ var render = function render() {
       id: "search1"
     }
   }, [_c("div", {
-    staticClass: "col m12 s12 input-field"
+    staticClass: "col m12 s12 input-field",
+    staticStyle: {
+      "margin-bottom": "0px"
+    }
   }, [_c("input", {
     directives: [{
       name: "model",

@@ -1,6 +1,6 @@
 <template>
     <div class="col m2 s2 input-field" style="margin-top: 0px;padding-left: 0px;" id="search1">
-        <div class="col m12 s12 input-field">
+        <div class="col m12 s12 input-field" style="margin-bottom: 0px;">
             <input id="cod_os" type="text" v-model="keywords" autocomplete="off" maxlength="10" required>
             <label for="cod_os" class="active" id="lblCod_os" name="lblCod_os">Obra Social</label>
             <small class="errorTxt1"></small>
@@ -18,7 +18,7 @@
 export default {
     data() {
         return {
-            keywords: null,
+            keywords: document.getElementById("cod_os_original").value,
             results: [],
             account_id: null
         };
