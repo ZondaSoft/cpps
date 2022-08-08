@@ -48,6 +48,7 @@
                                  <th data-field="codigo">Código</th>
                                  <th data-field="codigo">Nemotécnico</th>
                                  <th data-field="detalle">Nombre</th>
+                                 <th data-field="observacion">Observación</th>
                                  <th data-field="select"></th>
                               </tr>
                            </thead>
@@ -64,6 +65,9 @@
 
                                     <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">
                                        {{ $legajo->nom_prest }}
+                                    </td>
+                                    <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">
+                                       {{ $legajo->observacion }}
                                     </td>
                                     
                                     <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">

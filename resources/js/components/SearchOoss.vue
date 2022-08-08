@@ -1,15 +1,16 @@
 <template>
-    <div class="col m6 s6 input-field" style="margin-top: 0px;" id="search1">
-        <div class="col m3 s3 input-field">
-            <input id="cod_os" type="text" v-model="keywords" autocomplete="off">
-            <label for="cod_os">Obra Social</label>
+    <div class="col m2 s2 input-field" style="margin-top: 0px;padding-left: 0px;" id="search1">
+        <div class="col m12 s12 input-field">
+            <input id="cod_os" type="text" v-model="keywords" autocomplete="off" maxlength="10" required>
+            <label for="cod_os" class="active" id="lblCod_os" name="lblCod_os">Obra Social</label>
             <small class="errorTxt1"></small>
         </div>
-        <div class="col m5 s5 input-field">
+        <!-- <div class="col m5 s5 input-field">
             <ul v-if="results.length > 0">
                 <li v-for="result in results" :key="result.id" v-text="result.desc_os"></li>
+                <input id="nom_os" type="text" v-model="keywords" autocomplete="off" value="result.cod_os">
             </ul>
-        </div>
+        </div> -->
         
     </div>
 </template>
@@ -29,7 +30,7 @@ export default {
     },
     methods: {
         fetch() {
-            axios.get('/res-search', { params: { keywords: this.keywords } })
+            axios.get('/searchOoss', { params: { keywords: this.keywords } })
                 .then(response => this.results = response.data)
                 .catch(error => {});
         }

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Facades\App\Repository\Posts;
 use App\Models\Cpps01;  // Professionals
 use App\Models\Cpps07;  // Obras sociales
+use App\Models\Cpps14;  // Pivote table Nomenclador-precios
 
 class PostController extends Controller
 {
@@ -15,11 +16,27 @@ class PostController extends Controller
     }
 
 
-    public function search(Request $request)
+    public function searchOoss(Request $request)
     {
         $posts = Cpps07::where('cod_os',$request->keywords)->get();
         
         return response()->json($posts);
+    }
+
+
+    public function searchProfessional(Request $request)
+    {
+        $posts = Cpps01::where('mat_prov_cole',$request->keywords)->get();
+        
+        return response()->json($posts);
+    }
+
+
+    public function searchPrecios(Request $request, $id)
+    {
+        $posts = Cpps14::where('cod_nomenclador', $id)->get();
+
+        return $posts;
     }
 
 

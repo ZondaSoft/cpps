@@ -193,6 +193,63 @@
                       <small class="errorTxt7"></small>
                     </div>
                   </div>
+
+
+
+
+                  <!-- CONVENIOS -->
+                  <div class="col s12" style="padding-right: 0px;padding-left: 0px" id="convenios" name="convenios">
+                    <ul class="collapsible collapsible-accordion">
+                      <li>
+                          <div class="collapsible-header waves-light gradient-45deg-purple-deep-orange lightrn-1 white-text">
+                            <i class="material-icons">toll</i> Convenios asociados
+                          </div>
+                          <div class="collapsible-body" style="display: block;">
+
+                            <div class="row">
+                              
+                              <!-- START table-responsive-->
+                              <div class="col s12">
+                                <table class="bordered">
+                                  <thead>
+                                      <tr>
+                                        <th data-field="name">Cód.Nomenclador</th>
+                                        <th data-field="name">Nombre Nomenclador</th>
+                                        <th data-field="name">Importe</th>
+                                      </tr>
+                                  </thead>
+                                  <tbody>
+                                      @foreach ($convNomenclador as $convenio)
+                                        <tr style="height: 10px;">
+                                          <td style="height: 10px;">
+                                            {{ $convenio->cod_nomenclador }}
+                                          </td>
+
+                                          <td style="height: 10px;">
+                                            {{ $convenio->NomNomenclador }}
+                                          </td>
+
+                                          <td style="height: 10px;">
+                                            {{ $convenio->importe }}
+                                          </td>
+                                        </tr>
+                                      @endforeach
+                                  </tbody>
+                                </table>
+
+                                {{-- <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/obras-admin/add') }}" >Agregar convenio</a> --}}
+
+                            </div>
+                            <!-- END table-responsive-->
+
+                            </div>
+                          </div>
+                      </li>
+                    </ul>
+                  </div>
+
+
+
               </div>
 
 

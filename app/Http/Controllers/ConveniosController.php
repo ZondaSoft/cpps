@@ -8,6 +8,7 @@ use App\Models\Datoempr;
 use App\Models\Cpps07;  // Obras social
 use App\Models\Cpps11;  // Convenios de OS
 use App\Models\Cpps12;  // Pivote table betwwen OS & convenios
+use App\Models\Cpps14;  // Pivote table convenios & nomencladores
 use Carbon\Carbon;
 
 
@@ -108,6 +109,7 @@ class ConveniosController extends Controller
         }
 
         $obras = Cpps07::orderBy('cod_os')->get();
+        $convNomenclador = Cpps14::where('cod_convenio', $legajo->cod_conv)->get();
 
         return view('convenios.index')->with(compact(
             'empresa',
@@ -119,7 +121,8 @@ class ConveniosController extends Controller
             'active',
             'fecha',
             'id_caja',
-            'cerrada'
+            'cerrada',
+            'convNomenclador'
         ));
     }
 
@@ -142,6 +145,7 @@ class ConveniosController extends Controller
         $active = 12;
 
         $obras = Cpps07::orderBy('cod_os')->get();
+        $convNomenclador = Cpps14::get();
 
         return view('convenios.index')->with(compact(
             'legajo',
@@ -150,7 +154,8 @@ class ConveniosController extends Controller
             'active',
             'iconSearch',
             'fecha',
-            'obras'
+            'obras',
+            'convNomenclador'
         ));
     }
 
@@ -237,14 +242,18 @@ class ConveniosController extends Controller
             $familiares = new Sue002;
         } */
 
+        $obras = Cpps07::orderBy('cod_os')->get();
+        $convNomenclador = Cpps14::get();
+
         return view('convenios.index')->with(compact(
             'legajo',
             'agregar',
             'edicion',
             'iconSearch',
             'active',
-            'fecha'
-            
+            'fecha',
+            'obras',
+            'convNomenclador'
         ));    // Abrir form de modificacion
     }
 

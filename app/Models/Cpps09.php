@@ -21,7 +21,7 @@ class Cpps09 extends Model
 
 		if ($name != "")
 		{
-			$query->where(\DB::raw("CONCAT(cod_nomen,' ', cod_nemotecnico,' ', nom_prest)"), "LIKE" , "%$name%");
+			$query->where(\DB::raw("CONCAT(cod_nomen,' ', cod_nemotecnico,' ', nom_prest,' ', observacion)"), "LIKE" , "%$name%");
 
 			//dd($query);
 		}

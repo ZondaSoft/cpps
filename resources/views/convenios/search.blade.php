@@ -47,6 +47,7 @@
                               <tr>
                                  <th data-field="codigo">Código</th>
                                  <th data-field="detalle">Nombre</th>
+                                 <th data-field="detalle">Observación</th>
                                  <th data-field="select"></th>
                               </tr>
                            </thead>
@@ -60,9 +61,13 @@
                                     <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">
                                        {{ $legajo->desc_conv }}
                                     </td>
+
+                                    <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">
+                                       {{ $legajo->observacion_conv }}
+                                    </td>
                                     
                                     <td style="height: 40px;padding-bottom: 4px;padding-top: 4px;">
-                                       <a class="mb-0 btn waves-effect waves-light cyan" href="\convenios\{{ $legajo->id }}">Seleccionar</a>
+                                       <a class="mb-0 btn waves-effect waves-light cyan" href="\convenios\{{ $legajo->cod_conv }}">Seleccionar</a>
                                     </td>
                                  </tr>
                               @endforeach

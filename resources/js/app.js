@@ -24,7 +24,10 @@ window.Vue = require('vue').default;
 
 //Vue.component('example-component', require('./components/ExampleComponent.vue').default);
 Vue.component("v-select", vSelect);
-Vue.component('search-component', require('./components/SearchComponent.vue').default);
+Vue.component('search-ooss', require('./components/SearchOoss.vue').default);
+Vue.component('search-professional', require('./components/SearchProfessional.vue').default);
+Vue.component('search-nomenclador', require('./components/SearchNomenclador.vue').default);
+
 Vue.component('select-component', require('./components/SelectComponent.vue').default);
 Vue.component('vselect-ooss', require('./components/vSelectOoss.vue').default);
 Vue.component('vselect-prof', require('./components/vSelectProf.vue').default);

@@ -115,7 +115,7 @@
           <div class="row" id="app">
             <div class="s12 m12">
               <div class="form-row">
-                <div class="col m2 s2 input-field">
+                <div class="col m2 s2 input-field" style="width: 100px;">
                   <input id="periodo" name="periodo" type="text" class="validate" 
                     value="{{ old('periodo',$legajo->periodo) }}"
                     {{ $edicion?'':'disabled' }}
@@ -127,19 +127,19 @@
                   <small class="errorTxt1"></small>
                 </div>
 
-                {{-- <search-component></search-component> --}}
+                <search-ooss onchange="changeObra(this)"></search-ooss>
                 {{-- <select-component></select-component> --}}
-                <vselect-ooss></vselect-ooss>
+                {{-- <vselect-ooss></vselect-ooss> --}}
                 
-                {{-- <div class="col m6 s6 input-field">
-                  <select id="det_os" name="det_os" >
+                <div class="col m4 s4 input-field" style="padding-right: 0px;">
+                  <select id="det_os" name="det_os" onchange="changeObra2(this)">
                       <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
                       @foreach ($obras as $obra)
-                        <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->cod_os }} - {{ $obra->desc_os }}</option>
+                        <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->desc_os }}</option>
                       @endforeach
                   </select>
                   <label>Obra Social</label>
-                </div> --}}
+                </div>
 
                 <div class="col m2 s2 input-field">
                   <input id="ordenes " name="ordenes" type="number" step="1" class="validate" 
@@ -184,17 +184,21 @@
                                 <small class="errorTxt4"></small>
                               </div> --}}
 
-                              {{-- <div class="col m8 s8 input-field">
+                              <search-professional onchange="changeProfessional(this)" value="{{ old('cod_prof') }}"></search-professional>
+
+                              <div class="col m8 s8 input-field">
                                 <select id="profesional" name="profesional" 
-                                    {{ $edicion?'enabled':'disabled' }}>
+                                    {{ $edicion?'enabled':'disabled' }} 
+                                    onchange="changeProfessional2(this)" >
                                     <option value = "" @if ( old('profesional',$legajo->profesional)  == "")  selected   @endif  >Seleccione un profesional</option>
                                     @foreach ($profesionales as $profesional)
-                                      <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('profesional',$legajo->profesional)  == $profesional->profesional)         @endif  >{{ $profesional->mat_prov_cole }} - {{ $profesional->nom_ape }}</option>
+                                      <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('profesional',$legajo->profesional)  == $profesional->profesional)         @endif  >{{ $profesional->nom_ape }} - ({{ $profesional->mat_prov_cole }})
+                                      </option>
                                     @endforeach
                                 </select>
-                                <label>Apellido y Nombre</label> --}}
+                                <label>Apellido y Nombre</label>
 
-                                <vselect-prof></vselect-prof>
+                                {{-- <vselect-prof></vselect-prof> --}}
                               </div>
                             </div>
                             
@@ -218,73 +222,71 @@
                                 value="{{ old('orden_nro',$legajo->orden_nro) }}"
                                 {{ $edicion?'enabled':'disabled' }}
                                 maxlength="30" autocomplete='off'
-                                data-error=".errorTxt5">
+                                data-error=".errorTxt5" required>
                               <label for="orden_nro">Nro. Orden</label>
                               <small class="errorTxt8"></small>
                             </div>
 
                             <div class="col m6 s6 input-field">
-                              <input id="afiliado" name="afiliado" type="text" class="validate" 
-                                value="{{ old('afiliado',$legajo->afiliado) }}"
+                              <input id="nom_afiliado" name="nom_afiliado" type="text" class="validate" 
+                                value="{{ old('nom_afiliado',$legajo->nom_afiliado) }}"
                                 {{ $edicion?'enabled':'disabled' }}
                                 maxlength="50" autocomplete='off'
                                 data-error=".errorTxt5">
-                              <label for="afiliado">Afiliado</label>
+                              <label for="nom_afiliado">Afiliado</label>
                               <small class="errorTxt9"></small>
                             </div>
                           </div>
 
                           <div class="row">
-                            {{-- <div class="col m1 s1 input-field">
-                              <select id="cuota_col" name="cuota_col" {{ $edicion?'enabled':'disabled' }}>
-                                <option value="0" @if ($legajo->cuota_col == "0")  selected   @endif  >SI se descuenta</option>
-                                <option value="1" @if ($legajo->cuota_col == "1")  selected   @endif  >NO se descuenta</option>
-                              </select>
-                              <label>Código</label>
-                            </div>
-                            
+                            <search-nomenclador onchange="changeNomenclador(this)"></search-nomenclador>
+
                             <div class="col m3 s3 input-field">
-                              <select id="nomenclador" name="nomenclador" {{ $edicion?'enabled':'disabled' }}>
-                                <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione nomenclador</option>
+                              <select id="nomenclador" name="nomenclador" {{ $edicion?'enabled':'disabled' }} onchange="changePrestacion(this)">
+                                <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione...</option>
+                                @foreach ($nomencladores as $nomenclador)
+                                  <option value = "{{ $nomenclador->cod_nemotecnico  }}" @if ( old('nomenclador',$legajo->id_nomen)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
+                                @endforeach
                               </select>
                               <label>Nomenclador</label>
                             </div>
 
                             <div class="col m3 s3 input-field">
-                              <select id="prestacion" name="prestacion" {{ $edicion?'enabled':'disabled' }}>
+                              <select id="prestacion" name="prestacion" {{ $edicion?'enabled':'disabled' }} onchange="changePrestacion2(this)">
                                 <option value="" @if ($legajo->prestacion == "")  selected   @endif  >Seleccione prestación</option>
+                                @foreach ($prestaciones as $prestacion)
+                                  <option value = "{{ $prestacion->cod_nomen  }}" @if ( old('prestacion',$legajo->cod_nomen)  == $prestacion->cod_nomen)  selected @endif>{{ $prestacion->nom_prest }}</option>
+                                @endforeach
                               </select>
                               <label>Prestación</label>
-                            </div> --}}
+                            </div>
                             
-                            <vselect-prof></vselect-prof>
-                            
-                            <div class="col m2 s2 input-field">
-                              <input id="cantidad" name="cantidad" type="number" class="validate" 
+                            <div class="col m2 s2 input-field" style="width: 130px;">
+                              <input id="cantidad" name="cantidad" type="number" class="validate" step="1"
                                 value="{{ old('cantidad',$legajo->cantidad) }}"
                                 {{ $edicion?'enabled':'disabled' }}
-                                maxlength="22" autocomplete='off'
-                                data-error=".errorTxt4">
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt4" required>
                               <label for="cantidad">Cantidad</label>
                               <small class="errorTxt14"></small>
                             </div>
 
-                            <div class="col m2 s2 input-field">
-                              <input id="importe" name="importe" type="number" class="validate" 
-                                value="{{ old('importe',$legajo->importe) }}"
+                            <div class="col m2 s2 input-field" style="width: 130px;">
+                              <input id="precio" name="precio" type="number" class="validate" step="0.10"
+                                value="{{ old('precio',$legajo->precio) }}"
                                 {{ $edicion?'enabled':'disabled' }}
-                                maxlength="22" autocomplete='off'
+                                maxlength="11" autocomplete='off'
                                 data-error=".errorTxt15">
-                              <label for="importe">Importe</label>
+                              <label for="precio"  id="lblPrecio" name="lblPrecio">Importe</label>
                               <small class="errorTxt15"></small>
                             </div>
 
-                            <div class="col m2 s2 input-field">
+                            <div class="col m2 s2 input-field" style="width: 130px;">
                               <input id="total" name="total" type="number" class="validate" 
                                 value="{{ old('total',$legajo->total) }}"
                                 {{ $edicion?'enabled':'disabled' }}
-                                maxlength="22" autocomplete='off'
-                                data-error=".errorTxt16">
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt16" disabled>
                               <label for="total">Total</label>
                               <small class="errorTxt16"></small>
                             </div>
@@ -336,4 +338,106 @@
 {{-- page scripts --}}
 @section('page-script')
 <script src="{{asset('js/scripts/page-users.js')}}"></script>
+
+<script>
+function changeObra(e) {
+  var obraSocial = document.getElementById("cod_os").value;
+
+  document.getElementById("det_os").value = obraSocial;
+  //$("det_os").val("1050");
+  $("#det_os").formSelect(); // Refrescar
+
+  var valor1 = document.getElementById("det_os").value;
+}
+
+function changeObra2(e) {
+  var obraSocial = document.getElementById("det_os").value;
+
+  document.getElementById("cod_os").value = obraSocial;
+  
+  $("#lblCod_os").addClass('active');
+}
+
+
+function changeProfessional(e) {
+  //var valor1 = document.getElementById("det_os").value;
+  //console.log(valor1);
+
+  var matricula = document.getElementById("cod_prof").value;
+
+  document.getElementById("profesional").value = matricula;
+  
+  $("#profesional").formSelect(); // Refrescar
+}
+
+
+function changeProfessional2(e) {
+  var ape_nomProfesional = document.getElementById("profesional").value;
+
+  document.getElementById("cod_prof").value = ape_nomProfesional;
+  
+  $("#lblMatricula").addClass('active');
+}
+
+
+
+function changeNomenclador(e) {
+  var Nomenclador = document.getElementById("id_nomen").value;
+
+  document.getElementById("nomenclador").value = Nomenclador;
+  $("#nomenclador").formSelect(); // Refrescar
+
+  changePrestacion(1)
+}
+
+
+function changePrestacion(e) {
+  var nomenclador = $( "#nomenclador option:selected" ).text();
+  
+  document.getElementById("prestacion").value = nomenclador;
+  $("#prestacion").formSelect(); // Refrescar
+
+  buscoPrecio(1)
+}
+
+
+function changePrestacion2(e) {
+  var detPrestacion = document.getElementById("prestacion").value;
+
+  document.getElementById("nomenclador").value = detPrestacion;
+  
+  //$("#lblMatricula").addClass('active');
+}
+
+
+function buscoPrecio(e) {
+  var codPrestacion = document.getElementById("prestacion").value
+
+  $.ajax({
+      url: "/searchPrecios/" + codPrestacion,
+      data: "",
+      dataType: "json",
+      method: "GET",
+      success: function(result)
+      {
+        if (result != null) {
+          
+          document.getElementById("precio").value = result[0].importe;
+
+          $("#lblPrecio").addClass('active');
+
+        } else {
+          alert('Error en la devolucion del precio');
+        } 
+      },
+      fail: function(){
+          alert("Error buscando vehiculos...");
+      },
+      beforeSend: function(){
+
+      }
+    });
+} 
+
+</script>
 @endsection

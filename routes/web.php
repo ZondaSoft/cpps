@@ -41,9 +41,11 @@ Route::get('/', function () {
 //          Rutas usadas en componenes vue.js
 //-----------------------------------------------------
 Route::get('search', [PostController::class, 'index']);
-Route::get('res-search', [PostController::class, 'search']);
+Route::get('searchOoss', [PostController::class, 'searchOoss']);
+Route::get('searchProfessional', [PostController::class, 'searchProfessional']);
 Route::get('get-oss', [PostController::class, 'getobras']);
 Route::get('get-prof', [PostController::class, 'getProfessionals']);
+Route::get('searchPrecios/{id?}', [PostController::class, 'searchPrecios']);
 
 /* Route::get('/home', function () {
     return view('home');

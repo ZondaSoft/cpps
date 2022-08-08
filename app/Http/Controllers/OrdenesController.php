@@ -97,6 +97,9 @@ class OrdenesController extends Controller
         
         $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
         $obras = Cpps07::orderBy('cod_os')->get();
+        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
+        $prestaciones = Cpps09::orderBy('nom_prest')->get();
+
         $now = Carbon::now();
 
         return view('ordenes.index')->with(compact(
@@ -109,7 +112,9 @@ class OrdenesController extends Controller
             'fecha',
             'profesionales',
             'obras',
-            'cerrada'
+            'cerrada',
+            'nomencladores',
+            'prestaciones'
         ));
     }
 
@@ -133,8 +138,10 @@ class OrdenesController extends Controller
         $agregar = True;
         $active = 1;
         
-        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
-        $obras = Cpps07::orderBy('cod_os')->get();
+        $profesionales = Cpps01::orderBy('nom_ape')->get();
+        $obras = Cpps07::orderBy('desc_os')->get();
+        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
+        $prestaciones = Cpps09::orderBy('nom_prest')->get();
 
         return view('ordenes.index')->with(compact(
             'legajo',
@@ -145,7 +152,9 @@ class OrdenesController extends Controller
             'fecha',
             'id_caja',
             'profesionales',
-            'obras'
+            'obras',
+            'nomencladores',
+            'prestaciones'
         ));
     }
 
@@ -154,15 +163,15 @@ class OrdenesController extends Controller
     {
         // Validaciones
         $messages = [
-            'mat_prov_cole.required' => 'El Nro. de matricula es obligatoria',
-            'mat_prov_cole.unique' => 'El Nro. de matricula ya existe',
-            'nom_ape.required' => 'El nombre y apellido es obligatorio',
-            'nom_ape.min' => 'El nombre y apellido debe tener más de 2 letras'
+            'cod_prof.required' => 'El Nro. de matricula es obligatoria',
+            'profesional.required' => 'El nombre y apellido es obligatorio',
+            'det_os.required' => 'La Obra social es obligatoria'
         ];
 
         $rules = [
-            'mat_prov_cole' => 'required|unique:cpps01s',
-            'nom_ape' => 'required|min:2'
+            'cod_prof' => 'required',
+            'profesional' => 'required',
+            'det_os' => 'required'
         ];
 
         $this->validate($request, $rules, $messages);
