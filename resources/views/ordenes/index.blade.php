@@ -146,19 +146,17 @@
                 <div class="col m2 s2 input-field" style="margin-bottom: 0px;">
                   <input id="ordenes " name="ordenes" type="number" step="1" class="validate" 
                     value="{{ old('ordenes ',$legajo->ordenes ) }}"
-                    {{ $edicion?'':'disabled' }}
-                    {{ $agregar?'enabled autofocus=""':'disabled' }}
+                    disabled
                     maxlength="8" autocomplete='off' required
                     data-error=".errorTxt3">
-                  <label for="ordenes">Ordenes *</label>
+                  <label for="ordenes">Ordenes</label>
                   <small class="errorTxt3"></small>
                 </div>
 
                 <div class="col m2 s2 input-field" style="margin-bottom: 0px;">
                   <input id="importe " name="importe" type="number" step="0.1" class="validate"
                     value="{{ old('importe ',$legajo->importe ) }}"
-                    {{ $edicion?'':'disabled' }}
-                    {{ $agregar?'enabled autofocus=""':'disabled' }}
+                    disabled
                     maxlength="8" autocomplete='off' required
                     data-error=".errorTxt4">
                   <label for="importe">Importe</label>
@@ -222,11 +220,11 @@
                         <div class="collapsible-body" style="display: block;padding-top: 15px;padding-top: 5px;padding-bottom: 5px;">
 
                           <div class="row">
-                            <div class="col m3 s3 input-field">
+                            <div class="col m2 s2 input-field">
                               <input id="orden_nro" name="orden_nro" type="number" step="1" class="validate" 
                                 value="{{ old('orden_nro',$legajo->orden_nro) }}"
                                 {{ $edicion?'enabled':'disabled' }}
-                                maxlength="30" autocomplete='off'
+                                maxlength="11" autocomplete='off'
                                 data-error=".errorTxt5" required>
                               <label for="orden_nro">Nro. Orden</label>
                               <small class="errorTxt8"></small>
