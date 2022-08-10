@@ -5371,7 +5371,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      keywords: null,
+      keywords: document.getElementById("nemotecnico_original").value,
       results: [],
       account_id: null
     };
@@ -5453,7 +5453,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   data: function data() {
     return {
-      keywords: null,
+      keywords: document.getElementById("matricula_original").value,
       results: [],
       account_id: null
     };
@@ -5760,8 +5760,8 @@ var render = function render() {
       expression: "keywords"
     }],
     attrs: {
-      id: "cod_prof",
-      name: "cod_prof",
+      id: "mat_prov_cole",
+      name: "mat_prov_cole",
       type: "text",
       autocomplete: "off",
       maxlength: "10",
@@ -5778,7 +5778,7 @@ var render = function render() {
     }
   }), _vm._v(" "), _c("label", {
     attrs: {
-      "for": "cod_prof",
+      "for": "mat_prov_cole",
       id: "lblMatricula",
       name: "lblMatricula"
     }

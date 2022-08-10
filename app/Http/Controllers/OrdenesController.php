@@ -31,7 +31,7 @@ class OrdenesController extends Controller
         $iconSearch = true;
 
         if ($id == null) {
-            $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+            $legajo = Cpps30::Where('mat_prov_cole', '>', 0)
                 ->orderBy('mat_prov_cole')
                 ->first();      // find($id);
 
@@ -40,9 +40,9 @@ class OrdenesController extends Controller
                 $nrolegajo = $legajo->codigo;
             }
         } else {
-            $legajo = Cpps01::find($id);
+            $legajo = Cpps30::find($id);
             if ($legajo == null) {
-                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                $legajo = Cpps30::Where('mat_prov_cole', '>', 0)
                     ->orderBy('mat_prov_cole')
                     ->first();
             }
@@ -60,30 +60,30 @@ class OrdenesController extends Controller
 
         // Si a pesar de todos los controles $legajo es null es porque no hay registros
         if ($legajo == null)
-            $legajo = new Cpps01;
+            $legajo = new Cpps30;
 
         // Si la var. $direction muestra que el cursor s    e mueve (-1)
         if ($direction == -1) {
-            $legajo = Cpps01::where('codigo', '<', $nrolegajo)
+            $legajo = Cpps30::where('codigo', '<', $nrolegajo)
                 ->Where('mat_prov_cole', '>', 0)
                 ->orderBy('codigo', 'desc')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                $legajo = Cpps30::Where('mat_prov_cole', '>', 0)
                     ->orderBy('mat_prov_cole')
                     ->first();
         }
 
         // Si la var. $direction muestra que el cursor se mueve (+1)
         if ($direction == 1) {
-            $legajo = Cpps01::where('mat_prov_cole', '>', $nrolegajo)
+            $legajo = Cpps30::where('mat_prov_cole', '>', $nrolegajo)
                 ->Where('mat_prov_cole', '>', 0)
                 ->orderBy('mat_prov_cole')
                 ->first();
 
             if ($legajo == null)
-                $legajo = Cpps01::latest('id')
+                $legajo = Cpps30::latest('id')
                     ->where('mat_prov_cole', '>', 0)
                     ->first();
         }
@@ -91,7 +91,7 @@ class OrdenesController extends Controller
 
         // Si la var. $direction muestra que el cursor se mueve al final
         if ($direction == 9) {
-            $legajo = Cpps01::latest('codigo')
+            $legajo = Cpps30::latest('codigo')
                 ->where('mat_prov_cole', '>', 0)
                 ->first();
         }
@@ -528,6 +528,174 @@ class OrdenesController extends Controller
         $cerrada = $request->input('cerrada');
         $concepto1 = $request->input('concepto');
         $concepto2 = $request->input('concepto2');
+
+        return \Excel::download(new ProfesionalesExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
+    }
+
+
+
+    //---------------------------------------------------------------------------------
+    public function print2()
+    {
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 52;
+        $fecha = null;
+        $id_caja = 0;
+        $nrolegajo = 0;
+        $cerrada = false;
+        $ddesde = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $dhasta = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $iconSearch = false;
+
+        
+        $legajo = Cpps01::Where('mat_prov_cole', '>', 0)
+                ->orderBy('mat_prov_cole')
+                ->first();      // find($id);
+
+        // Datos de la empresa
+        $empresa = Datoempr::first();      // find($id);
+        //if ($empresa == null) {
+        //    return redirect('/empresa/');
+        //}
+
+        // Si a pesar de todos los controles $legajo es null es porque no hay registros
+        if ($legajo == null)
+            $legajo = new Cpps01;
+
+        // 1ro buscamos la apertura de la caja actual
+        $apertura = Fza020::whereNull('cerrada')->first();
+
+        // Si no hay aperturas redirijo a apertura
+        if ($apertura != null) {
+            $fechaActual = $apertura->fecha;
+            $fecha = $apertura->fecha;
+            $id_caja = $apertura->id;
+        }
+
+        $origen = Fza030::orderBy('fecha')->first();
+        if ($origen != null) {
+            $ddesde = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
+        }
+        
+        $origen = Fza030::orderBy('fecha', 'Desc')->first();
+        if ($origen != null) {
+            $dhasta = $origen->fecha;   //Carbon::parse($origen->fecha)->format('d/m/Y');
+        }
+
+        // Defaults values in form
+        $legajo->cod_os = '1050';
+        $legajo->mat_prov_cole = 1;
+        $legajo->mat_prov_cole2 = 1;
+
+        $lastProfesional = Cpps01::orderBy('mat_prov_cole', 'desc')->first();
+        if ($lastProfesional != null) {
+            $legajo->mat_prov_cole2 = $lastProfesional->mat_prov_cole;
+        }
+
+        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
+        $obras = Cpps07::orderBy('cod_os')->get();
+        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
+        $prestaciones = Cpps09::orderBy('nom_prest')->get();
+
+        return view('ordenes.print')->with(compact(
+            'empresa',
+            'legajo',
+            'iconSearch',
+            'agregar',
+            'edicion',
+            'active',
+            'fecha',
+            'id_caja',
+            'cerrada',
+            'ddesde',
+            'dhasta',
+            'profesionales',
+            'nomencladores',
+            'prestaciones',
+            'obras'
+        ));
+    }
+    
+    
+    
+    public function printpdf2(Request $request)
+    {
+        $pdf = \App::make('dompdf.wrapper');
+
+        $codsector = null;
+        $cod_nov = null;
+        $cerrada = false;
+        $fecha = null;
+        $legajo = null;
+        $novedad = null;
+        $agregar = true;
+        $edicion = true;
+        $active = 1;
+        $anterior = 0;
+        $cuenta = 0;
+        $id_caja = 0;
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $novedad = null;
+        $order = null;
+        $fecha_orig = null;
+        $fecha5 = null;
+        $novedades = null;
+        
+        //$fecha_orig = Carbon::parse( Carbon::now() )->format('d/m/Y');
+
+        //if ($nrolegajo != null) {
+        //  $legajoNew->legajo = $id;
+        // Busco el legajo seleccionado
+        //  $legajoNew->detalle = $legajoNew->Apynom;
+        //}
+        //$legajo->fecha_naci = Carbon::parse($legajo->fecha_naci)->format('d/m/Y');
+        //$legajo->alta = Carbon::parse($legajo->alta)->format('d/m/Y');
+
+        // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
+        $periodo = $request->input('periodo');
+        
+        $desde = $request->input('ddesde');
+        $hasta = $request->input('dhasta');
+        
+        $profesional1 = $request->input('profesional');
+        $profesional2 = $request->input('profesional2');
+        
+        $novedades = Cpps30::where('periodo', $periodo)->whereBetween('mat_prov_cole', [$profesional1, $profesional2])
+            ->orderBy('mat_prov_cole','asc')
+            ->orderBy('ordennro','asc')
+            ->join('cpps09s', function ($join) {
+                    $join->on('cpps30s.mat_prov_cole', '=', 'cpps30s.mat_prov_cole');
+                  })
+            ->get();
+        
+        //
+        //->join('mdl003s', function ($join) {
+        //    $join->on('mdl060s.prestador', '=', 'mdl003s.id');
+        //  })
+
+        // ->orderBy('mdl060s.fecha')
+
+        // Tamano hoja
+        //$pdf->setPaper('A4', 'landscape');
+
+        // Cargar view
+        $pdf->loadview('ordenes.printpdf', compact('periodo', 'novedades', 'desde', 'hasta', 'cerrada'));
+        
+        // Generar el PDF al navegador
+
+        return $pdf->stream();
+    }
+
+
+    public function excel2(Request $request)
+    {
+        $desde = $request->input('ddesde');
+        $hasta = $request->input('dhasta');
+        $periodo = $request->input('periodo');
+        $profesional1 = $request->input('profesional');
+        $profesional2 = $request->input('profesional2');
 
         return \Excel::download(new ProfesionalesExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
     }

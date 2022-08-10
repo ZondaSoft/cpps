@@ -23,7 +23,8 @@ return new class extends Migration
             $table->string('nom_afiliado', 50)->nullable();
             $table->date('fecha')->nullable();
             $table->unsignedBigInteger('plan');          // cod_conv en cpps11 as foreign key
-            $table->integer('id_nomen')->nullable();        // 1
+            //$table->integer('id_nomen')->nullable();        // 1
+            $table->string('cod_nemotecnico',10)->nullable();
             $table->string('cod_nomen',15)->nullable();     // 330101
             $table->smallInteger('cantidad')->nullable();
             $table->float('precio')->nullable();

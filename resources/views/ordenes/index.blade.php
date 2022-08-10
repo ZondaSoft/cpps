@@ -127,14 +127,14 @@
                   <small class="errorTxt1"></small>
                 </div>
 
+                
                 <input id="cod_os_original" name="cod_os_original" type="text" autocomplete="off" maxlength="10" value="{{ old('cod_os',$legajo->cod_os) }}" style="width: 100px;margin-bottom: 0px;" hidden>
-
                 <search-ooss style="width: 100px;margin-bottom: 0px;" onchange="changeObra(this)"></search-ooss>
-                {{-- <select-component></select-component> --}}
-                {{-- <vselect-ooss></vselect-ooss> --}}
+                
                 
                 <div class="col m4 s4 input-field" style="padding-right: 0px;margin-bottom: 0px;">
-                  <select id="det_os" name="det_os" onchange="changeObra2(this)">
+                  <select id="det_os" name="det_os" onchange="changeObra2(this)" 
+                      {{ $edicion?'enabled':'disabled' }} >
                       <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
                       @foreach ($obras as $obra)
                         <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->desc_os }}</option>
@@ -173,26 +173,16 @@
                         <div class="collapsible-body" style="display: block;padding-top: 15px;padding-bottom: 5px;">
                             <div class="row">
 
-                              {{-- <div class="col m2 s2 input-field">
-                                <input id="matricula " name="matricula" type="number" step="1" class="validate" 
-                                  value="{{ old('matricula ',$legajo->matricula ) }}"
-                                  {{ $edicion?'':'disabled' }}
-                                  {{ $agregar?'enabled autofocus=""':'disabled' }}
-                                  maxlength="8" autocomplete='off' required
-                                  data-error=".errorTxt4">
-                                <label for="matricula">Mátricula *</label>
-                                <small class="errorTxt4"></small>
-                              </div> --}}
-
-                              <search-professional onchange="changeProfessional(this)" value="{{ old('cod_prof') }}"></search-professional>
+                              <input id="matricula_original" name="matricula_original" type="text" autocomplete="off" maxlength="10" value="{{ old('mat_prov_cole',$legajo->mat_prov_cole) }}" style="width: 100px;margin-bottom: 0px;" hidden>
+                              <search-professional onchange="changeProfessional(this)" value="{{ old('mat_prov_cole') }}"></search-professional>
 
                               <div class="col m7 s7 input-field">
                                 <select id="profesional" name="profesional" 
                                     {{ $edicion?'enabled':'disabled' }} 
                                     onchange="changeProfessional2(this)" >
-                                    <option value = "" @if ( old('profesional',$legajo->profesional)  == "")  selected   @endif  >Seleccione un profesional</option>
+                                    <option value = "" @if ( old('profesional',$legajo->mat_prov_cole)  == "")  selected   @endif  >Seleccione un profesional</option>
                                     @foreach ($profesionales as $profesional)
-                                      <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('profesional',$legajo->profesional)  == $profesional->profesional)         @endif  >{{ $profesional->nom_ape }} - ({{ $profesional->mat_prov_cole }})
+                                      <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('mat_prov_cole',$legajo->mat_prov_cole)  == $profesional->mat_prov_cole)  selected  @endif  >{{ $profesional->nom_ape }} - ({{ $profesional->mat_prov_cole }})
                                       </option>
                                     @endforeach
                                 </select>
@@ -221,12 +211,12 @@
 
                           <div class="row">
                             <div class="col m2 s2 input-field">
-                              <input id="orden_nro" name="orden_nro" type="number" step="1" class="validate" 
-                                value="{{ old('orden_nro',$legajo->orden_nro) }}"
+                              <input id="ordennro" name="ordennro" type="number" step="1" class="validate" 
+                                value="{{ old('ordennro',$legajo->ordennro) }}"
                                 {{ $edicion?'enabled':'disabled' }}
                                 maxlength="11" autocomplete='off'
                                 data-error=".errorTxt5" required>
-                              <label for="orden_nro">Nro. Orden</label>
+                              <label for="ordennro">Nro. Orden</label>
                               <small class="errorTxt8"></small>
                             </div>
 
@@ -254,13 +244,15 @@
                           </div>
 
                           <div class="row">
+                            
+                            <input id="nemotecnico_original" name="nemotecnico_original" type="text" autocomplete="off" maxlength="10" value="{{ old('cod_nemotecnico',$legajo->cod_nemotecnico) }}" style="width: 100px;margin-bottom: 0px;" hidden>
                             <search-nomenclador onchange="changeNomenclador(this)"></search-nomenclador>
 
                             <div class="col m3 s3 input-field">
                               <select id="nomenclador" name="nomenclador" {{ $edicion?'enabled':'disabled' }} onchange="changePrestacion(this)">
                                 <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione...</option>
                                 @foreach ($nomencladores as $nomenclador)
-                                  <option value = "{{ $nomenclador->cod_nemotecnico  }}" @if ( old('nomenclador',$legajo->id_nomen)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
+                                  <option value = "{{ $nomenclador->cod_nemotecnico  }}" @if ( old('nomenclador',$legajo->cod_nemotecnico)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
                                 @endforeach
                               </select>
                               <label>Nomenclador</label>
@@ -378,7 +370,7 @@ function changeProfessional(e) {
   //var valor1 = document.getElementById("det_os").value;
   //console.log(valor1);
 
-  var matricula = document.getElementById("cod_prof").value;
+  var matricula = document.getElementById("mat_prov_cole").value;
 
   document.getElementById("profesional").value = matricula;
   
@@ -389,7 +381,7 @@ function changeProfessional(e) {
 function changeProfessional2(e) {
   var ape_nomProfesional = document.getElementById("profesional").value;
 
-  document.getElementById("cod_prof").value = ape_nomProfesional;
+  document.getElementById("mat_prov_cole").value = ape_nomProfesional;
   
   $("#lblMatricula").addClass('active');
 }

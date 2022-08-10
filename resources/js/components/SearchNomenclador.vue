@@ -17,7 +17,7 @@
 export default {
     data() {
         return {
-            keywords: null,
+            keywords: document.getElementById("nemotecnico_original").value,
             results: [],
             account_id: null
         };

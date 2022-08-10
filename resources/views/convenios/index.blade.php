@@ -202,7 +202,7 @@
                     <ul class="collapsible collapsible-accordion">
                       <li>
                           <div class="collapsible-header waves-light gradient-45deg-purple-deep-orange lightrn-1 white-text">
-                            <i class="material-icons">toll</i> Convenios asociados
+                            <i class="material-icons">toll</i> Nomenclador de prácticas asociado
                           </div>
                           <div class="collapsible-body" style="display: block;">
 
@@ -213,6 +213,7 @@
                                 <table class="bordered">
                                   <thead>
                                       <tr>
+                                        <th data-field="name">Código</th>
                                         <th data-field="name">Cód.Nomenclador</th>
                                         <th data-field="name">Nombre Nomenclador</th>
                                         <th data-field="name">Importe</th>
@@ -221,6 +222,10 @@
                                   <tbody>
                                       @foreach ($convNomenclador as $convenio)
                                         <tr style="height: 10px;">
+                                          <td style="height: 10px;">
+                                            {{ $convenio->cod_nemotecnico }}
+                                          </td>
+
                                           <td style="height: 10px;">
                                             {{ $convenio->cod_nomenclador }}
                                           </td>

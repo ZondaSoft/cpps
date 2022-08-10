@@ -502,4 +502,10 @@ class ConceptosController extends Controller
 
         return \Excel::download(new ConceptosExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
     }
+
+
+
+    public function info() {
+        return view('info');
+    }
 }

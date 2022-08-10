@@ -29,20 +29,20 @@
           "slug": "Adm.Obras Sociales"
         },
         {
-          "url": "convenios",
-          "name": "Convenios de O.S.",
-          "i18n": "Convenios de O.S.",
-          "class": "waves-effect waves-cyan",
-          "icon": "assignment",
-          "slug": "Convenios de O.S."
-        },
-        {
           "url": "nomenclador",
           "name": "Nomenclador de O.S.",
           "i18n": "Nomenclador de O.S.",
           "class": "waves-effect waves-cyan",
           "icon": "assignment",
           "slug": "Nomenclador de O.S."
+        },
+        {
+          "url": "convenios",
+          "name": "Convenios de O.S.",
+          "i18n": "Convenios de O.S.",
+          "class": "waves-effect waves-cyan",
+          "icon": "assignment",
+          "slug": "Convenios de O.S."
         }
       ]
     },
@@ -107,11 +107,18 @@
       "icon": "local_printshop",
       "submenu": [
         {
-          "url": "print-concepts",
-          "name": "de Conceptos",
-          "i18n": "de Conceptos",
+          "url": "print-orders",
+          "name": "Ordenes",
+          "i18n": "Ordenes",
           "class": "waves-effect waves-cyan",
-          "slug": "de Conceptos"
+          "slug": "Ordenes"
+        },
+        {
+          "url": "print-concepts",
+          "name": "Caja por Conceptos",
+          "i18n": "Caja por Conceptos",
+          "class": "waves-effect waves-cyan",
+          "slug": "Caja por Conceptos"
         }
       ]
     },

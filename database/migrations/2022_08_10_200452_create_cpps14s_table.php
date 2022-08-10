@@ -15,15 +15,17 @@ return new class extends Migration
     {
         Schema::create('cpps14s', function (Blueprint $table) {
             $table->id();
-            $table->bigInteger('cod_convenio');  // cpps11s
-            $table->string('cod_nomenclador',10)->nullable() ;   // cpps09s
+            $table->bigInteger('cod_convenio');     // cpps11s
+            $table->string('cod_nemotecnico',10)->nullable();   // cpps09s
+            $table->string('cod_nomenclador',15)->nullable() ;   // cpps09s
             $table->decimal('importe', 11, 2)->nullable();
             $table->timestamps();
 
 
             // FK
             //$table->foreign('cod_convenio')->references('cod_conv')->on('cpps11s');
-            //$table->foreign('cod_nomenclador')->references('cod_nemotecnico')->on('cpps09s');
+            //$table->foreign('cod_nemotecnico')->references('cod_nemotecnico')->on('cpps09s');
+            //$table->foreign('id_nomen')->references('id_nomen')->on('cpps09s');
         });
     }
 

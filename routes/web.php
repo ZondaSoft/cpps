@@ -200,6 +200,14 @@ Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@searc
 Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
 Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
 
+Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
+Route::post('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
+Route::post('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
+
+Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
+Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
+
+
 // Route::get('/search', 'OrdenesController@search2');
 // Route::post('/action', 'OrdenesController@search3');
 
@@ -260,6 +268,10 @@ Route::post('/conceptos/delete/{id}', 'ConceptosController@baja');
 Route::get('/print-concepts', 'ConceptosController@print')->name('conceptos.print');
 Route::post('/conceptos/print', 'ConceptosController@printpdf');
 Route::post('/conceptos/excel', 'ConceptosController@excel');
+
+
+
+Route::get('/page-faq', 'ConceptosController@info');
 
 // Route::get('/conceptos/ddjjdomicilio/{id?}', 'ConceptosController@ddjjdomicilio');
 // Route::get('/conceptos/map/{id}', 'ConceptosController@map');
