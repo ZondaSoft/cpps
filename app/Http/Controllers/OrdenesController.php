@@ -642,6 +642,7 @@ class OrdenesController extends Controller
         $fecha_orig = null;
         $fecha5 = null;
         $novedades = null;
+        $nombreObra = '';
         
         //$fecha_orig = Carbon::parse( Carbon::now() )->format('d/m/Y');
 
@@ -655,6 +656,12 @@ class OrdenesController extends Controller
 
         // fix error: SQLSTATE[42000]: Syntax error or access violation: 1055 Expression #1 of SELECT list is not in GROUP BY clause and contains nonaggregated column
         $periodo = $request->input('periodo');
+        $obra = $request->input('det_os');
+
+        $searchObra = Cpps07::where('cod_os', $obra)->first();
+        if ($searchObra != null) {
+            $nombreObra = $searchObra->desc_os;
+        }
         
         $desde = $request->input('ddesde');
         $hasta = $request->input('dhasta');
@@ -662,12 +669,18 @@ class OrdenesController extends Controller
         $profesional1 = $request->input('profesional');
         $profesional2 = $request->input('profesional2');
         
-        $novedades = Cpps30::where('periodo', $periodo)->whereBetween('mat_prov_cole', [$profesional1, $profesional2])
-            ->orderBy('mat_prov_cole','asc')
-            ->orderBy('ordennro','asc')
-            ->join('cpps09s', function ($join) {
-                    $join->on('cpps30s.mat_prov_cole', '=', 'cpps30s.mat_prov_cole');
+        $novedades = Cpps30::where('periodo', $periodo)->whereBetween('cpps30s.mat_prov_cole', [$profesional1, $profesional2])
+            ->orderBy('cpps30s.mat_prov_cole','asc')
+            ->orderBy('cpps30s.ordennro','asc')
+            ->join('cpps01s', function ($join) {
+                    $join->on('cpps01s.mat_prov_cole', '=', 'cpps30s.mat_prov_cole');
                   })
+            ->join('cpps09s', function ($join) {
+                    $join->on('cpps09s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico');
+                  })
+            ->join('cpps14s', function ($join) {
+                $join->on('cpps14s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico');
+                })
             ->get();
         
         //
@@ -680,8 +693,10 @@ class OrdenesController extends Controller
         // Tamano hoja
         //$pdf->setPaper('A4', 'landscape');
 
+        //dd($novedades);
+
         // Cargar view
-        $pdf->loadview('ordenes.printpdf', compact('periodo', 'novedades', 'desde', 'hasta', 'cerrada'));
+        $pdf->loadview('ordenes.printpdf', compact('periodo', 'novedades', 'desde', 'hasta', 'obra', 'nombreObra', 'profesional1', 'profesional2'));
         
         // Generar el PDF al navegador
 
@@ -697,6 +712,6 @@ class OrdenesController extends Controller
         $profesional1 = $request->input('profesional');
         $profesional2 = $request->input('profesional2');
 
-        return \Excel::download(new ProfesionalesExport($desde, $hasta, $concepto1, $concepto2), 'Conceptos_fecha.xlsx');
+        return \Excel::download(new ProfesionalesExport($desde, $hasta, $profesional1, $profesional2), 'Ordenes.xlsx');
     }
 }

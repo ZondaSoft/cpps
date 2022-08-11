@@ -238,6 +238,11 @@ Route::post('/cajas/delete/{id}', 'HomeController@baja');
 //-------------------------------------
 //         Comprobantes de cajas
 //-------------------------------------
+Route::get('/facturacion/{id?}', 'FacturarController@index')->name('facturar.index');
+
+//-------------------------------------
+//         Comprobantes de cajas
+//-------------------------------------
 Route::get('/orden-add/{id_caja?}', 'CajaController@add')->name('orden.add');
 Route::post('/orden-add', 'CajaController@store');
 Route::get('/orden-add/edit/{id}', 'CajaController@edit')->name('orden.edit');

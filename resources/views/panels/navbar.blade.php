@@ -19,6 +19,9 @@
           @if ($active == 35)
             Obras Sociales -> Carga de Ordenes
           @endif
+          @if ($active == 40)
+            Facturas
+          @endif
           @if ($active == 50)
             Caja Diaria @if ($cerrada == true or $cerrada == 1) (Cerrada) @endif  <small> #  {{ $id_caja }}  -  Fecha : {{ date('d/m/Y', strtotime($fecha)) }}<small></h5>
           @endif  

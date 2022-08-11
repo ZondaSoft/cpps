@@ -139,7 +139,7 @@
                   <!-- Profesional -->
                   <div class="col m4 s4 input-field" style="padding-right: 0px;margin-bottom: 0px;">
                     <select id="det_os" name="det_os" onchange="changeObra2(this)" 
-                        <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
+                        <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >(Todas)</option>
                         @foreach ($obras as $obra)
                           <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->cod_os }} - {{ $obra->desc_os }}</option>
                         @endforeach
@@ -148,17 +148,6 @@
                   </div>
 
 
-                  <div class="col m4 s4 input-field" style="padding-right: 0px;margin-bottom: 0px;">
-                    <select id="det_os" name="det_os" onchange="changeObra2(this)" 
-                        <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >Seleccione una Obra Social</option>
-                        @foreach ($obras as $obra)
-                          <option value = "{{ $obra->cod_os  }}" @if ( old('obra',$legajo->cod_os)  == $obra->cod_os)  selected   @endif  >{{ $obra->cod_os }} - {{ $obra->desc_os }}</option>
-                        @endforeach
-                    </select>
-                    <label>Obra Social</label>
-                  </div>
-
-                  
                   <div class="col m12 s12 input-field">
                   </div>
                   
