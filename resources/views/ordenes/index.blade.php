@@ -193,6 +193,15 @@
                         </div>
                         <div class="collapsible-body" style="display: block;padding-top: 15px;padding-top: 5px;padding-bottom: 5px;">
                           <br>
+                          <div class="col m12 s12">
+                            <a id="addorder1" name="addorder1" class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/carga-ordenes/add') }}" disabled="true" >Agregar orden</a>
+                            <a id="printorder1" name="printorder1" class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" disabled="true" style="font-color: withe">Imprimir ...</a>
+                            {{-- <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
+                                <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
+                            </a> --}}
+                          </div><br>
+                          <br>
+                          <br>
                           <div class="row">
                             
                           <!-- START table-responsive-->
@@ -200,10 +209,14 @@
                             <table id="table-ordenes" class="bordered">
                               <thead>
                                   <tr>
-                                    <th data-field="name">Código</th>
-                                    <th data-field="name">Cód.Nomenclador</th>
-                                    <th data-field="name">Nombre Nomenclador</th>
+                                    <th data-field="name">Nro.</th>
+                                    <th data-field="name">Fecha</th>
+                                    <th data-field="name">Paciente</th>
+                                    <th data-field="name">Práctica</th>
+                                    <th data-field="name">Cantidad</th>
                                     <th data-field="name">Importe</th>
+                                    <th data-field="name"></th>
+                                    <th data-field="name"></th>
                                   </tr>
                               </thead>
                               <tbody>
@@ -213,21 +226,11 @@
                             <br>
 
                             <div class="col m12 s12">
-                              @if($edicion == true)
-                                <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
-                                  Guardar cambios</button>
-                                
-                                <a href="{{ asset( url('/carga-ordenes') ) }}" class="btn btn-labeled btn-danger mb-2">
-                                    <span class="btn-label"><i class="fa fa-times"></i>
-                                    </span>Cancelar
-                                </a>
-                              @else
-                                <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/carga-ordenes/add') }}" disabled >Agregar orden</a>
-                                <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" disabled style="font-color: withe">Imprimir ...</a>
-                                {{-- <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
-                                    <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
-                                </a> --}}
-                              @endif
+                              <a id="addorder2" name="addorder2" class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/carga-ordenes/add') }}" disabled="true" >Agregar orden</a>
+                              <a id="printorder2" name="printorder2" class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" disabled="true" style="font-color: withe">Imprimir ...</a>
+                              {{-- <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
+                                  <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
+                              </a> --}}
                             </div>
 
                             <br>
@@ -390,38 +393,91 @@ function calcular(e) {
 }
 
 
+
 function verOrdenes(e) {
   var obra = 0
   var matricula = 0
+  var periodo = ""
+  var event_data = '';
+
+  // Blank table
+  const table = document.getElementById("table-ordenes");
+  table.innerHTML = "";
+
+  event_data += '<thead><tr>';
+  event_data += '<th data-field="name">Nro.</th>'
+  event_data += '<th data-field="name">Fecha</th>'
+  event_data += '<th data-field="name">Paciente</th>'
+  event_data += '<th data-field="name">Práctica</th>'
+  event_data += '<th data-field="name">Cantidad</th>'
+  event_data += '<th data-field="name">Importe</th>'
+  event_data += '<th data-field="name"></th>'
+  event_data += '<th data-field="name"></th>'
+  event_data += '</tr></thead>'
+  $("#table-ordenes").append(event_data);
+
+  // <thead>
+  //     <tr>
+  //       <th data-field="name">Código</th>
+  //       <th data-field="name">Cód.Nomenclador</th>
+  //       <th data-field="name">Nombre Nomenclador</th>
+  //       <th data-field="name">Importe</th>
+  //     </tr>
+  // </thead>
 
   obra = document.getElementById("cod_os").value
   matricula = document.getElementById("mat_prov_cole").value
+  periodo = document.getElementById("periodo").value
 
-  alert(obra)
-  alert(matricula)
-
-  // Blank the select
-  while (selectVehiculos.options.length > 0) {
-      selectVehiculos.remove(0);
-  }
-  
   // create option using DOM
-  var x = document.getElementById("selectVehiculos");
+  var x = document.getElementById("table-ordenes");
 
   $.ajax({
-    url: "/api/ordenes/" + obra + "/" + matricula,
+    url: "/api/ordenes/" + obra + "/" + matricula + "/" + periodo,
     data: "",
     dataType: "json",
     method: "GET",
     success: function(result) {
-        console.log(result)
-        
+      var event_data = '';
+      $.each(result, function(index, value){
+          /*console.log(value);*/
+          event_data += '<tr>';
+          event_data += '<td>'+value.ordennro+'</td>';
+          event_data += '<td>'+value.fecha+'</td>';
+          event_data += '<td>'+value.nom_afiliado+'</td>';
+          event_data += '<td>'+value.cod_nomen+'</td>';
+          event_data += '<td>'+value.cantidad+'</td>';
+          event_data += '<td>'+value.importe+'</td>';
+          event_data += '<td><a class="btn-floating mb-1 btn-flat waves-effect waves-light green accent-2 white-text"><i class="material-icons">edit</i></a></td>';
+          event_data += '<td><a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text"><i class="material-icons">delete</i></a></td>';
+          event_data += '<tr>';
+      });
+      $("#table-ordenes").append(event_data);
+
+      //<a class="waves-effect waves-light btn modal-trigger mb-2" href="#modal3">Modal Bottom Sheet Style</a>
+
+      const button1 = document.getElementById("addorder1")
+      button1.disabled = false
+      button1.removeAttribute('disabled');
+
+      const button2 = document.getElementById("printorder1")
+      button2.disabled = false
+      button2.removeAttribute('disabled');
+
+      const button3 = document.getElementById("addorder2")
+      button3.disabled = false
+      button3.removeAttribute('disabled');
+
+      const button4 = document.getElementById("printorder2")
+      button4.disabled = false
+      button4.removeAttribute('disabled');
+
     },
     fail: function() {
-          alert("Error buscando vehiculos...");
+      alert("Error buscando ordenes ...");
     },
     beforeSend: function(){
-
+      
     }
   });
 

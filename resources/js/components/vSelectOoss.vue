@@ -1,11 +1,12 @@
 <template>
-    <div class="col m6 s6 select-dropdown dropdown-trigger" style="margin-top: 0px;">
+    <div style="margin-top: 0px;">
         <v-select
+            id="mat_prov_cole""
             v-model="selected_id"
             label="desc_os"
+            clearable=false
             :options="obras"
             class="input-field"
-            style="border-style: hidden none inset;"
         ></v-select>
         <label>Obra Social</label>
     </div>
@@ -30,3 +31,10 @@ export default {
     }
 }
 </script>
+
+
+<style>
+    #mat_prov_cole .v-select .dropdown-toggle {
+        border: none;
+        }
+</style>

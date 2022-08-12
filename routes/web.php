@@ -200,9 +200,9 @@ Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@searc
 Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
 Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
 
-Route::get('/api/ordenes/{obra?}/{matricula?}', 'OrdenesController@laodorders')
+Route::get('/api/ordenes/{obra?}/{matricula?}/{periodo?}', 'OrdenesController@laodorders')
     ->where(['obra' => '[0-9]+', 'matricula' => '[-1-9]+'])
-    ->name('apiordenes');
+    ->name('apiorders');
 
 Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
 Route::post('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');

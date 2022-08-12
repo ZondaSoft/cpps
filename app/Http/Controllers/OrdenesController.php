@@ -98,6 +98,7 @@ class OrdenesController extends Controller
 
         $legajo->cod_os = 0;
         $legajo->mat_prov_cole = 0;
+        $legajo->periodo = '2022-07';
 
         $ordenes = new Cpps30;
         
@@ -124,7 +125,7 @@ class OrdenesController extends Controller
     }
 
 
-    public function laodorders($obra = null, $matricula = null)
+    public function laodorders($obra = null, $matricula = null, $periodo = null)
     {
         if ($obra === null) {
             return null;
@@ -134,17 +135,15 @@ class OrdenesController extends Controller
             return null;
         }
 
+        if ($periodo === null) {
+            return null;
+        }
         
         $orders = Cpps30::where('cod_os', $obra)
+                ->Where('periodo', $periodo)
                 ->Where('mat_prov_cole', $matricula)
-                ->orderBy('codigo', 'desc')
+                ->orderBy('ordennro', 'desc')
                 ->get();
-
-        
-        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
-        $obras = Cpps07::orderBy('cod_os')->get();
-        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
-        $prestaciones = Cpps09::orderBy('nom_prest')->get();
 
         return $orders;
     }
@@ -165,7 +164,7 @@ class OrdenesController extends Controller
         $iconSearch = false;
 
         $legajo = new Cpps01;      // find($id);     // dd($legajo);
-        $legajo->periodo = '08/2022';
+        $legajo->periodo = '2022-07';
         $legajo->fecha = Carbon::Now()->format('Y-m-d');
         $legajo->cod_os = '1050';
 

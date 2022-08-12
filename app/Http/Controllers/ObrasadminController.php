@@ -21,7 +21,7 @@ class ObrasadminController extends Controller
     public function index($id = null, $direction = null)
     {
         $agregar = False;
-        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: CRUD
         $active = 10;
         $fecha = null;
         $id_caja = 0;
@@ -127,7 +127,7 @@ class ObrasadminController extends Controller
 
 
         $legajo = new Cpps07;      // find($id);     // dd($legajo);
-        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: CRUD
         $agregar = True;
         $active = 10;
 
@@ -215,7 +215,7 @@ class ObrasadminController extends Controller
         }
 
         $agregar = False;
-        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: CRUD
         $active = 10;
 
         $convenios = Cpps11::orderBy('cod_conv')->get();
