@@ -5745,7 +5745,8 @@ var render = function render() {
     staticClass: "col m2 s2 input-field",
     staticStyle: {
       "margin-top": "0px",
-      "padding-left": "0px"
+      "padding-left": "0px",
+      "margin-bottom": "0px"
     },
     attrs: {
       id: "search2"

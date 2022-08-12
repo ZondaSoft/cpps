@@ -10,20 +10,12 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 </div>
 <div class="col-lg-12 col-md-12 col-xs-12 text-center" style="font-size: 16px;font-weight: bold">
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- ORDENES EMITIDAS
+ORDENES EMITIDAS
 </div>
 
 <br>
 
 <div class="col-lg-12 col-md-12 col-xs-12 text-center" style="font-size: 14px">
-  &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  Obra Social: {{ $obra }} - {{ $nombreObra }} &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
  Período: {{ $periodo }}
 </div>
@@ -52,14 +44,16 @@
                   &nbsp;Fecha</th>
                 <th style="width: 40px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Afiliado</th>
+                <th style="width: 35px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
+                  &nbsp;Plan</th>
                 <th style="width: 130px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Práctica</th>
                 <th style="width: 40px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px;">
                   Cantidad</th>
                 <th style="width: 70px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
                   &nbsp;Importe</th>
-                <th style="width: 90px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
-                  &nbsp;Comentarios</th>
+                {{-- <th style="width: 8px;border-bottom: 1px solid;border-top: 1px solid;padding-top: 10px;padding-bottom: 10px">
+                  &nbsp;Comentarios</th> --}}
             </tr>
           </thead>
 
@@ -85,6 +79,8 @@
                     <td>
                     </td>
                     <td>
+                    </td>
+                    <td>
                       ---------------
                     </td>
                     <td style="text-align: right;font-weight: bolder;">
@@ -92,6 +88,8 @@
                     </td>
                   </tr>
                   <tr>
+                    <td>
+                    </td>
                     <td>
                     </td>
                     <td>
@@ -126,11 +124,11 @@
                   </td>
                 </tr>
                 
-                <tr>
+                {{-- <tr>
                   <td>
                     <br>
                   </td>  
-                </tr>
+                </tr> --}}
 
                 @php
                   $matricula = $orden->mat_prov_cole;
@@ -147,6 +145,9 @@
                 <td>
                   {{ substr($orden->nom_afiliado,0,20) }}
                 </td>
+                <td style="text-align: right">
+                  {{ $orden->plan }}
+                </td>
                 <td>
                   {{ substr($orden->nom_prest,0,23) }}
                 </td>
@@ -156,6 +157,7 @@
                 <td style="text-align: right">
                   {{ number_format($orden->importe,2) }}
                 </td>
+                
 
                 @php
                   $cantidad = $cantidad + $orden->cantidad;
@@ -177,6 +179,8 @@
                 <td>
                 </td>
                 <td>
+                </td>
+                <td>
                   ---------------
                 </td>
                 <td style="text-align: right;font-weight: bolder;">
@@ -184,6 +188,8 @@
                 </td>
               </tr>
               <tr>
+                <td>
+                </td>
                 <td>
                 </td>
                 <td>

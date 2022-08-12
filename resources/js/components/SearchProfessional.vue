@@ -1,5 +1,5 @@
 <template>
-    <div class="col m2 s2 input-field" style="margin-top: 0px;padding-left: 0px;" id="search2">
+    <div class="col m2 s2 input-field" style="margin-top: 0px;padding-left: 0px;margin-bottom: 0px;" id="search2">
         <div class="col m12 s12 input-field">
             <input id="mat_prov_cole" name="mat_prov_cole" type="text" v-model="keywords" autocomplete="off" maxlength="10" required>
             <label for="mat_prov_cole" id="lblMatricula" name="lblMatricula">Matrícula</label>

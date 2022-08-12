@@ -112,9 +112,10 @@
                   <!-- Profesional -->
                   <div class="col m4 s4 input-field">
                     <select id="profesional" name="profesional" >
-                        <option value = "" @if ( old('profesional',$legajo->mat_prov_cole)  == "")  selected   @endif  >Seleccione un profesional</option>
+                        <option value = "" @if ( old('profesional',$legajo->nom_ape)  == "")  selected   @endif  >Seleccione un profesional</option>
                         @foreach ($profesionales as $profesional)
-                          <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('mat_prov_cole',$legajo->mat_prov_cole)  == $profesional->mat_prov_cole)  selected  @endif  >{{ $profesional->mat_prov_cole }} - {{ $profesional->nom_ape }}
+                          <option value = "{{ $profesional->nom_ape }}" 
+                            @if ( old('nom_ape',$legajo->nom_ape)  == $profesional->nom_ape)  selected  @endif  >{{ $profesional->nom_ape }} ({{ $profesional->mat_prov_cole }})
                           </option>
                         @endforeach
                     </select>
@@ -124,9 +125,10 @@
 
                   <div class="col m4 s4 input-field">
                     <select id="profesional2" name="profesional2" >
-                        <option value = "" @if ( old('profesional',$legajo->mat_prov_cole)  == "")  selected   @endif  >Seleccione un profesional</option>
+                        <option value = "" @if ( old('profesional',$legajo->nom_ape2)  == "")  selected   @endif  >Seleccione un profesional</option>
                         @foreach ($profesionales as $profesional)
-                          <option value = "{{ $profesional->mat_prov_cole  }}" @if ( old('mat_prov_cole',$legajo->mat_prov_cole2)  == $profesional->mat_prov_cole)  selected  @endif  >{{ $profesional->mat_prov_cole }} - {{ $profesional->nom_ape }}
+                          <option value = "{{ $profesional->nom_ape  }}" 
+                            @if ( old('nom_ape',$legajo->nom_ape2)  == $profesional->nom_ape)  selected  @endif  >{{ $profesional->nom_ape }} ({{ $profesional->mat_prov_cole }})
                           </option>
                         @endforeach
                     </select>

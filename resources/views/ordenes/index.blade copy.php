@@ -56,9 +56,9 @@
     <div class="card-content" style="padding-top: 0px;">
       <!-- users edit account form start -->
       @if($agregar == true)
-      <form action="#" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/carga-ordenes/add') ) }}" enctype="multipart/form-data">
       @else
-      <form action="#" enctype="multipart/form-data">
+      <form method="post" action="{{ asset( url('/carga-ordenes/edit/'.$legajo->id) ) }}" enctype="multipart/form-data">
       @endif
 
         {{ csrf_field() }}
@@ -68,7 +68,25 @@
           <div class="m6 s6 display-flex content-end">
             <h5 style="margin-top: 7px;margin-bottom: 14px;">Carga de ordenes</h5>
           </div>
-          
+          <div class="col m6 s6" style="padding-left: 70px;">
+            @if($edicion == true)
+              <div class="col s12 display-flex justify-content-end mt-3 mb-1 mr-1">
+                <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
+                  Guardar cambios</button>
+                
+                <a href="{{ asset( url('/carga-ordenes') ) }}" class="btn btn-labeled btn-danger mb-2">
+                    <span class="btn-label"><i class="fa fa-times"></i>
+                    </span>Cancelar
+                </a>
+              </div>
+            @else
+              <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/carga-ordenes/add') }}" >Agregar</a>
+              <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" style="font-color: withe">Editar</a>
+              <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
+                  <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
+              </a>
+            @endif
+          </div>
         </div>
         </div>
 
@@ -124,8 +142,8 @@
                 </div>
 
                 <div class="col m2 s2 input-field" style="margin-bottom: 0px;">
-                  <input id="ordenes2 " name="ordenes2" type="number" step="1" class="validate" 
-                    value="{{ old('ordenes2',$legajo->ordenes2 ) }}"
+                  <input id="ordenes " name="ordenes" type="number" step="1" class="validate" 
+                    value="{{ old('ordenes ',$legajo->ordenes ) }}"
                     disabled
                     maxlength="8" autocomplete='off' required
                     data-error=".errorTxt3">
@@ -170,11 +188,6 @@
                                 {{-- <vselect-prof></vselect-prof> --}}
                               </div>
 
-                              <div class="col m3 s3 input-field">
-                                <a type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1" onclick="verOrdenes()">
-                                  Ver ordenes</a>
-                              </div>
-
                               
 
                             </div>
@@ -192,53 +205,97 @@
                           <i class="material-icons">toll</i> Ordenes
                         </div>
                         <div class="collapsible-body" style="display: block;padding-top: 15px;padding-top: 5px;padding-bottom: 5px;">
-                          <br>
-                          <div class="row">
-                            
-                          <!-- START table-responsive-->
-                          <div class="col s12">
-                            <table id="table-ordenes" class="bordered">
-                              <thead>
-                                  <tr>
-                                    <th data-field="name">Código</th>
-                                    <th data-field="name">Cód.Nomenclador</th>
-                                    <th data-field="name">Nombre Nomenclador</th>
-                                    <th data-field="name">Importe</th>
-                                  </tr>
-                              </thead>
-                              <tbody>
-                                  
-                              </tbody>
-                            </table>
-                            <br>
 
-                            <div class="col m12 s12">
-                              @if($edicion == true)
-                                <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
-                                  Guardar cambios</button>
-                                
-                                <a href="{{ asset( url('/carga-ordenes') ) }}" class="btn btn-labeled btn-danger mb-2">
-                                    <span class="btn-label"><i class="fa fa-times"></i>
-                                    </span>Cancelar
-                                </a>
-                              @else
-                                <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/carga-ordenes/add') }}" disabled >Agregar orden</a>
-                                <a class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" disabled style="font-color: withe">Imprimir ...</a>
-                                {{-- <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
-                                    <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
-                                </a> --}}
-                              @endif
+                          <div class="row">
+                            <div class="col m2 s2 input-field">
+                              <input id="ordennro" name="ordennro" type="number" step="1" class="validate" 
+                                value="{{ old('ordennro',$legajo->ordennro) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt5" required>
+                              <label for="ordennro">Nro. Orden</label>
+                              <small class="errorTxt8"></small>
                             </div>
 
-                            <br>
+                            <div class="col m6 s6 input-field">
+                              <input id="nom_afiliado" name="nom_afiliado" type="text" class="validate" 
+                                value="{{ old('nom_afiliado',$legajo->nom_afiliado) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                maxlength="50" autocomplete='off'
+                                data-error=".errorTxt5">
+                              <label for="nom_afiliado">Afiliado</label>
+                              <small class="errorTxt9"></small>
+                            </div>
 
-                            {{-- <a class="waves-effect waves-light btn mb-1 mr-1" href="{{ asset('/obras-admin/add') }}" >Agregar convenio</a> --}}
+                            <div class="col m2 s2 input-field">
+                              {{-- <input id='fecha' type="text" class="datepicker mr-2 mb-1" placeholder="Elija fecha" value="{{ old('fecha',$orden->fecha) }}"> --}}
+                              <input id="fecha" name="fecha" type="date" placeholder="dd/mm/aaaa" class="" 
+                                    value="{{ old('fecha',$legajo->fecha) }}"
+                                    maxlength="10" autocomplete='off'
+                                    required
+                                    {{ $edicion?'enabled':'disabled' }}
+                                    data-error=".errorTxt2">
+                              <label for="fecha">Fecha Aut.</label>
+                              <small class="errorTxt2"></small>
+                            </div>
+                          </div>
 
-                        </div>
-                        <!-- END table-responsive-->
+                          <div class="row">
+                            
+                            <input id="nemotecnico_original" name="nemotecnico_original" type="text" autocomplete="off" maxlength="10" value="{{ old('cod_nemotecnico',$legajo->cod_nemotecnico) }}" style="width: 100px;margin-bottom: 0px;" hidden>
+                            <search-nomenclador onchange="changeNomenclador(this)"></search-nomenclador>
 
-                        </div>
+                            <div class="col m3 s3 input-field">
+                              <select id="nomenclador" name="nomenclador" {{ $edicion?'enabled':'disabled' }} onchange="changePrestacion(this)">
+                                <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione...</option>
+                                @foreach ($nomencladores as $nomenclador)
+                                  <option value = "{{ $nomenclador->cod_nemotecnico  }}" @if ( old('nomenclador',$legajo->cod_nemotecnico)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
+                                @endforeach
+                              </select>
+                              <label>Nomenclador</label>
+                            </div>
 
+                            <div class="col m3 s3 input-field">
+                              <select id="prestacion" name="prestacion" {{ $edicion?'enabled':'disabled' }} onchange="changePrestacion2(this)">
+                                <option value="" @if ($legajo->prestacion == "")  selected   @endif  >Seleccione prestación</option>
+                                @foreach ($prestaciones as $prestacion)
+                                  <option value = "{{ $prestacion->cod_nomen  }}" @if ( old('prestacion',$legajo->cod_nomen)  == $prestacion->cod_nomen)  selected @endif>{{ $prestacion->nom_prest }}</option>
+                                @endforeach
+                              </select>
+                              <label>Prestación</label>
+                            </div>
+                            
+                            <div class="col m1 s1 input-field" style="width: 110px;">
+                              <input id="cantidad" name="cantidad" type="number" class="validate" step="1"
+                                value="{{ old('cantidad',$legajo->cantidad) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt4" required onchange="calcular()">
+                              <label for="cantidad" id="lblCantidad" name="lblCantidad">Cantidad</label>
+                              <small class="errorTxt14"></small>
+                            </div>
+
+                            <div class="col m2 s2 input-field" style="width: 130px;">
+                              <input id="precio" name="precio" type="number" class="validate" step="0.10"
+                                value="{{ old('precio',$legajo->precio) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt15">
+                              <label for="precio"  id="lblPrecio" name="lblPrecio">Importe</label>
+                              <small class="errorTxt15"></small>
+                            </div>
+
+                            <div class="col m2 s2 input-field" style="width: 130px;">
+                              <input id="total" name="total" type="number" class="validate" 
+                                value="{{ old('total',$legajo->total) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                maxlength="11" autocomplete='off'
+                                data-error=".errorTxt16" disabled>
+                              <label for="total" id="lblTotal" name="lblTotal">Total</label>
+                              <small class="errorTxt16"></small>
+                            </div>
+                          </div>
+        
                         </div>
                     </li>
                   </ul>
@@ -247,7 +304,17 @@
             </div>
 
 
-            
+            @if($edicion == true)
+            <div class="col s12 display-flex justify-content-end mt-3">
+              <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1">
+                Guardar cambios</button>
+              
+              <a href="{{ asset( url('/carga-ordenes') ) }}" class="btn btn-labeled btn-danger mb-2">
+                  <span class="btn-label"><i class="fa fa-times"></i>
+                  </span>Cancelar
+              </a>
+            </div>
+            @endif
           </div>
 
 
@@ -387,46 +454,6 @@ function calcular(e) {
   document.getElementById("total").value = precio * cantidad;
   
   $("#lblTotal").addClass('active');
-}
-
-
-function verOrdenes(e) {
-  var obra = 0
-  var matricula = 0
-
-  obra = document.getElementById("cod_os").value
-  matricula = document.getElementById("mat_prov_cole").value
-
-  alert(obra)
-  alert(matricula)
-
-  // Blank the select
-  while (selectVehiculos.options.length > 0) {
-      selectVehiculos.remove(0);
-  }
-  
-  // create option using DOM
-  var x = document.getElementById("selectVehiculos");
-
-  $.ajax({
-    url: "/api/ordenes/" + obra + "/" + matricula,
-    data: "",
-    dataType: "json",
-    method: "GET",
-    success: function(result) {
-        console.log(result)
-        
-    },
-    fail: function() {
-          alert("Error buscando vehiculos...");
-    },
-    beforeSend: function(){
-
-    }
-  });
-
-  
-  $("#selectVehiculos").formSelect(); // Refrescar
 }
 
 </script>

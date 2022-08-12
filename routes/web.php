@@ -200,6 +200,10 @@ Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@searc
 Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
 Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
 
+Route::get('/api/ordenes/{obra?}/{matricula?}', 'OrdenesController@laodorders')
+    ->where(['obra' => '[0-9]+', 'matricula' => '[-1-9]+'])
+    ->name('apiordenes');
+
 Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
 Route::post('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
 Route::post('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
@@ -236,12 +240,12 @@ Route::get('/cajas/delete/{id}', 'HomeController@delete');
 Route::post('/cajas/delete/{id}', 'HomeController@baja');
 
 //-------------------------------------
-//         Comprobantes de cajas
+//              Facturacion
 //-------------------------------------
 Route::get('/facturacion/{id?}', 'FacturarController@index')->name('facturar.index');
 
 //-------------------------------------
-//         Comprobantes de cajas
+//        Comprobantes de cajas
 //-------------------------------------
 Route::get('/orden-add/{id_caja?}', 'CajaController@add')->name('orden.add');
 Route::post('/orden-add', 'CajaController@store');

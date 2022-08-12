@@ -95,6 +95,11 @@ class OrdenesController extends Controller
                 ->where('mat_prov_cole', '>', 0)
                 ->first();
         }
+
+        $legajo->cod_os = 0;
+        $legajo->mat_prov_cole = 0;
+
+        $ordenes = new Cpps30;
         
         $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
         $obras = Cpps07::orderBy('cod_os')->get();
@@ -113,9 +118,38 @@ class OrdenesController extends Controller
             'obras',
             'cerrada',
             'nomencladores',
-            'prestaciones'
+            'prestaciones',
+            'ordenes'
         ));
     }
+
+
+    public function laodorders($obra = null, $matricula = null)
+    {
+        if ($obra === null) {
+            return null;
+        }
+
+        if ($matricula === null) {
+            return null;
+        }
+
+        
+        $orders = Cpps30::where('cod_os', $obra)
+                ->Where('mat_prov_cole', $matricula)
+                ->orderBy('codigo', 'desc')
+                ->get();
+
+        
+        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
+        $obras = Cpps07::orderBy('cod_os')->get();
+        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
+        $prestaciones = Cpps09::orderBy('nom_prest')->get();
+
+        return $orders;
+    }
+
+
 
     /**
      * Show the application dashboard.
@@ -585,15 +619,22 @@ class OrdenesController extends Controller
 
         // Defaults values in form
         $legajo->cod_os = '1050';
-        $legajo->mat_prov_cole = 1;
-        $legajo->mat_prov_cole2 = 1;
+        $legajo->nom_ape = 1;
+        $legajo->nom_ape2 = 1;
 
-        $lastProfesional = Cpps01::orderBy('mat_prov_cole', 'desc')->first();
-        if ($lastProfesional != null) {
-            $legajo->mat_prov_cole2 = $lastProfesional->mat_prov_cole;
+        $firstProfesional = Cpps01::select('mat_prov_cole', 'nom_ape')->orderBy('nom_ape', 'asc')->first();
+        
+        if ($firstProfesional != null) {
+            $legajo->nom_ape = $firstProfesional->nom_ape;
         }
 
-        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
+        $lastProfesional = Cpps01::select('mat_prov_cole', 'nom_ape')->orderBy('nom_ape', 'desc')->first();
+        
+        if ($lastProfesional != null) {
+            $legajo->nom_ape2 = $lastProfesional->nom_ape;
+        }
+
+        $profesionales = Cpps01::orderBy('nom_ape')->get();     // mat_prov_cole 
         $obras = Cpps07::orderBy('cod_os')->get();
         $nomencladores = Cpps09::orderBy('cod_nomen')->get();
         $prestaciones = Cpps09::orderBy('nom_prest')->get();
@@ -668,10 +709,8 @@ class OrdenesController extends Controller
         
         $profesional1 = $request->input('profesional');
         $profesional2 = $request->input('profesional2');
-        
-        $novedades = Cpps30::where('periodo', $periodo)->whereBetween('cpps30s.mat_prov_cole', [$profesional1, $profesional2])
-            ->orderBy('cpps30s.mat_prov_cole','asc')
-            ->orderBy('cpps30s.ordennro','asc')
+
+        $novedades = Cpps30::where('periodo', $periodo)
             ->join('cpps01s', function ($join) {
                     $join->on('cpps01s.mat_prov_cole', '=', 'cpps30s.mat_prov_cole');
                   })
@@ -679,8 +718,11 @@ class OrdenesController extends Controller
                     $join->on('cpps09s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico');
                   })
             ->join('cpps14s', function ($join) {
-                $join->on('cpps14s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico');
+                $join->on('cpps14s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico')->on('cpps14s.cod_convenio', '=', 'cpps30s.plan');
                 })
+            ->whereBetween('cpps01s.nom_ape', [$profesional1, $profesional2])
+            ->orderBy('cpps01s.nom_ape','asc')
+            ->orderBy('cpps30s.ordennro','asc')
             ->get();
         
         //
