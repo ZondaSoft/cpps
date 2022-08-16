@@ -9,7 +9,9 @@ use App\Models\Fza020;  // Head de movimientos
 use App\Models\Cpps01;  // Profesionales
 use App\Models\Cpps07;  // Obras sociales
 use App\Models\Cpps09;  // Nomencladores
+use App\Models\Cpps12;  // Convenios-Planes
 use App\Models\Cpps30;  // Ordenes
+use App\Models\Cpps90;  // Ordenes de baja y/o editadas
 use Carbon\Carbon;
 
 class OrdenesController extends Controller
@@ -96,14 +98,18 @@ class OrdenesController extends Controller
                 ->first();
         }
 
-        $legajo->cod_os = 0;
+        //$legajo->cod_os = "";
+        $legajo->ordenes2 = 0;
         $legajo->mat_prov_cole = 0;
-        $legajo->periodo = '2022-07';
+        $legajo->precio = 0.00;
+        $legajo->total = 0.00;
+        //$legajo->periodo = '2022-07';
 
         $ordenes = new Cpps30;
         
         $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
         $obras = Cpps07::orderBy('cod_os')->get();
+        $conv_os = Cpps12::where('cod_os', $legajo->cod_os)->get();
         $nomencladores = Cpps09::orderBy('cod_nomen')->get();
         $prestaciones = Cpps09::orderBy('nom_prest')->get();
 
@@ -117,6 +123,7 @@ class OrdenesController extends Controller
             'fecha',
             'profesionales',
             'obras',
+            'conv_os',
             'cerrada',
             'nomencladores',
             'prestaciones',
@@ -138,12 +145,27 @@ class OrdenesController extends Controller
         if ($periodo === null) {
             return null;
         }
+
+        $sumOrders = Cpps30::where('cod_os', $obra)
+            ->Where('periodo', $periodo)
+            ->Where('mat_prov_cole', $matricula)
+            ->orderBy('ordennro', 'desc')
+            ->get()->sum('importe');
+        
+        $countOrders = Cpps30::where('cod_os', $obra)
+            ->Where('periodo', $periodo)
+            ->Where('mat_prov_cole', $matricula)
+            ->orderBy('ordennro', 'desc')
+            ->get()->count('cantidad');
         
         $orders = Cpps30::where('cod_os', $obra)
                 ->Where('periodo', $periodo)
                 ->Where('mat_prov_cole', $matricula)
                 ->orderBy('ordennro', 'desc')
                 ->get();
+
+        $orders->put('cuenta', $countOrders);
+        $orders->put('suma', $sumOrders);
 
         return $orders;
     }
@@ -166,7 +188,7 @@ class OrdenesController extends Controller
         $legajo = new Cpps01;      // find($id);     // dd($legajo);
         $legajo->periodo = '2022-07';
         $legajo->fecha = Carbon::Now()->format('Y-m-d');
-        $legajo->cod_os = '1050';
+        $legajo->cod_os = '1050';  // 1050
 
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $agregar = True;
@@ -238,6 +260,25 @@ class OrdenesController extends Controller
             return redirect('/carga-ordenes/' . $legajo->id)->with('success', 'La orden ya fue registrada con éxito');
 
         return redirect('/carga-ordenes/');
+    }
+
+    public function saveorder(Request $request) {
+        
+        $order = new Cpps30();
+
+        $order->cod_os = $request->input('cod_os');
+        $order->periodo = $request->input('periodo');
+        $order->plan = $request->input('plan');
+        $order->ordennro = $request->input('ordennro');
+        $order->mat_prov_cole = $request->input('mat_prov_cole');
+        $order->nom_afiliado = $request->input('nom_afiliado');
+        $order->cantidad = $request->input('cantidad');
+        $order->precio = $request->input('precio');
+        $order->importe = $request->input('importe');
+
+        $order->save();
+
+        return "{\"result\":\"ok\",\"id\":\"$order->ordennro\",\"ordennro\":\"$order->nom_afiliado\",\"nom_afiliado\":\"$order->nom_afiliado\",\"}";
     }
 
 
@@ -330,8 +371,6 @@ class OrdenesController extends Controller
         $active = 1;
         $cerrada = false;
 
-        $images = null;
-
         return "{\"result\":\"ok\",\"id\":\"$legajo->id\",\"codigo\":\"$legajo->codigo\",\"detalle\":\"$legajo->detalle\",\"}";
         //return redirect("/profesionales/");
     }
@@ -343,8 +382,6 @@ class OrdenesController extends Controller
         $agregar = False;
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 1;
-
-        $images = null;
 
         // Agrego el legajo por dar de baja en Sue070
         $legajoBaja = new Sue070;
@@ -364,6 +401,69 @@ class OrdenesController extends Controller
 
         // return "{\"result\":\"ok\",\"id\":\"$legajo->id\"}";
         return redirect("/profesionales/");
+    }
+
+
+    public function editorder(Request $request, $id = null)
+    {
+        $order = Cpps30::find($id);
+
+        if ($order == null) {
+            return "{\"result\":\"fail\"}";
+        }
+
+        $agregar = False;
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 1;
+        
+        // Agrego el legajo por dar de baja en Sue070
+        $orderBaja = new Cpps90;
+        try {
+            $orderBaja->id = $order->id;
+            $orderBaja->ordennro = $order->ordennro;
+
+            $orderBaja->save();
+        } catch (\Exception $e) {
+            //throw $th;
+            //$legajoBaja->save();
+        }
+
+        $orderArray = $order->toArray();
+
+        //"{\"result\":\"ok\",\"id\":\"$orderArray\"}"
+        return $orderArray;
+    }
+
+
+
+    public function deleteorder(Request $request, $id = null)
+    {
+        $order = Cpps30::find($id);
+
+        if ($order == null) {
+            return "{\"result\":\"fail\"}";
+        }
+
+        $agregar = False;
+        $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 1;
+
+        // Agrego el legajo por dar de baja en Sue070
+        $orderBaja = new Cpps90;
+        try {
+            $orderBaja->id = $order->id;
+            $orderBaja->ordennro = $order->ordennro;
+
+            $orderBaja->save();
+        } catch (\Exception $e) {
+            //throw $th;
+            //$legajoBaja->save();
+        }
+
+        // Delete from cpps30 Active Orders
+        $order->delete();
+
+        return "{\"result\":\"ok\",\"id\":\"$order->id\"}";
     }
 
 
@@ -754,5 +854,17 @@ class OrdenesController extends Controller
         $profesional2 = $request->input('profesional2');
 
         return \Excel::download(new ProfesionalesExport($desde, $hasta, $profesional1, $profesional2), 'Ordenes.xlsx');
+    }
+
+
+    public function test()
+    {
+        $iconSearch = false;
+        $active = 1;
+
+        return view('ordenes.test')->with(compact(
+            'iconSearch',
+            'active'
+        ));
     }
 }

@@ -4,7 +4,9 @@
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-require('./bootstrap');
+// require('./bootstrap');
+
+window.axios = require('axios');
 
 window.Vue = require('vue').default;
 
@@ -26,6 +28,7 @@ window.Vue = require('vue').default;
 Vue.component("v-select", vSelect);
 Vue.component('search-ooss', require('./components/SearchOoss.vue').default);
 Vue.component('search-professional', require('./components/SearchProfessional.vue').default);
+Vue.component('search-nomenclador2', require('./components/SearchNomenclador2.vue').default);
 Vue.component('search-nomenclador', require('./components/SearchNomenclador.vue').default);
 
 Vue.component('select-component', require('./components/SelectComponent.vue').default);

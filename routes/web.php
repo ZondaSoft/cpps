@@ -183,6 +183,9 @@ Route::post('/obras/delete/{id}', 'CajaController@baja');
 Route::get('/carga-ordenes/{id?}/{direction?}', 'OrdenesController@index')
     ->where(['id' => '[0-9]+', 'direction' => '[-1-9]+'])
     ->name('convenios');
+
+Route::get('/test', 'OrdenesController@test');
+
 Route::get('/carga-ordenes/add', 'OrdenesController@add')
     ->name('convenios.add');
 Route::post('/carga-ordenes/add', 'OrdenesController@store');
@@ -200,10 +203,26 @@ Route::get('/carga-ordenes/{id?}/{direction?}/search/', 'OrdenesController@searc
 Route::get('/carga-ordenes/delete/{id}', 'OrdenesController@delete');
 Route::post('/carga-ordenes/delete/{id}', 'OrdenesController@baja');
 
+// Route::get('/api/ordenes/{obra}/{matricula}/{periodo}', 'OrdenesController@laodorders')
+//     ->name('apiorders');
+    
 Route::get('/api/ordenes/{obra?}/{matricula?}/{periodo?}', 'OrdenesController@laodorders')
-    ->where(['obra' => '[0-9]+', 'matricula' => '[-1-9]+'])
+    ->where(['obra' => '[0-9]+', 'matricula' => '[0-9]+'])
     ->name('apiorders');
 
+//------------------   Agrego nueva orden   ------------------------------
+Route::post('/api/ordenessave/', 'OrdenesController@saveorder')->name('apisaveorders');
+    
+//------------------   Modifico orden   ------------------------------
+Route::get('/api/ordenesedit/{id?}', 'OrdenesController@editorder')
+    ->where(['id' => '[0-9]+', 'matricula' => '[0-9]+'])
+    ->name('apieditorders');
+
+//------------------   Borro orden   ------------------------------
+Route::post('/api/ordenesdelete/{id?}', 'OrdenesController@deleteorder')
+    ->where(['id' => '[0-9]+', 'matricula' => '[-1-9]+']);
+
+//------------------   Impresion de ordenes  ------------------------------
 Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
 Route::post('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
 Route::post('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
