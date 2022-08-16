@@ -834,6 +834,9 @@ function saveOrder() {
 
   $.ajax({
     url: "/api/ordenessave/",
+    headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+    },
     type: "POST",
     method: "POST",
     data: "periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cod_nomen="+cod_nomen+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
