@@ -4,7 +4,7 @@
   <div class="footer-copyright">
     <div class="container">
       <span>&copy; 2022 <a href="http://zondasoftware.com.ar/"
-          target="_blank"> -  Ver. 3.03b  -   ZondaSoftware</a> Todos los derechos reservados.
+          target="_blank"> -  Ver. 3.04b  -   ZondaSoftware</a> Todos los derechos reservados.
       </span>
       {{-- <span class="right hide-on-small-only">
         Desarrollado por <a href="http://zondasoftware.com.ar/">ZondaSoftware</a>

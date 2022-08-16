@@ -168,7 +168,7 @@
                                   <div class="col s12">
                                     <div class="form-row">
                                       <div class="col s1" style="width: 70px;">
-                                        <a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text" href="#"><i class="material-icons">delete</i></a>
+                                        <a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text" href="#"><i class="material-icons">person_add</i></a>
                                       </div>
                                       <div class="col m10 s10">
                                         <h4>Agregar orden</h4>
@@ -202,7 +202,7 @@
                                         </div>
                                         
                                         
-                                        <div class="col m6 s6 input-field">
+                                        <div class="col m5 s5 input-field">
                                           <input id="nom_afiliado2" name="nom_afiliado2" type="text" class="validate" 
                                             value="{{ old('nom_afiliado2',$legajo->nom_afiliado) }}"
                                             maxlength="50" autocomplete='off'
@@ -211,7 +211,7 @@
                                           <small class="errorTxt10"></small>
                                         </div>
             
-                                        <div class="col m2 s2 input-field">
+                                        <div class="col m3 s3 input-field">
                                           {{-- <input id='fecha' type="text" class="datepicker mr-2 mb-1" placeholder="Elija fecha" value="{{ old('fecha',$orden->fecha) }}"> --}}
                                           <input id="fecha2" name="fecha2" type="date" placeholder="dd/mm/aaaa" class="" 
                                                 value="{{ old('fecha2',$legajo->fecha) }}"
@@ -239,7 +239,7 @@
                                         <input id="nemotecnico_original2" name="nemotecnico_original2" type="text" autocomplete="off" maxlength="10" value="{{ old('cod_nemotecnico',$legajo->cod_nemotecnico) }}" style="width: 100px;margin-bottom: 0px;" hidden>
                                         <search-nomenclador2 onchange="changeNomenclador2(this)"></search-nomenclador2>
             
-                                        <div class="col m3 s3 input-field">
+                                        <div class="col m3 s3 input-field" style="width: 130px;">
                                           <select id="cod_nomen2" name="cod_nomen2" onchange="changePrestacion(this)">
                                             <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione...</option>
                                             @foreach ($nomencladores as $nomenclador)
@@ -260,7 +260,7 @@
                                           <label>Prestación</label>
                                         </div>
                                         
-                                        <div class="col m1 s1 input-field" style="width: 110px;">
+                                        <div class="col m1 s1 input-field" style="width: 90px;">
                                           <input id="cantidad2" name="cantidad2" type="number" class="validate" step="1"
                                             value="{{ old('cantidad2',$legajo->cantidad) }}"
                                             maxlength="11" autocomplete='off'
@@ -346,7 +346,7 @@
                                         </div>
                                         
                                         
-                                        <div class="col m6 s6 input-field">
+                                        <div class="col m5 s5 input-field">
                                           <input id="nom_afiliado" name="nom_afiliado" type="text" class="validate" 
                                             value="{{ old('nom_afiliado',$legajo->nom_afiliado) }}"
                                             maxlength="50" autocomplete='off'
@@ -355,7 +355,7 @@
                                           <small class="errorTxt10"></small>
                                         </div>
             
-                                        <div class="col m2 s2 input-field">
+                                        <div class="col m3 s3 input-field">
                                           {{-- <input id='fecha' type="text" class="datepicker mr-2 mb-1" placeholder="Elija fecha" value="{{ old('fecha',$orden->fecha) }}"> --}}
                                           <input id="fecha" name="fecha" type="date" placeholder="dd/mm/aaaa" class="" 
                                                 value="{{ old('fecha',$legajo->fecha) }}"
@@ -456,13 +456,12 @@
                                       <div class="col s1" style="width: 70px;">
                                         <a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text" href="#"><i class="material-icons">delete</i></a>
                                       </div>
-                                      <div class="col m4 s4">
+                                      <div class="col m5 s5">
                                         <h4>Eliminar orden ?</h4>
                                       </div>
                                       <div class="col m3 s3">
-                                        Orden # 
                                         <div class="input-field inline">
-                                          <input id="id_order" name="id_order" type="number" autocomplete="off" maxlength="10" value="0" style="width: 100px;margin-bottom: 0px;" disabled>
+                                          <input id="id_order" name="id_order" type="number" autocomplete="off" maxlength="10" value="0" style="width: 100px;margin-bottom: 0px;" disabled hidden>
                                         </div>
                                         {{-- <label for="id_order">Nro.</label> --}}
                                       </div>
@@ -556,18 +555,8 @@
                   </ul>
                 </div>
               </div>
-            </div>
-
-
-
-            
-
-
-            
+            </div>            
           </div>
-
-
-          
           <!-- users edit account form ends -->
         </div>
         
@@ -585,7 +574,6 @@
 
 {{-- page scripts --}}
 @section('page-script')
-
 <script src="{{ asset('js/app.js') }}"></script>  {{-- defer --}}
 <script src="{{asset('vendors/jquery-validation/jquery.validate.min.js')}}"></script>
 <script src="{{asset('js/scripts/advance-ui-modals.js')}}"></script>
@@ -784,6 +772,23 @@ function calcular(e) {
 
 
 function addOrder() {
+  // $('#modal1').modal({
+  //   dismissible: true, // Modal can be dismissed by clicking outside of the modal
+  //   opacity: .5, // Opacity of modal background
+  //   inDuration: 300, // Transition in duration
+  //   outDuration: 200, // Transition out duration
+  //   startingTop: '4%', // Starting top style attribute
+  //   endingTop: '10%', // Ending top style attribute
+  //   ready: function(modal, trigger) { // Callback for Modal open. Modal and trigger parameters available.
+  //   alert("Ready");
+  //   console.log(modal, trigger);
+  //   },
+  //   complete: function() { alert('Closed'); } // Callback for Modal close
+  //   }
+  // );
+
+  // alert('llamo modal1')
+
   document.getElementById("ordennro2").focus();
 
   document.getElementById("ordennro2").value = 0
