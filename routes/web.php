@@ -215,7 +215,11 @@ Route::post('/api/ordenessave/', 'OrdenesController@saveorder')->name('apisaveor
     
 //------------------   Modifico orden   ------------------------------
 Route::get('/api/ordenesedit/{id?}', 'OrdenesController@editorder')
-    ->where(['id' => '[0-9]+', 'matricula' => '[0-9]+'])
+    ->where(['id' => '[0-9]+'])
+    ->name('apieditorders');
+
+//------------------   Update orden   ------------------------------
+Route::post('/api/ordenesupdate/{id?}', 'OrdenesController@updateorder')
     ->name('apieditorders');
 
 //------------------   Borro orden   ------------------------------

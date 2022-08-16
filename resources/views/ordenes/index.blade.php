@@ -315,7 +315,7 @@
                                         <a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text" href="#"><i class="material-icons">delete</i></a>
                                       </div>
                                       <div class="col m10 s10">
-                                        <h4>Modificar orden ?</h4>
+                                        <h4>Modificar orden</h4>
                                       </div>
                                       <br>
                                     </div>
@@ -756,7 +756,7 @@ function buscoPrecio(e) {
     });
 }
 
-// Calcular importe en nueva orden
+//-------------- Calcular importe en nueva orden ---------------------
 function calcular2(e) {
   var precio = 0
   var cantidad = 0
@@ -769,7 +769,7 @@ function calcular2(e) {
   $("#lblTotal2").addClass('active');
 }
 
-// Calcular importe en modificar orden
+//-------------- Calcular importe en modificar orden ---------------------
 function calcular(e) {
   var precio = 0
   var cantidad = 0
@@ -806,19 +806,20 @@ function saveOrder() {
   
   var periodo = document.getElementById("periodo").value
   var cod_os = document.getElementById("cod_os").value
-  var plan = document.getElementById("plan").value
   var mat_prov_cole = document.getElementById("mat_prov_cole").value
   var ordennro = document.getElementById("ordennro2").value
   var dni_afiliado = document.getElementById("dni_afiliado2").value
   var nom_afiliado = document.getElementById("nom_afiliado2").value
+  var fecha = document.getElementById("fecha2").value
+  var plan = document.getElementById("plan2").value
   var cod_nemotecnico = document.getElementById("id_nomen2").value
   var cantidad = document.getElementById("cantidad2").value
   var precio = document.getElementById("precio2").value
   var importe = document.getElementById("importe2").value
-  
+
   $.ajax({
     url: "/api/ordenessave/",
-    data: "periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&cod_nemotecnico="+cod_nemotecnico+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
+    data: "periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
     dataType: "json",
     method: "POST",
     success: function(result) {
@@ -839,9 +840,8 @@ function saveOrder() {
 
 
 function editOrder(id) {
-  // if (id == null || id == 0) {
-  //   return
-  // }
+  
+  document.getElementById("id_order").value = id;
 
   $.ajax({
     url: "/api/ordenesedit/" + id,
@@ -851,15 +851,18 @@ function editOrder(id) {
     success: function(result) {
       
       //console.table(result)
+      document.getElementById("id_order").value = result.id
       document.getElementById("ordennro").value = result.ordennro
       document.getElementById("dni_afiliado").value = result.dni_afiliado
       document.getElementById("nom_afiliado").value = result.nom_afiliado
       document.getElementById("fecha").value = result.fecha
       document.getElementById("plan").value = result.plan
       document.getElementById("nemotecnico_original").value = result.cod_nemotecnico
-      document.getElementById("id_nomen").value = result.cod_nemotecnico
+      document.getElementById("id_nomen").value = result.cod_nemotecnico  // ver
+      
       document.getElementById("prestacion").value = result.cod_nomen    // nomenclador
       $("#prestacion").formSelect(); // Refrescar
+      
       document.getElementById("cantidad").value = result.cantidad
       document.getElementById("precio").value = result.precio
       //alert(result.importe)
@@ -876,12 +879,25 @@ function editOrder(id) {
 }
 
 function updateOrder() {
-  //alert(id)
-  var id = document.getElementById("id_order").value;
+  var id = document.getElementById("id_order").value
+  var periodo = document.getElementById("periodo").value
+  var cod_os = document.getElementById("cod_os").value
+  var mat_prov_cole = document.getElementById("mat_prov_cole").value
+  var ordennro = document.getElementById("ordennro").value
+  var dni_afiliado = document.getElementById("dni_afiliado").value
+  var nom_afiliado = document.getElementById("nom_afiliado").value
+  var fecha = document.getElementById("fecha").value
+  var plan = document.getElementById("plan").value
+  var cod_nemotecnico = document.getElementById("id_nomen").value
+  var cantidad = document.getElementById("cantidad").value
+  var precio = document.getElementById("precio").value
+  var importe = document.getElementById("importe").value
 
+  
+  // data: "id="+id+"&_token={{ csrf_token()}}",
   $.ajax({
-    url: "/api/ordenesedit/" + id,
-    data: "id="+id+"&_token={{ csrf_token()}}",
+    url: "/api/ordenesupdate/" + id,
+    data: "id="+id+"&periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
     dataType: "json",
     method: "POST",
     success: function(result) {
@@ -889,8 +905,8 @@ function updateOrder() {
       console.table(result)
 
     },
-    fail: function() {
-      alert("Error buscando ordenes ...");
+    fail: function(xhr, textStatus, errorThrown) {
+      alert(xhr.responseText);
     },
     beforeSend: function(){
       
@@ -966,6 +982,10 @@ function verOrdenes() {
   matricula = document.getElementById("mat_prov_cole").value
   periodo = document.getElementById("periodo").value
 
+  if (matricula == 0) {
+    return false;
+  }
+
   // create option using DOM
   var x = document.getElementById("table-ordenes");
 
@@ -992,9 +1012,6 @@ function verOrdenes() {
           event_data += '<tr>';
 
         } else {
-          
-          console.log(result.cuenta)
-          console.log(result.suma)
           
           document.getElementById("ordenes2").value = result.cuenta
           document.getElementById("total").value = result.suma

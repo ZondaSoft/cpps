@@ -103,11 +103,10 @@ class OrdenesController extends Controller
         $legajo->mat_prov_cole = 0;
         $legajo->precio = 0.00;
         $legajo->total = 0.00;
-        //$legajo->periodo = '2022-07';
-
+        
         $ordenes = new Cpps30;
         
-        $profesionales = Cpps01::orderBy('mat_prov_cole')->get();
+        $profesionales = Cpps01::orderBy('nom_ape')->get();
         $obras = Cpps07::orderBy('cod_os')->get();
         $conv_os = Cpps12::where('cod_os', $legajo->cod_os)->get();
         $nomencladores = Cpps09::orderBy('cod_nomen')->get();
@@ -266,12 +265,16 @@ class OrdenesController extends Controller
         
         $order = new Cpps30();
 
-        $order->cod_os = $request->input('cod_os');
         $order->periodo = $request->input('periodo');
-        $order->plan = $request->input('plan');
-        $order->ordennro = $request->input('ordennro');
+        $order->cod_os = $request->input('cod_os');
         $order->mat_prov_cole = $request->input('mat_prov_cole');
+        $order->ordennro = $request->input('ordennro');
+        $order->dni_afiliado = $request->input('dni_afiliado');
         $order->nom_afiliado = $request->input('nom_afiliado');
+        $order->fecha = $request->input('fecha');
+        $order->plan = $request->input('plan');
+        $order->cod_nemotecnico = $request->input('cod_nemotecnico');
+        $order->cod_nomen = $request->input('cod_nomen');
         $order->cantidad = $request->input('cantidad');
         $order->precio = $request->input('precio');
         $order->importe = $request->input('importe');
@@ -358,7 +361,37 @@ class OrdenesController extends Controller
         return redirect('/profesionales/' . $id);
     }
 
+    
+    public function updateorder(Request $request, $id = null) {
+        
+        //$id = $request->input('id');
+        $order = Cpps30::find($id);
 
+        if ($order == null) {
+            return "{\"result\":\"no id :\"$id}";
+        }
+
+        $order->periodo = $request->input('periodo');
+        $order->cod_os = $request->input('cod_os');
+        $order->mat_prov_cole = $request->input('mat_prov_cole');
+        $order->ordennro = $request->input('ordennro');
+        $order->dni_afiliado = $request->input('dni_afiliado');
+        $order->nom_afiliado = $request->input('nom_afiliado');
+        $order->fecha = $request->input('fecha');
+        $order->plan = $request->input('plan');
+        $order->cod_nemotecnico = $request->input('cod_nemotecnico');
+        $order->cod_nomen = $request->input('cod_nomen');
+        $order->cantidad = $request->input('cantidad');
+        $order->precio = $request->input('precio');
+        $order->importe = $request->input('importe');
+
+        $order->update($request->only('ordennro', 'dni_afiliado', 'nom_afiliado', 'fecha', 'plan', 'cod_nemotecnico', 'cod_nomen', 'cantidad', 'precio', 'importe'));
+
+        return "{\"result\":\"ok\",\"id\":\"$order->ordennro\",\"ordennro\":\"$order->nom_afiliado\",\"nom_afiliado\":\"$order->nom_afiliado\",\"}";
+    }
+    
+    
+    
     public function delete($id)
     {
         $legajo = Cpps01::find($id);
@@ -416,18 +449,6 @@ class OrdenesController extends Controller
         $edicion = True;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 1;
         
-        // Agrego el legajo por dar de baja en Sue070
-        $orderBaja = new Cpps90;
-        try {
-            $orderBaja->id = $order->id;
-            $orderBaja->ordennro = $order->ordennro;
-
-            $orderBaja->save();
-        } catch (\Exception $e) {
-            //throw $th;
-            //$legajoBaja->save();
-        }
-
         $orderArray = $order->toArray();
 
         //"{\"result\":\"ok\",\"id\":\"$orderArray\"}"
