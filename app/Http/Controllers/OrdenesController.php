@@ -160,7 +160,7 @@ class OrdenesController extends Controller
         $orders = Cpps30::where('cod_os', $obra)
                 ->Where('periodo', $periodo)
                 ->Where('mat_prov_cole', $matricula)
-                ->orderBy('ordennro', 'desc')
+                ->orderBy('ordennro', 'asc')
                 ->get();
 
         $orders->put('cuenta', $countOrders);
