@@ -186,7 +186,7 @@
                                             value="{{ old('ordennro2',$legajo->ordennro) }}"
                                             maxlength="11" autocomplete='off'
                                             data-error=".errorTxt8" required>
-                                          <label for="ordennro2">Nro. Orden</label>
+                                          <label for="ordennro2" class="active">Nro. Orden</label>
                                           <small class="errorTxt8"></small>
                                         </div>
                                         {{-- {{ $edicion?'enabled':'disabled' }} --}}
@@ -246,7 +246,7 @@
                                               <option value = "{{ $nomenclador->cod_nemotecnico }}" @if ( old('cod_nomen2',$legajo->cod_nemotecnico)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
                                             @endforeach
                                           </select>
-                                          <label>Nomenclador</label>
+                                          <label>Nomenclador2</label>
                                         </div>
                                         
                                         {{-- {{ $edicion?'enabled':'disabled' }}  --}}
@@ -390,7 +390,7 @@
                                               <option value = "{{ $nomenclador->cod_nemotecnico  }}" @if ( old('cod_nomen',$legajo->cod_nemotecnico)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
                                             @endforeach
                                           </select>
-                                          <label>Nomenclador</label>
+                                          <label>Nomenclador 1</label>
                                         </div>
                                         
                                         {{-- {{ $edicion?'enabled':'disabled' }}  --}}
@@ -401,7 +401,7 @@
                                               <option value = "{{ $prestacion->cod_nomen  }}" @if ( old('prestacion',$legajo->cod_nomen)  == $prestacion->cod_nomen)  selected @endif>{{ $prestacion->nom_prest }}</option>
                                             @endforeach
                                           </select>
-                                          <label>Prestación</label>
+                                          <label>Prestación 1</label>
                                         </div>
                                         
                                         <div class="col m1 s1 input-field" style="width: 110px;">
@@ -534,7 +534,7 @@
                             <br>
 
                             <div class="col m12 s12">
-                              <a id="addorder2" name="addorder2" class="waves-effect waves-light btn mb-1 mr-1 modal-trigger" href="#modal1" disabled="true" >Agregar orden</a>
+                              <a id="addorder2" name="addorder2" class="waves-effect waves-light btn mb-1 mr-1 modal-trigger" href="#modal1" disabled="true" onclick="addOrder()">Agregar orden</a>
                               <a id="printorder2" name="printorder2" class="waves-effect waves-light red green btn mb-1 mr-1" href="{{ asset('/carga-ordenes/edit') }}/{{ $legajo->id }}" disabled="true" style="font-color: withe">Imprimir ...</a>
                               {{-- <a title="Borrar repuesto" class="waves-effect waves-light red darken-1 btn mb-1 mr-1" style="color: white" onclick="showModalBorrar({{ $legajo->id }})">
                                   <em class="icon-trash" style="color: white"></em> &nbsp;Borrar
@@ -791,15 +791,20 @@ function addOrder() {
 
   document.getElementById("ordennro2").focus();
 
-  document.getElementById("ordennro2").value = 0
+  document.getElementById("ordennro2").value = ""
   document.getElementById("dni_afiliado2").value = ""
   document.getElementById("nom_afiliado2").value = ""
   document.getElementById("fecha2").value = "2022-07-01"
   document.getElementById("plan2").value = 18
   document.getElementById("nemotecnico_original2").value = 1
   document.getElementById("id_nomen").value = 1
+
+  document.getElementById("cod_nomen2").value = 1
+  $("#cod_nomen2").formSelect(); // Refrescar
+
   document.getElementById("prestacion2").value = 330101
   $("#prestacion2").formSelect(); // Refrescar
+  
   document.getElementById("cantidad2").value = 1
   document.getElementById("precio2").value = 853
   //alert(result.importe)
@@ -818,13 +823,18 @@ function saveOrder() {
   var fecha = document.getElementById("fecha2").value
   var plan = document.getElementById("plan2").value
   var cod_nemotecnico = document.getElementById("id_nomen2").value
+  
+  //var cod_nomen = document.getElementById("prestacion").value
+  var select = document.getElementById('cod_nomen2');
+  var cod_nomen = select.options[select.selectedIndex].text;
+  
   var cantidad = document.getElementById("cantidad2").value
   var precio = document.getElementById("precio2").value
   var importe = document.getElementById("importe2").value
 
   $.ajax({
     url: "/api/ordenessave/",
-    data: "periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
+    data: "periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cod_nomen="+cod_nomen+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
     dataType: "json",
     method: "POST",
     success: function(result) {
@@ -865,6 +875,9 @@ function editOrder(id) {
       document.getElementById("nemotecnico_original").value = result.cod_nemotecnico
       document.getElementById("id_nomen").value = result.cod_nemotecnico  // ver
       
+      document.getElementById("cod_nomen").value = result.cod_nemotecnico    // nomenclador
+      $("#cod_nomen").formSelect(); // Refrescar
+      
       document.getElementById("prestacion").value = result.cod_nomen    // nomenclador
       $("#prestacion").formSelect(); // Refrescar
       
@@ -894,15 +907,20 @@ function updateOrder() {
   var fecha = document.getElementById("fecha").value
   var plan = document.getElementById("plan").value
   var cod_nemotecnico = document.getElementById("id_nomen").value
+
+  var select = document.getElementById('cod_nomen');
+  var cod_nomen = select.options[select.selectedIndex].text;
+
   var cantidad = document.getElementById("cantidad").value
   var precio = document.getElementById("precio").value
   var importe = document.getElementById("importe").value
 
-  
+  //cod_nomen
+
   // data: "id="+id+"&_token={{ csrf_token()}}",
   $.ajax({
     url: "/api/ordenesupdate/" + id,
-    data: "id="+id+"&periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
+    data: "id="+id+"&periodo="+periodo+"&cod_os="+cod_os+"&plan="+plan+"&mat_prov_cole="+mat_prov_cole+"&ordennro="+ordennro+"&dni_afiliado="+dni_afiliado+"&nom_afiliado="+nom_afiliado+"&fecha="+fecha+"&cod_nemotecnico="+cod_nemotecnico+"&cod_nomen="+cod_nomen+"&cantidad="+cantidad+"&precio="+precio+"&importe="+importe+"&_token={{ csrf_token()}}",
     dataType: "json",
     method: "POST",
     success: function(result) {
@@ -1004,7 +1022,6 @@ function verOrdenes() {
       $.each(result, function(index, value){
         //console.table(value);
         if (value.ordennro != null) {
-
           event_data += '<tr style="height: 14px;">';
           event_data += '<td style="height: 10px;">'+value.ordennro+'</td>';
           event_data += '<td style="height: 10px;">'+value.fecha+'</td>';
