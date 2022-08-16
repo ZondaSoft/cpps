@@ -833,7 +833,7 @@ function saveOrder() {
   var importe = document.getElementById("importe2").value
 
   $.ajax({
-    url: "/api/ordenessave/",
+    url: "/api/ordenessave",
     headers: {
         'Content-Type': 'application/x-www-form-urlencoded'
     },
