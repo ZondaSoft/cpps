@@ -796,7 +796,7 @@ function addOrder() {
   document.getElementById("nom_afiliado2").value = ""
   document.getElementById("fecha2").value = "2022-07-01"
   
-  document.getElementById("plan2").value = 18
+  document.getElementById("plan2").value = 20
   $("#plan2").formSelect(); // Refrescar
 
   document.getElementById("nemotecnico_original2").value = 1
