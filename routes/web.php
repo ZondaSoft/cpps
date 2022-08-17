@@ -46,7 +46,7 @@ Route::get('searchOoss', [PostController::class, 'searchOoss']);
 Route::get('searchProfessional', [PostController::class, 'searchProfessional']);
 Route::get('get-oss', [PostController::class, 'getobras']);
 Route::get('get-prof', [PostController::class, 'getProfessionals']);
-Route::get('searchPrecios/{id?}', [PostController::class, 'searchPrecios']);
+Route::get('searchPrecios/{id?}/{plan?}', [PostController::class, 'searchPrecios']);
 
 /* Route::get('/home', function () {
     return view('home');

@@ -32,9 +32,11 @@ class PostController extends Controller
     }
 
 
-    public function searchPrecios(Request $request, $id)
+    public function searchPrecios(Request $request, $id, $plan)
     {
-        $posts = Cpps14::where('cod_nomenclador', $id)->get();
+        $posts = Cpps14::where('cod_nemotecnico', $id)
+            ->where('cod_convenio', $plan)
+            ->get();
 
         return $posts;
     }

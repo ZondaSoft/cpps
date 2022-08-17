@@ -100,6 +100,7 @@ class OrdenesController extends Controller
 
         //$legajo->cod_os = "";
         $legajo->ordenes2 = 0;
+        $legajo->plan == "";
         $legajo->mat_prov_cole = 0;
         $legajo->precio = 0.00;
         $legajo->total = 0.00;

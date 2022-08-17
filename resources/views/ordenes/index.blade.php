@@ -226,12 +226,12 @@
                                       <div class="row">
                                         <div class="col m3 s3 input-field">
                                           <select id="plan2" name="plan2" onchange="changePlan2(this)">
-                                            <option value="" @if ($legajo->cod_conv == "")  selected   @endif  >Seleccione...</option>
+                                            <option value="" @if ($legajo->plan == "")  selected   @endif  >Seleccione...</option>
                                             @foreach ($conv_os as $plan)
                                               <option value = "{{ $plan->cod_conv  }}" @if ( old('plan',$legajo->plan)  == $plan->cod_conv)  selected @endif>{{ $plan->cod_conv }}</option>
                                             @endforeach
                                           </select>
-                                          <label>Convenio (Plan)</label>
+                                          <label>Convenio (Plan) add</label>
                                         </div>
                                       </div>
 
@@ -240,7 +240,7 @@
                                         <search-nomenclador2 onchange="changeNomenclador2(this)"></search-nomenclador2>
             
                                         <div class="col m3 s3 input-field" style="width: 130px;">
-                                          <select id="cod_nomen2" name="cod_nomen2" onchange="changePrestacion(this)">
+                                          <select id="cod_nomen2" name="cod_nomen2" onchange="changePrestacion2(this)">
                                             <option value="" @if ($legajo->nomenclador == "")  selected   @endif  >Seleccione...</option>
                                             @foreach ($nomencladores as $nomenclador)
                                               <option value = "{{ $nomenclador->cod_nemotecnico }}" @if ( old('cod_nomen2',$legajo->cod_nemotecnico)  == $nomenclador->cod_nemotecnico)  selected @endif>{{ $nomenclador->cod_nomen }}</option>
@@ -257,7 +257,7 @@
                                               <option value = "{{ $prestacion->cod_nomen  }}" @if ( old('prestacion2',$legajo->cod_nomen)  == $prestacion->cod_nomen)  selected @endif>{{ $prestacion->nom_prest }}</option>
                                             @endforeach
                                           </select>
-                                          <label>Prestación</label>
+                                          <label>Prestación (add)</label>
                                         </div>
                                         
                                         <div class="col m1 s1 input-field" style="width: 90px;">
@@ -640,17 +640,17 @@ function changeNomenclador(e) {
 
 // Usado en agregar orden
 function changePrestacion2(e) {
-  var nomenclador = $( "#nomenclador2 option:selected" ).text();
-  
+  var nomenclador = $( "#cod_nomen2 option:selected" ).text();
+
   document.getElementById("prestacion2").value = nomenclador;
   $("#prestacion2").formSelect(); // Refrescar
 
-  buscoPrecio(1)
+  buscoPrecio2(1)
 }
 
 // Usado en modificion de orden
 function changePrestacion(e) {
-  var nomenclador = $( "#nomenclador option:selected" ).text();
+  var nomenclador = $( "#cod_nomen option:selected" ).text();
   
   document.getElementById("prestacion").value = nomenclador;
   $("#prestacion").formSelect(); // Refrescar
@@ -666,30 +666,21 @@ function changePrestacion(e) {
 // }
 
 function changePlan2(e) {
-  // var nomenclador = $( "#nomenclador option:selected" ).text();
-  
-  // document.getElementById("prestacion").value = nomenclador;
-  // $("#prestacion").formSelect(); // Refrescar
-
-  // buscoPrecio(1)
+  changeNomenclador2()
 }
 
 
 function changePlan(e) {
-  // var nomenclador = $( "#nomenclador option:selected" ).text();
-  
-  // document.getElementById("prestacion").value = nomenclador;
-  // $("#prestacion").formSelect(); // Refrescar
-
-  // buscoPrecio(1)
+  changeNomenclador()
 }
 
-
-function buscoPrecio2(e) {
-  var codPrestacion = document.getElementById("prestacion2").value
+//------------ Busco precios en modificacion de ordenes ----------------
+function buscoPrecio(e) {
+  var codNemotecnico = document.getElementById("id_nomen").value
+  var codPlan = document.getElementById("plan").value
 
   $.ajax({
-      url: "/searchPrecios/" + codPrestacion,
+      url: "/searchPrecios/" + codNemotecnico + "/" + codPlan,
       data: "",
       dataType: "json",
       method: "GET",
@@ -697,9 +688,11 @@ function buscoPrecio2(e) {
       {
         if (result != null) {
           
-          document.getElementById("precio2").value = result[0].importe;
+          document.getElementById("precio").value = result[0].importe;
 
-          $("#lblPrecio2").addClass('active');
+          $("#lblPrecio").addClass('active');
+
+          calcular()
 
         } else {
           alert('Error en la devolucion del precio');
@@ -714,22 +707,27 @@ function buscoPrecio2(e) {
     });
 }
 
-
-function buscoPrecio(e) {
-  var codPrestacion = document.getElementById("prestacion").value
+//--------------- Busco precios en add orders --------------------
+function buscoPrecio2(e) {
+  var codNemotecnico = document.getElementById("id_nomen2").value
+  var codPlan = document.getElementById("plan2").value
 
   $.ajax({
-      url: "/searchPrecios/" + codPrestacion,
+      url: "/searchPrecios/" + codNemotecnico + "/" + codPlan,
       data: "",
       dataType: "json",
       method: "GET",
       success: function(result)
       {
         if (result != null) {
-          
-          document.getElementById("precio").value = result[0].importe;
 
-          $("#lblPrecio").addClass('active');
+          console.table(result)
+          
+          document.getElementById("precio2").value = result[0].importe;
+
+          $("#lblPrecio2").addClass('active');
+
+          calcular2()
 
         } else {
           alert('Error en la devolucion del precio');
@@ -753,7 +751,9 @@ function calcular2(e) {
   precio = document.getElementById("precio2").value;
 
   document.getElementById("importe2").value = precio * cantidad;
-  
+
+  total = document.getElementById("importe2").value
+
   $("#lblTotal2").addClass('active');
 }
 
@@ -795,7 +795,10 @@ function addOrder() {
   document.getElementById("dni_afiliado2").value = ""
   document.getElementById("nom_afiliado2").value = ""
   document.getElementById("fecha2").value = "2022-07-01"
+  
   document.getElementById("plan2").value = 18
+  $("#plan2").formSelect(); // Refrescar
+
   document.getElementById("nemotecnico_original2").value = 1
   document.getElementById("id_nomen").value = 1
 
@@ -806,9 +809,11 @@ function addOrder() {
   $("#prestacion2").formSelect(); // Refrescar
   
   document.getElementById("cantidad2").value = 1
-  document.getElementById("precio2").value = 853
+  document.getElementById("precio2").value = 0.00
   //alert(result.importe)
-  document.getElementById("importe2").value = 853
+  document.getElementById("importe2").value = 0.00
+    
+  buscoPrecio2()
 }
 
 
