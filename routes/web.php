@@ -229,11 +229,11 @@ Route::post('/api/ordenesdelete/{id?}', 'OrdenesController@deleteorder')
 
 //------------------   Impresion de ordenes  ------------------------------
 Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
-Route::post('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
-Route::post('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
+Route::get('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
+Route::get('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
 
-Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
-Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
+//Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
+//Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
 
 
 // Route::get('/search', 'OrdenesController@search2');

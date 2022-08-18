@@ -50,7 +50,7 @@
   <div class="card">
     <div class="card-content" style="padding-top: 0px;">
       <!-- users edit account form start -->
-      <form id="formMain" method="post" action="{{ url('/print-orders/print') }}" enctype="multipart/form-data">
+      <form id="formMain" method="get" action="{{ url('/print-orders/print') }}" enctype="multipart/form-data">
         {{ csrf_field() }}
 
         <div class="row">
@@ -59,7 +59,7 @@
             <h5 style="margin-top: 7px;margin-bottom: 14px;">Informe por Ordenes por profesional</h5>
           </div>
           <div class="col m6 s6">
-            <button class="waves-effect waves-light btn mb-1 mr-1" onclick="pdfexport(this)">
+            <button  data-target="modal1" class="waves-effect waves-light btn modal-trigger mb-1 mr-1" onclick="pdfexport(this)">
               Imprimir
             </button>
             <button class="waves-effect waves-light red green btn mb-1 mr-1" style="font-color: withe" onclick="excel(this)">
@@ -138,7 +138,7 @@
                   <div class="col m12 s12 input-field">
                   </div>
 
-                  <!-- Profesional -->
+                  <!-- Obra social -->
                   <div class="col m4 s4 input-field" style="padding-right: 0px;margin-bottom: 0px;">
                     <select id="det_os" name="det_os" onchange="changeObra2(this)" 
                         <option value = "" @if ( old('obra',$legajo->cod_os)  == "")  selected   @endif  >(Todas)</option>
@@ -148,6 +148,16 @@
                     </select>
                     <label>Obra Social</label>
                   </div>
+
+
+                  <!------------ MODAL DE ESPERA  ----------->
+                  <div id="modal1" class="modal">
+                    <div class="modal-content">
+                      <h4>Generando reporte</h4>
+                      <p>Por favor aguarde un momento mientras se procesan los datos ...</p>
+                    </div>
+                  </div>
+
 
 
                   <div class="col m12 s12 input-field">

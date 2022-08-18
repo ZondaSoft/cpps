@@ -786,23 +786,10 @@ class OrdenesController extends Controller
         $pdf = \App::make('dompdf.wrapper');
 
         $codsector = null;
-        $cod_nov = null;
-        $cerrada = false;
         $fecha = null;
         $legajo = null;
-        $novedad = null;
-        $agregar = true;
-        $edicion = true;
         $active = 1;
-        $anterior = 0;
-        $cuenta = 0;
-        $id_caja = 0;
-        $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
-        $novedad = null;
-        $order = null;
-        $fecha_orig = null;
-        $fecha5 = null;
         $novedades = null;
         $nombreObra = '';
         
@@ -841,6 +828,7 @@ class OrdenesController extends Controller
             ->join('cpps14s', function ($join) {
                 $join->on('cpps14s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico')->on('cpps14s.cod_convenio', '=', 'cpps30s.plan');
                 })
+            ->select('cpps30s.*', 'cpps01s.mat_prov_cole', 'cpps01s.nom_ape', 'cpps09s.nom_prest')
             ->whereBetween('cpps01s.nom_ape', [$profesional1, $profesional2])
             ->orderBy('cpps01s.nom_ape','asc')
             ->orderBy('cpps30s.ordennro','asc')
