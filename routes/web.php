@@ -267,6 +267,7 @@ Route::post('/cajas/delete/{id}', 'HomeController@baja');
 //              Facturacion
 //-------------------------------------
 Route::get('/facturacion/{id?}', 'FacturarController@index')->name('facturar.index');
+Route::get('/facturacion/web/{id?}', 'FacturarController@webupload')->name('facturar.webupload');
 
 //-------------------------------------
 //        Comprobantes de cajas

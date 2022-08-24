@@ -48,14 +48,10 @@
         </span>Excel
       </button> --}}
 
-      <input hidden id="id_caja" name="id_caja" value="{{ $id_caja }}" type="text">
-      <input hidden id="fecha" name="fecha" value="{{ $fecha }}" type="text">
-      <input hidden id="cerrada" name="cerrada" value="{{ $cerrada }}" type="text">
-
       <!-- create agregar button-->
-      @if ($cerrada == false)
+      
       <div class="invoice-create-btn" style="margin-left: -5px">
-        <a href="{{asset('orden-add')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+        <a href="{{asset('facturacion')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
           <i class="material-icons">add</i>
           <span class="hide-on-small-only">Agregar</span>
         </a>
@@ -63,20 +59,15 @@
 
       <!-- create cierre de caja button-->
       
-      <div class="invoice-create-btn" style="margin-left: 15px">
-        <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4" >  {{-- onclick="showModalBorrar()" --}}
+      {{-- <div class="invoice-create-btn" style="margin-left: 15px">
+        <a href="{{ asset('caja-cerrar') }}/{{ $id_caja }}" class="btn waves-effect waves-light deep-orange darken-1 border-round z-depth-4" >
           <i class="material-icons">vpn_key</i>
           <span class="hide-on-small-only">Cerrar caja</span>
         </a>
-      </div>
-    @else
-      <div class="invoice-create-btn">
-        <a href="{{asset('orden-abrir')}}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
-          <i class="material-icons">add</i>
-          <span class="hide-on-small-only">Abrir nueva caja</span>
-        </a>
-      </div>
-    @endif
+      </div> --}}
+
+      {{-- onclick="showModalBorrar()" --}}
+    
     </form>
   </div>
   
@@ -113,121 +104,54 @@
           <th>Obra Social</th>
           <th>Concepto</th>
           <th>Importe</th>
-          <th>Saldo</th>
+          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
 
-      <div hidden>
-      {{ $saldo = 0 }}
-      {{ $saldoDebito = 0 }}
-      {{ $saldoCredito = 0 }}
-      {{ $saldoBancario = 0 }}
-      {{ $saldoCheques = 0 }}
-      </div>
-
       <tbody>
-        <tr>
-          <td></td>
-          <td></td>
-          <td>
-              {{-- <a href="{{asset('apertura') . '/' . $apertura->id }}">{{ $apertura->id }}</a> --}}
-          </td>
-          <td>{{ date('d/m/Y', strtotime($apertura->fecha)) }}</td>
-          <td><span class="invoice-customer">APERTURA / SALDO INICIAL</span></td>
-          <td>
-              
-          </td>
-          <td><span class="invoice-amount">${{ number_format($apertura->apertura,2) }}</span></td>
-
-          <div hidden>
-            {{ $saldo = $saldo + $apertura->apertura }}
-          </div>
-
-          <td><span class="invoice-amount">${{ number_format($saldo,2) }}</span></td>
-          <td>
-            <div class="invoice-action">
-              
-            </div>
-          </td>
-        </tr>
-        @foreach ($novedades as $novedad)
+        @foreach ($facturas as $novedad)
         <tr>
           <td>{{ $novedad->id }}</td>
-          <td> @if ($novedad->tipo == 0) Fac @endif 
-            @if ($novedad->tipo == 1) Rec @endif 
-            @if ($novedad->tipo == 2) ND @endif
-            @if ($novedad->tipo == 3) NC @endif
-            @if ($novedad->tipo == 4) Ti @endif
-            @if ($novedad->tipo == 5) Tr @endif
-            @if ($novedad->tipo == 6) Ot @endif 
-          </td>
+          <td> {{ $novedad->tipo_comprob }} </td>
           <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="#">{{ $novedad->numero }}</a>
+              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="#">{{ str_pad($novedad->pventa, 4, "0", STR_PAD_LEFT) }}-{{ str_pad($novedad->numero, 8, "0", STR_PAD_LEFT) }}</a>
           </td>
           <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
           <td><span class="invoice-customer" 
-            @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-            @if ($novedad->cuenta == 0) Egresos en efectivo @endif
-            @if ($novedad->cuenta == 1) Tarjeta Credito (Ingresos)) @endif
-            @if ($novedad->cuenta == 2) Tarjeta Debito (Ingresos) @endif
-            @if ($novedad->cuenta == 3) Transf. Bancaria Galicia (Ingresos) @endif
-            @if ($novedad->cuenta == 4) Transf. Bancaria Macro (Ingresos) @endif
-            @if ($novedad->cuenta == 5) Ingresos en efectivo @endif
-            @if ($novedad->cuenta == 6) Ingresos en Cheques @endif
+            {{ $novedad->cod_os }}
           </span></td>
           <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-            {{ substr($novedad->nomConcepto,0,20) }}
+            {{ substr($novedad->concepto,0,20) }}
           </span></td>
           
           <td>
             <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              @if ($novedad->cuenta == 0)(@endif
-                ${{ number_format($novedad->importe,2) }}
-              @if ($novedad->cuenta == 0))@endif
+              $ {{ number_format($novedad->importe,2) }}
             </span>
           </td>
-
-          <div hidden>
-            @if ($novedad->cuenta === 0)
-              {{ $saldo = $saldo - $novedad->importe }}
-            @endif
-            @if ($novedad->cuenta === 5)
-              {{ $saldo = $saldo + $novedad->importe }}
-            @endif
-
-            @if ($novedad->cuenta == 2)
-              {{ $saldoDebito = $saldoDebito + $novedad->importe }}
-            @endif
-            @if ($novedad->cuenta == 1)
-              {{ $saldoCredito = $saldoCredito + $novedad->importe }}
-            @endif
-            @if ($novedad->cuenta == 3 or $novedad->cuenta == 4)
-              {{ $saldoBancario = $saldoBancario + $novedad->importe }}
-            @endif
-            @if ($novedad->cuenta == 6)
-              {{ $saldoCheques = $saldoCheques + $novedad->importe }}
-            @endif
-  
-          </div>
 
           <td>
             <span class="invoice-amount">
               @if ($novedad->cuenta == 0 or $novedad->cuenta == 5)
-                ${{ number_format($saldo,2) }}
+                {{-- ${{ number_format($saldo,2) }} --}}
               @endif
             </span>
           </td>
           <td>
             <div class="invoice-action">
-              @if ($cerrada == false)
-                <a href="{{ asset('orden-add') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4">
-                  <i class="material-icons">edit</i>
-                </a>
-                <a href="{{ asset('orden') . '/delete/' . $novedad->id }}" class="invoice-action-edit">
-                  <i class="material-icons">delete</i>
-                </a>
-              @endif
+              <a href="{{ asset('facturacion') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Ver detalles">
+                <i class="material-icons">remove_red_eye</i>
+              </a>
+              <a href="{{ asset('facturacion') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Modificar factura">
+                <i class="material-icons">edit</i>
+              </a>
+              <a href="#modal3" class="invoice-action-edit mr-4 modal-trigger" onclick="prepararFactura({{ $novedad->id }})" title="Subir factura a intranet (psicologossalta.com.ar)">
+                <i class="material-icons">cloud_upload</i>
+              </a>
+              <a href="{{ asset('orden') . '/delete/' . $novedad->id }}" class="invoice-action-edit" title="Anular factura">
+                <i class="material-icons">delete</i>
+              </a>
             </div>
           </td>
         </tr>
@@ -236,48 +160,53 @@
       </tbody>
     </table>
 
+    <!------------ MODAL PARA SUBIR A LA WEB ----------->
+    <div id="modal3" class="modal bottom-sheet">
+      <div class="modal-content">
+        <div class="row">
+          <div class="col s12">
+            <div class="form-row">
+              <div class="col s1" style="width: 70px;">
+                <a class="btn-floating mb-1 btn-flat waves-effect waves-light red accent-2 white-text" href="#"><i class="material-icons">cloud_upload</i></a>
+              </div>
+              <div class="col m9 s9">
+                <h4>Subir facturación a la intranet de psicologossalta.com.ar ?</h4>
+              </div>
+              <div class="col m3 s3">
+                <div class="input-field inline">
+                  <input id="id_order" name="id_order" type="number" autocomplete="off" maxlength="10" value="0" style="width: 100px;margin-bottom: 0px;" disabled hidden>
+                </div>
+                {{-- <label for="id_order">Nro.</label> --}}
+              </div>
+            </div>
+
+            <div class="row">
+              <div class="col m2 s2">
+              </div>
+              <div class="col m9 s9">
+                <span class="title">Confirma la operación ?</span>
+
+                <label for="id_factura"># interno : </label>
+                <input id="id_factura" name="id_factura" type="number" autocomplete="off" maxlength="10" value="" style="width: 100px;margin-bottom: 0px;" disabled>
+              </div>
+            </div>
+            
+            {{-- <img src="{{asset('images/avatar/avatar-7.png')}}" alt="" class="circle"> --}}
+
+            <div class="modal-footer">
+              <a href="#!" class="modal-action modal-close waves-effect waves-red btn-flat">Cancelar</a>
+              <a href="#!" class="modal-action modal-close waves-effect waves-green btn-flat" onclick="upLoad()">Subir</a>
+            </div>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+
     <div class="s12 m12">
       <div class="form-row">
         
-        <div class="col m2 s2 input-field">
-          <input id="saldoEfectivo" name="saldoEfectivo" type="text" class="validate" 
-            value="{{ old('saldoEfectivo',$saldo) }}"
-            disabled data-error=".errorTxt1">
-          <label for="saldo">Saldo contado actual</label>
-          <small class="errorTxt1"></small>
-        </div>
-
-        <div class="col m2 s2 input-field">
-          <input id="saldoDebito" name="saldoDebito" type="text" class="validate" 
-            value="{{ old('saldoDebito',$saldoDebito) }}"
-            disabled data-error=".errorTxt1">
-          <label for="saldo">Ingresos por Débitos</label>
-          <small class="errorTxt1"></small>
-        </div>
-
-        <div class="col m2 s2 input-field">
-          <input id="saldoCredito" name="saldoCredito" type="text" class="validate" 
-            value="{{ old('saldoCredito',$saldoCredito) }}"
-            disabled data-error=".errorTxt1">
-          <label for="saldo">Ingresos por Créditos</label>
-          <small class="errorTxt1"></small>
-        </div>
-
-        <div class="col m2 s2 input-field">
-          <input id="saldoBancario" name="saldoBancario" type="text" class="validate" 
-            value="{{ old('saldoBancario',$saldoBancario) }}"
-            disabled data-error=".errorTxt1">
-          <label for="saldo">Bancarios</label>
-          <small class="errorTxt1"></small>
-        </div>
-
-        <div class="col m2 s2 input-field">
-          <input id="saldoCheques" name="saldoCheques" type="text" class="validate" 
-            value="{{ old('saldoCheques',$saldoCheques) }}"
-            disabled data-error=".errorTxt1">
-          <label for="saldo">Cheques</label>
-          <small class="errorTxt1"></small>
-        </div>
+        
       
       </div>
     </div>
@@ -310,6 +239,39 @@
 
     document.getElementById('formMain').action="{{ url('/cajas/excel/') }}";
 
+  }
+
+  function prepararFactura(id) {
+    document.getElementById("id_factura").value = id;
+  }
+
+
+  function upLoad() {
+    var id = document.getElementById("id_factura").value
+    
+    $.ajax({
+        url: "/facturacion/web/" + id,
+        data: "",
+        dataType: "json",
+        async: false,
+        method: "GET",
+        success: function(result)
+        {
+          if (result != null) {
+            
+            alert(result);
+
+          } else {
+            alert('Error en la devolucion del precio');
+          } 
+        },
+        fail: function(){
+            alert("Error buscando vehiculos...");
+        },
+        beforeSend: function(){
+
+        }
+      });
   }
 </script>
 

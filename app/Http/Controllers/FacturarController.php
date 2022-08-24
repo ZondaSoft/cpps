@@ -5,12 +5,16 @@ use App\Exports\CajaExport;
 use App\Models\Datoempr;
 use App\Models\Vta001;
 use App\Models\Fza002;
-use App\Models\Fza030;  // Movimientos
+use App\Models\Cpps30;  // Ordenes
+use App\Models\Cpps40;  // Facturas
+use App\Models\edi_Facturas;  // Facturas Web
+use App\Models\edi_Ordenes;  // Ordenes Web
 use App\Models\Fza020;  // Head de movimientos
-use App\Models\Cpa010;  // Conceptos
 Use Maatwebsite\Excel\Sheet;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use DB;
+
 
 class FacturarController extends Controller
 {
@@ -21,15 +25,12 @@ class FacturarController extends Controller
 
     public function index(Request $request, $id = null, $direction = null)
     {
-        $legajoNew = new Cpa010;
-        $legajoNew->fecha = Carbon::Now()->format('d/m/Y');
-        $legajoNew->hasta = Carbon::Now()->format('d/m/Y');
-        $legajoNew->fecha_sin = Carbon::Now()->format('d/m/Y');
-        $legajoNew->dias = 1;
+        $facturaNew = new Cpps40;
+        $facturaNew->fecha = Carbon::Now()->format('d/m/Y');
+        $facturaNew->hasta = Carbon::Now()->format('d/m/Y');
+        $facturaNew->fecha_sin = Carbon::Now()->format('d/m/Y');
+        $facturaNew->dias = 1;
         $periodo = null;
-        $codsector = null;
-        $cod_nov = null;
-        $cerrada = false;
         $fecha = null;
         $legajo = null;
         $novedad = null;
@@ -40,66 +41,9 @@ class FacturarController extends Controller
         $anterior = 0;
         $cuenta = 0;
         $id_caja = 0;
+        $cerrada = null;
         $apertura = null;
         $iconSearch = true;
-
-        if ($id != null) {
-            $id_caja = $id;
-
-            $apertura = Fza020::Where('id', $id)->first();
-            
-            if ($apertura != null) {
-                $id_caja = $apertura->id;
-                $fecha = $apertura->fecha;
-                $cerrada = $apertura->cerrada;
-            } else {
-                $apertura = Fza020::orderBy('id','asc')->first();
-
-                if ($apertura != null) {
-                    $id_caja = $apertura->id;
-                    $fecha = $apertura->fecha;
-                    $cerrada = $apertura->cerrada;
-                }
-            }
-        } else {
-            //-----------------------------------------------------------------------------------
-            // Controlo si hay caja abierta y voy a ella sino voy a la ultima caja encontrada
-            //------------------------------------------------------------------------------------
-            $apertura = Fza020::WhereNull('cerrada')->first();
-
-            if ($apertura == null) {
-                // Busco ultima caja
-                $ultimaCaja = Fza020::orderBy('id','desc')->first();
-                $apertura = $ultimaCaja;
-
-                // No hay cajas anteriores ? ABRO 1ER CAJA
-                if ($apertura == null) {
-                    $legajo = new Fza020;
-                    $apertura = new Fza020;
-                    
-                    $legajo->id = 1;
-                    $id_caja = 1;
-                    $legajo->fecha = Carbon::Now()->format('Y-m-d');;     //->format('d/m/Y');
-                    $cerrada = null;
-                    $legajo->apertura = 0.00;
-                    $legajo->cierre = 0.00;
-
-                    return view('caja-apertura')->with(compact('novedad','apertura','id_caja','fecha','cerrada','cuenta',
-                        'legajoNew','legajo','iconSearch','agregar','edicion','active'));            
-                } else {
-                    $id_caja = $apertura->id;
-                    $fecha = $apertura->fecha;
-                    $cerrada = $apertura->cerrada;
-                }
-        
-            } else {
-                $id_caja = $apertura->id;
-                $fecha = $apertura->fecha;
-                $cerrada = $apertura->cerrada;
-                
-            }
-        }
-
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 40;
@@ -107,10 +51,9 @@ class FacturarController extends Controller
         $order = null;
         $fecha_orig = null;
         $fecha5 = null;
-        $novedades = null;
+        $facturas = null;
         
-        $novedades = Fza030::Where('id_caja', $id_caja)
-            ->orderBy('id','asc')
+        $facturas = Cpps40::orderBy('id','asc')
             ->paginate(20)
             ->appends(request()->query());
         
@@ -141,9 +84,85 @@ class FacturarController extends Controller
             //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
         }
 
-        //dd($novedades);
+        //dd($facturas);
 
-        return view('facturacion.index')->with(compact('novedad','apertura','id_caja','cod_nov','fecha','legajo',
-            'legajoNew','iconSearch', 'agregar','edicion','active','novedades','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
+        return view('facturacion.index')->with(compact('novedad','apertura','id_caja','fecha','legajo',
+            'facturaNew','iconSearch', 'agregar','edicion','active','facturas','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
+    }
+
+    function webupload(Request $request, $id)
+    {
+        $factura = Cpps40::find($id);
+
+        if ($factura != null) {
+            
+            // 1-Si existe ya la factura en la tabla para exportar (edi_Facturas) la borro
+            $deleteFactura = edi_Facturas::where('id_fact', $id)->first();
+
+            if ($deleteFactura != null) {
+                $deleteFactura::where('id_fact', $id)->delete();
+            }
+
+            // 2-Agrego datos de la factura (Cpps30) en la tabla para exportar (edi_Facturas)
+            $nuevaFactura = new edi_Facturas();
+            $nuevaFactura->id_fact = $id;
+            $nuevaFactura->periodo_fac = $factura->fecha;
+            $nuevaFactura->cod_os = $factura->cod_os;
+            $nuevaFactura->concepto = $factura->concepto;
+            
+            $nuevaFactura->save();
+
+            // 3-Borro ordenes pre-existentes
+            $deleteOrders = edi_Ordenes::where('id_fact', $id)
+                ->delete();
+
+            // 4-Agrego ordenes a edi_Facturas
+            $nroRenglon = 1;
+            
+            DB::statement(DB::raw("SET @row = '0'"));
+
+            $ordenes = Cpps30::select('id_fact',
+                DB::raw("@row:=@row+1 AS nro_renglon"),
+                'ordennro',
+                'profesionales.cod_prof',
+                DB::raw('cod_nemotecnico as id_nomen'),'nom_afiliado','importe','cantidad',DB::raw('0 as estado_orden'),'dni_afiliado')
+                ->join('cpps01s AS profesionales', 'profesionales.mat_prov_cole', '=', 'cpps30s.mat_prov_cole')
+                ->where('id_fact', $id)
+                ->where('periodo', $factura->periodo)
+                ->where('cod_os', $factura->cod_os)
+                ->get();    // ->toArray()
+            
+            dd($ordenes->count());
+            
+            if ($ordenes != null) {
+                edi_Ordenes::insert($ordenes);
+
+                // foreach ($ordenes as $order) {
+                //     $newOrder = new edi_Ordenes();
+
+                //     $newOrder->id_fact = $id;
+                //     $newOrder->nro_renglon = $nroRenglon;
+                //     $newOrder->ordennro = $order->ordennro;
+                    
+                //     $newOrder->cod_prof = $order->CodProf;
+                    
+                //     $newOrder->id_nomen = $order->cod_nemotecnico;
+                //     $newOrder->nom_afiliado = $order->nom_afiliado;
+                //     $newOrder->importe = $order->importe;
+                //     $newOrder->cantidad = $order->cantidad;
+                //     $newOrder->estado_orden = 0;
+                //     $newOrder->dni_afiliado = $order->dni_afiliado;
+                //     $newOrder->save();
+
+                //     $nroRenglon++;
+                // }
+
+                return "{\"result\":\"ok\",\"id\":\"$id,\"ordenes\":\"$nroRenglon}";
+            }
+            
+            return "{\"result\":\"error\",\"id\":\"$id}";
+        }
+
+        return "{\"result\":\"error\",\"id\":\"$id}";
     }
 }

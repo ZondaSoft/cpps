@@ -10,4 +10,6 @@ class edi_Ordenes extends Model
     use HasFactory;
 
     protected $table="edi_Ordenes";
+
+    public $timestamps = false;
 }

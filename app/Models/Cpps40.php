@@ -5,11 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class edi_Facturas extends Model
+class Cpps40 extends Model
 {
     use HasFactory;
-
-    protected $table="edi_Facturas";
-
-    public $timestamps = false;
 }
