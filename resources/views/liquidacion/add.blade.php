@@ -90,7 +90,7 @@
       <!-- Dropdown Trigger -->
       <a class='dropdown-trigger btn waves-effect waves-light purple darken-1 border-round' href='#'
         data-target='btn-filter'>
-        <span class="hide-on-small-only">Filtrar facturas</span>
+        <span class="hide-on-small-only">Filtrar profesionales</span>
         <i class="material-icons">keyboard_arrow_down</i>
       </a>
       <!-- Dropdown Structure -->
@@ -109,14 +109,13 @@
           <th></th>
           <th></th>
           <th class="sorting_asc" tabindex="0">
-            <span>Tipo</span>
+            <span>N° Matricula</span>
           </th>
           <th>
-            <span>Nro.</span>
+            <span>Profesional</span>
           </th>
-          <th style="width: 10%">Fecha</th>
-          <th>Obra Social</th>
-          <th>Concepto</th>
+          <th style="width: 10%">Facturación</th>
+          <th>Descuentos</th>
           <th>Importe</th>
           <th>Estado</th>
           <th>Acciones</th>
@@ -126,24 +125,15 @@
       <tbody>
         @foreach ($facturas as $novedad)
         <tr>
-          <td>aa</td>
-          <td>{{ $novedad->id }}</td>
-          <td>{{ $novedad->tipo_comprob }}</td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="{{ asset('facturacion') . '/edit/' . $novedad->id }}">{{ str_pad($novedad->pventa, 4, "0", STR_PAD_LEFT) }}-{{ str_pad($novedad->numero, 8, "0", STR_PAD_LEFT) }}</a>
-          </td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
+          <td></td>
+          <td></td>
+          <td>{{ $novedad->mat_prov_cole }}</td>
+          <td>{{ $novedad->NomProf }}</td>
+          <td>$ {{ number_format($novedad->facturacion,2) }} </td>
+          <td>$ {{ number_format($novedad->facturacion * 0.04,2) }} </td>
           <td>
-            {{ $novedad->cod_os }} - 
-            {{ $novedad->NomObra }}
-          </td>
-          <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-            {{ substr($novedad->concepto,0,20) }}
-          </span></td>
-          
-          <td>
-            <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              $ {{ number_format($novedad->importe,2) }}
+            <span class="invoice-amount">
+              $ {{ number_format($novedad->facturacion / 1.04,2) }}
             </span>
           </td>
 

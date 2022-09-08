@@ -51,7 +51,7 @@ class LiquidacionController extends Controller
         $fecha5 = null;
         $facturas = null;
         
-        $facturas = Cpps30::select('mat_prov_cole')
+        $facturas = Cpps30::select('mat_prov_cole', DB::raw('SUM(importe) as facturacion'))
             ->orderBy('mat_prov_cole','asc')
             ->groupBy('mat_prov_cole')
             ->paginate(20)
@@ -59,7 +59,7 @@ class LiquidacionController extends Controller
         
             // ->orderBy('fecha','asc')
             // ->orderBy('numero','asc')
-
+        
         $id_crud = 2;
 
         // Combos de tablas anexas              //$legajos   = Vta001::orderBy('codigo')->Where('codigo','>',0)->get();
