@@ -7,6 +7,7 @@ return [
     "Adm.Obras Sociales"=> "Adm.Obras Sociales",
     "Convenios de O.S."=> "Convenios de O.S.",
     "Nomenclador de O.S."=> "Nomenclador de O.S.",
+    "Importar Ordenes"=> "Importar Ordenes",
     "Carga de Ordenes"=> "Carga de Ordenes",
     "Facturación a O.S."=> "Facturación a O.S.",
     "Caja Diaria"=> "Caja Diaria",

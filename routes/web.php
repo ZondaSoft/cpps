@@ -232,10 +232,10 @@ Route::get('/print-orders', 'OrdenesController@print2')->name('orders.print');
 Route::get('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.print');
 Route::get('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel');
 
+Route::get('/importar-ordenes/', 'OrdenesController@importar')->name('orders.import');
+
 //Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
 //Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
-
-
 // Route::get('/search', 'OrdenesController@search2');
 // Route::post('/action', 'OrdenesController@search3');
 
@@ -267,7 +267,17 @@ Route::post('/cajas/delete/{id}', 'HomeController@baja');
 //              Facturacion
 //-------------------------------------
 Route::get('/facturacion/{id?}', 'FacturarController@index')->name('facturar.index');
+Route::get('/facturacion/edit/{id?}', 'FacturarController@edit')->name('facturar.edit');
 Route::get('/facturacion/web/{id?}', 'FacturarController@webupload')->name('facturar.webupload');
+Route::get('/facturacion/view/{id?}', 'OrdenesController@vieworders')->name('facturar.view');
+
+
+
+//-------------------------------------
+//              Liquidaciones
+//-------------------------------------
+Route::get('/liquidaciones/add/{id?}', 'LiquidacionController@add')->name('liquidacion.add');
+
 
 //-------------------------------------
 //        Comprobantes de cajas

@@ -90,6 +90,70 @@ class FacturarController extends Controller
             'facturaNew','iconSearch', 'agregar','edicion','active','facturas','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
     }
 
+    public function edit(Request $request, $id = null)
+    {
+        $facturaNew = new Cpps40;
+        $facturaNew->fecha = Carbon::Now()->format('d/m/Y');
+        $facturaNew->hasta = Carbon::Now()->format('d/m/Y');
+        $facturaNew->fecha_sin = Carbon::Now()->format('d/m/Y');
+        $facturaNew->dias = 1;
+        $periodo = null;
+        $fecha = null;
+        $legajo = null;
+        $novedad = null;
+        $legajoReadOnly = '';
+        $agregar = true;
+        $edicion = true;
+        $active = 40;
+        $anterior = 0;
+        $cuenta = 0;
+        $id_caja = 0;
+        $cerrada = null;
+        $apertura = null;
+        $iconSearch = true;
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 40;
+        $novedad = null;
+        $order = null;
+        $fecha_orig = null;
+        $fecha5 = null;
+        $facturas = null;
+        
+        $factura = Cpps40::find($id);
+            // ->orderBy('fecha','asc')
+            // ->orderBy('numero','asc')
+
+        $id_crud = 2;
+
+        // Combos de tablas anexas              //$legajos   = Vta001::orderBy('codigo')->Where('codigo','>',0)->get();
+        $legajos   = Vta001::select('vta001s.codigo', 'vta001s.detalle', 'nom_com')
+            ->orderBy('detalle')
+            ->Where('vta001s.codigo','>',0)
+            ->get();
+        
+        // Filtro de sectores segun perfil del usuario
+        if (auth()->user()->rol == "ADMINISTRADOR" ) {
+            //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
+        } elseif (auth()->user()->rol == "CARGA-TARJA-INFORMES") {
+            /* $sectores  = Sue011::orderBy('detalle')
+                ->whereNotNull('codigo')
+                ->join('roles_sectores', function ($join) {
+                    $join->on('roles_sectores.codsector', '=', 'sue011s.codigo')
+                        ->where('user', auth()->user()->name);
+                    })
+                ->get(); */
+        } else {
+            // "TARJAS-INFORMES"
+            //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
+        }
+
+        //dd($facturas);
+
+        return view('facturacion.edit')->with(compact('novedad','apertura','id_caja','fecha','legajo',
+            'facturaNew','iconSearch', 'agregar','edicion','active','factura','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
+    }
+
     function webupload(Request $request, $id)
     {
         $factura = Cpps40::find($id);
@@ -130,9 +194,9 @@ class FacturarController extends Controller
                 ->where('id_fact', $id)
                 ->where('periodo', $factura->periodo)
                 ->where('cod_os', $factura->cod_os)
-                ->get();    // ->toArray()
+                ->get()->toArray();
             
-            dd($ordenes->count());
+            //dd($ordenes->count());
             
             if ($ordenes != null) {
                 edi_Ordenes::insert($ordenes);

@@ -55,6 +55,14 @@
       "slug": "app-email",
       "submenu": [
         {
+          "url": "importar-ordenes",
+          "name": "Importar Ordenes",
+          "i18n": "Importar Ordenes",
+          "class": "waves-effect waves-cyan",
+          "icon": "file_download",
+          "slug": "Importar Ordenes"
+        },
+        {
           "url": "carga-ordenes",
           "name": "Carga de Ordenes",
           "i18n": "Carga de Ordenes",

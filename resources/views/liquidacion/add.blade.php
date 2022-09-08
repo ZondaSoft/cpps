@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','CPPS - Facturas')
+@section('title','CPPS - Liquidacion')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -101,7 +101,7 @@
         <li><a href="#!">TODAS</a></li>
       </ul>
     </div>
-  <!-- </div> -->
+  <!-- </div> -->     
   <div class="responsive-table">
     <table id="mainTable" class="table invoice-data-table white border-radius-4 pt-1">
       <thead>

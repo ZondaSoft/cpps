@@ -2,13 +2,13 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','CPPS - Facturas')
+@section('title','CPPS - Ver ordenes')
 
 {{-- vendor styles --}}
 @section('vendor-style')
 <link rel="stylesheet" type="text/css" href="{{asset('vendors/data-tables/css/jquery.dataTables.min.css')}}">
 <link rel="stylesheet" type="text/css" href="{{asset('vendors/data-tables/extensions/responsive/css/responsive.dataTables.min.css')}}">
-<link rel="stylesheet" type="text/css" href="{{asset('vendors/data-tables/css/dataTables.checkboxes.css')}}">
+{{-- <link rel="stylesheet" type="text/css" href="{{asset('vendors/data-tables/css/dataTables.checkboxes.css')}}"> --}}
 @endsection
 
 {{-- page styles --}}
@@ -49,6 +49,7 @@
       </button> --}}
 
       <!-- create agregar button-->
+      
       <div class="invoice-create-btn" style="margin-left: -5px">
         <a href="{{asset('facturacion')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
           <i class="material-icons">add</i>
@@ -85,40 +86,25 @@
       <li><a href="#!">Unpaid</a></li>
       <li><a href="#!">Partial Payment</a></li>
     </ul> --}}
-
-    <div class="filter-btn">
-      <!-- Dropdown Trigger -->
-      <a class='dropdown-trigger btn waves-effect waves-light purple darken-1 border-round' href='#'
-        data-target='btn-filter'>
-        <span class="hide-on-small-only">Filtrar facturas</span>
-        <i class="material-icons">keyboard_arrow_down</i>
-      </a>
-      <!-- Dropdown Structure -->
-      <ul id='btn-filter' class='dropdown-content'>
-        <li><a href="#!">PENDIENTES</a></li>
-        <li><a href="#!">PAGADAS SIN LIQUIDAR</a></li>
-        <li><a href="#!">LIQUIDADAS</a></li>
-        <li><a href="#!">TODAS</a></li>
-      </ul>
-    </div>
   <!-- </div> -->
   <div class="responsive-table">
     <table id="mainTable" class="table invoice-data-table white border-radius-4 pt-1">
       <thead>
         <tr>
+          <!-- data table responsive icons -->
           <th></th>
-          <th></th>
+          <!-- data table checkbox -->
           <th class="sorting_asc" tabindex="0">
-            <span>Tipo</span>
+            <span>Matrícula</span>
           </th>
           <th>
-            <span>Nro.</span>
+            <span>Profesional</span>
           </th>
-          <th style="width: 10%">Fecha</th>
-          <th>Obra Social</th>
-          <th>Concepto</th>
+          <th style="width: 10%"># Orden</th>
+          <th>Paciente</th>
+          <th>Fecha</th>
+          <th>Nomenclador</th>
           <th>Importe</th>
-          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -126,20 +112,13 @@
       <tbody>
         @foreach ($facturas as $novedad)
         <tr>
-          <td>aa</td>
-          <td>{{ $novedad->id }}</td>
-          <td>{{ $novedad->tipo_comprob }}</td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="{{ asset('facturacion') . '/edit/' . $novedad->id }}">{{ str_pad($novedad->pventa, 4, "0", STR_PAD_LEFT) }}-{{ str_pad($novedad->numero, 8, "0", STR_PAD_LEFT) }}</a>
-          </td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
-          <td>
-            {{ $novedad->cod_os }} - 
-            {{ $novedad->NomObra }}
-          </td>
-          <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-            {{ substr($novedad->concepto,0,20) }}
-          </span></td>
+          <td></td>
+          <td> {{ $novedad->mat_prov_cole }}</td>
+          <td> {{ $novedad->NomProf }} </td>
+          <td> {{ $novedad->ordennro }} </td>
+          <td> {{ $novedad->nom_afiliado }} </td>
+          <td> {{ $novedad->fecha }} </td>
+          <td> {{ $novedad->cod_nomen }} </td>
           
           <td>
             <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
@@ -148,20 +127,9 @@
           </td>
 
           <td>
-            @if ($novedad->estado == 0 or $novedad->estado == 5)
-              <span class="chip lighten-5 red red-text">PENDIENTE</span>
-            @endif
-          </td>
-          <td>
             <div class="invoice-action">
-              <a href="{{ asset('facturacion') . '/view/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Ver ordenes asociadas">
-                <i class="material-icons">remove_red_eye</i>
-              </a>
               <a href="{{ asset('facturacion') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Modificar factura">
                 <i class="material-icons">edit</i>
-              </a>
-              <a href="#modal3" class="invoice-action-edit mr-4 modal-trigger" onclick="prepararFactura({{ $novedad->id }})" title="Subir factura a intranet (psicologossalta.com.ar)">
-                <i class="material-icons">cloud_upload</i>
               </a>
               <a href="{{ asset('orden') . '/delete/' . $novedad->id }}" class="invoice-action-edit" title="Anular factura">
                 <i class="material-icons">delete</i>
@@ -219,22 +187,20 @@
 
     <div class="s12 m12">
       <div class="form-row">
-        <!-- create agregar button-->
-          <div class="create-btn" style="margin-left: -5px">
-            <a href="{{ asset('liquidaciones') . '/add/' . $facturas }}" class="mb-6 btn waves-effect waves-light cyan">Nueva Liquidación</a>
-          </div>
+        
+        
+      
       </div>
     </div>
   </div>
 </section>
-
 @endsection
 
 {{-- vendor scripts --}}
 @section('vendor-script')
 <script src="{{asset('vendors/data-tables/js/jquery.dataTables.min.js')}}"></script>
 <script src="{{asset('vendors/data-tables/extensions/responsive/js/dataTables.responsive.min.js')}}"></script>
-<script src="{{asset('vendors/data-tables/js/datatables.checkboxes.min.js')}}"></script>
+{{-- <script src="{{asset('vendors/data-tables/js/datatables.checkboxes.min.js')}}"></script> --}}
 @endsection
 
 {{-- page scripts --}}
@@ -293,6 +259,4 @@
 
 <script src="{{asset('js/scripts/app-invoice.js')}}"></script>
 <script src="{{asset('js/scripts/advance-ui-modals.js')}}"></script>
-{{-- <script src="{{asset('vendors/data-tables/js/scripts/datatables.checkboxes.min.js')}}"></script> --}}
-
 @endsection

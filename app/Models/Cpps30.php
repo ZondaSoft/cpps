@@ -13,19 +13,19 @@ class Cpps30 extends Model
     protected $guarded = ['id'];
 
     // $legajos -> Centros de costo
-	// public function codigo_profesional()
-	// {
-	// 	return $this->belongsTo(Cpps01::Class,'mat_prov_cole', 'mat_prov_cole');
-	// }
+	public function nom_profesional()
+	{
+		return $this->belongsTo(Cpps01::Class,'mat_prov_cole', 'mat_prov_cole');
+	}
     
-    // public function getCodProfAttribute()
-    // {
-    //     if ($this->codigo_profesional != null) {
-    //         return $this->codigo_profesional->cod_prof;
-    //     }
+    public function getNomProfAttribute()
+    {
+        if ($this->nom_profesional != null) {
+            return $this->nom_profesional->nom_ape;
+        }
 
-    //     return '0000';
-	// }
+        return '0000';
+	}
 
     
     public function CodProf3()

@@ -11,7 +11,9 @@ use App\Models\Cpps07;  // Obras sociales
 use App\Models\Cpps09;  // Nomencladores
 use App\Models\Cpps12;  // Convenios-Planes
 use App\Models\Cpps30;  // Ordenes
+use App\Models\Cpps40;  // Facturas
 use App\Models\Cpps90;  // Ordenes de baja y/o editadas
+use App\Models\Vta001;
 use Carbon\Carbon;
 
 class OrdenesController extends Controller
@@ -169,7 +171,6 @@ class OrdenesController extends Controller
 
         return $orders;
     }
-
 
 
     /**
@@ -486,6 +487,72 @@ class OrdenesController extends Controller
         $order->delete();
 
         return "{\"result\":\"ok\",\"id\":\"$order->id\"}";
+    }
+
+    public function vieworders(Request $request, $id = null)
+    {
+        $facturaNew = new Cpps30;
+        $facturaNew->fecha = Carbon::Now()->format('d/m/Y');
+        $facturaNew->hasta = Carbon::Now()->format('d/m/Y');
+        $facturaNew->fecha_sin = Carbon::Now()->format('d/m/Y');
+        $facturaNew->dias = 1;
+        $periodo = null;
+        $fecha = null;
+        $legajo = null;
+        $novedad = null;
+        $legajoReadOnly = '';
+        $agregar = true;
+        $edicion = true;
+        $anterior = 0;
+        $cuenta = 0;
+        $id_caja = 0;
+        $cerrada = null;
+        $apertura = null;
+        $iconSearch = true;
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 42;
+        $novedad = null;
+        $order = null;
+        $fecha_orig = null;
+        $fecha5 = null;
+        $facturas = null;
+        
+        $facturas = Cpps30::orderBy('id','asc')
+            ->paginate(20)
+            ->appends(request()->query());
+        
+            // ->orderBy('fecha','asc')
+            // ->orderBy('numero','asc')
+
+        $id_crud = 2;
+
+        // Combos de tablas anexas              //$legajos   = Vta001::orderBy('codigo')->Where('codigo','>',0)->get();
+        $legajos   = Vta001::select('vta001s.codigo', 'vta001s.detalle', 'nom_com')
+            ->orderBy('detalle')
+            ->Where('vta001s.codigo','>',0)
+            ->get();
+        
+        // Filtro de sectores segun perfil del usuario
+        if (auth()->user()->rol == "ADMINISTRADOR" ) {
+            //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
+        } elseif (auth()->user()->rol == "CARGA-TARJA-INFORMES") {
+            /* $sectores  = Sue011::orderBy('detalle')
+                ->whereNotNull('codigo')
+                ->join('roles_sectores', function ($join) {
+                    $join->on('roles_sectores.codsector', '=', 'sue011s.codigo')
+                        ->where('user', auth()->user()->name);
+                    })
+                ->get(); */
+        } else {
+            // "TARJAS-INFORMES"
+            //$sectores  = Sue011::orderBy('detalle')->whereNotNull('codigo')->get();
+        }
+
+        //dd($facturas);
+
+        return view('facturacion.ordenes')->with(compact('novedad','apertura','id_caja','fecha','legajo',
+            'facturaNew','iconSearch', 'agregar','edicion','active','facturas','legajos', 'order','id_crud', 'legajoReadOnly','fecha5','id_caja','cerrada'));
     }
 
 
@@ -864,6 +931,51 @@ class OrdenesController extends Controller
         $profesional2 = $request->input('profesional2');
 
         return \Excel::download(new ProfesionalesExport($desde, $hasta, $profesional1, $profesional2), 'Ordenes.xlsx');
+    }
+
+
+    public function importar(Request $request)
+    {
+        $cod_os = '1050';
+        $iconSearch = true;
+        $agregar = False;
+        $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
+        $active = 1;
+        $fecha = null;
+        $id_caja = 0;
+        $cerrada = false;
+        $ddesde = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $dhasta = Carbon::parse(Carbon::today())->format('d/m/Y');
+        $periodo = null;
+
+        $legajo = Cpps30::Where('mat_prov_cole', '>', 0)
+                ->orderBy('mat_prov_cole')
+                ->first();
+        $empresa = Datoempr::first();      // find($id);
+        $profesionales = Cpps01::orderBy('nom_ape')->get();
+        $obras = Cpps07::orderBy('cod_os')->get();
+        $conv_os = Cpps12::where('cod_os', $cod_os)->get();
+        $nomencladores = Cpps09::orderBy('cod_nomen')->get();
+        $prestaciones = Cpps09::orderBy('nom_prest')->get();
+
+        return view('ordenes.importar')->with(compact(
+            'empresa',
+            'legajo',
+            'iconSearch',
+            'agregar',
+            'edicion',
+            'active',
+            'fecha',
+            'id_caja',
+            'cerrada',
+            'ddesde',
+            'dhasta',
+            'profesionales',
+            'nomencladores',
+            'prestaciones',
+            'obras',
+            'conv_os'
+        ));
     }
 
 
