@@ -1,6 +1,6 @@
 <div class="row mb-lg-12">
     <div class="col-lg-6 col-md-6 col-xs-6" style="border-right: 1px;solid #C00;">
-      <img alt="" src="img/logo-cpps.jpg" height="62" width="240" border-right="1"/>
+      <img alt="" src="{{ asset('img/logo-cpps.jpg') }}" height="62" width="240" border-right="1"/>
     </div>
 </div>
 <div class="col-lg-12 col-md-12 col-xs-12 text-center" style="font-size: 16px;font-weight: bold">
