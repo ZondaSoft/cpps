@@ -194,9 +194,6 @@
                     </div>
                   </div>
 
-
-
-
                   <!-- CONVENIOS -->
                   <div class="col s12" style="padding-right: 0px;padding-left: 0px" id="convenios" name="convenios">
                     <ul class="collapsible collapsible-accordion">
@@ -205,6 +202,23 @@
                             <i class="material-icons">toll</i> Nomenclador de prácticas asociado
                           </div>
                           <div class="collapsible-body" style="display: block;">
+
+                            <div class="col s2 input-field">
+                              <input id="fecha" name="fecha" type="date" class="validate" 
+                                value="{{ old('fecha',$legajo->fecha) }}"
+                                {{ $edicion?'enabled':'disabled' }}
+                                required maxlength="50" autocomplete='off'
+                                data-error=".errorTxt3">
+                              <label for="fecha">Vigencia desde *</label>
+                              <small class="errorTxt3"></small>
+                            </div>
+
+                            <a class="btn-floating mb-1 waves-effect waves-light " style="top: 15px;">
+                              <i class="material-icons">chevron_left</i>
+                            </a>
+                            <a class="btn-floating mb-1 waves-effect waves-light " style="top: 15px;">
+                              <i class="material-icons">chevron_right</i>
+                            </a>
 
                             <div class="row">
                               

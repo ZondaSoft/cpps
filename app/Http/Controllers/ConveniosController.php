@@ -24,7 +24,7 @@ class ConveniosController extends Controller
         $agregar = False;
         $edicion = False;    // True: Muestra botones Grabar - Cancelar   //  False: Muestra botones: Agregar, Editar, Borrar
         $active = 12;
-        $fecha = null;
+        $fecha = Carbon::now()->format('Y-m-d');
         $id_caja = 0;
         $nrolegajo = 0;
         $cerrada = false;
@@ -107,10 +107,18 @@ class ConveniosController extends Controller
                 $legajo->cod_os = $obraSeleccionada->cod_os;
             }
         }
+        
+        $firstDate = Cpps14::where('cod_convenio', $legajo->cod_conv)->orderBy('fecha', 'Desc')->first();
+        if ($firstDate != null) {
+            $fecha = $firstDate->fecha;
+        }
+        $legajo->fecha = $fecha;
 
         $obras = Cpps07::orderBy('cod_os')->get();
-        $convNomenclador = Cpps14::where('cod_convenio', $legajo->cod_conv)->get();
-
+        $convNomenclador = Cpps14::where('cod_convenio', $legajo->cod_conv)
+            ->where('fecha', $fecha)
+            ->get();
+        
         return view('convenios.index')->with(compact(
             'empresa',
             'legajo',

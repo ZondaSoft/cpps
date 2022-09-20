@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\OrdenesExport;
 use Illuminate\Http\Request;
 use App\Models\Datoempr;
 use App\Models\Fza030;  // Movimientos
@@ -15,6 +16,7 @@ use App\Models\Cpps40;  // Facturas
 use App\Models\Cpps90;  // Ordenes de baja y/o editadas
 use App\Models\Vta001;
 use Carbon\Carbon;
+use Maatwebsite\Excel\Facades\Excel;
 
 class OrdenesController extends Controller
 {
@@ -914,23 +916,33 @@ class OrdenesController extends Controller
         //dd($novedades);
 
         // Cargar view
-        $pdf->loadview('ordenes.printpdf', compact('periodo', 'novedades', 'desde', 'hasta', 'obra', 'nombreObra', 'profesional1', 'profesional2'));
+        //$pdf->loadview('ordenes.printpdf', compact('periodo', 'novedades', 'desde', 'hasta', 'obra', 'nombreObra', 'profesional1', 'profesional2'));
         
         // Generar el PDF al navegador
+        //return $pdf->stream();
 
-        return $pdf->stream();
+        return view('ordenes.printpdf')->with(compact(
+            'periodo',
+            'novedades',
+            'desde',
+            'hasta',
+            'obra',
+            'nombreObra',
+            'profesional1',
+            'profesional2'
+        ));
     }
 
 
     public function excel2(Request $request)
     {
-        $desde = $request->input('ddesde');
-        $hasta = $request->input('dhasta');
         $periodo = $request->input('periodo');
         $profesional1 = $request->input('profesional');
         $profesional2 = $request->input('profesional2');
+        $obra = $request->input('det_os');
+        $obra = substr($obra, 0, 11);
 
-        return \Excel::download(new ProfesionalesExport($desde, $hasta, $profesional1, $profesional2), 'Ordenes.xlsx');
+        return \Excel::download(new OrdenesExport($periodo, $obra, $profesional1, $profesional2), 'Ordenes.xlsx');
     }
 
 
