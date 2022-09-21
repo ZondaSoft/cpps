@@ -108,18 +108,18 @@
                <a class="navbar-brand" href="{{ asset('/home') }}">
                   <div class="brand-logo">
                      @if ($GLOBALS['cliente_id'] == 1)
-                        <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS">
+                        <img class="img-fluid" src="{{ asset('/img/logo-cpps-black.png') }}" alt="CPPS">
                      @endif
                      @if ($GLOBALS['cliente_id'] == 4)
-                        <img class="img-fluid" src="{{ asset('/img/logo-cpps.jpg') }}" alt="CPPS>
+                        <img class="img-fluid" src="{{ asset('/img/logo-cpps-black.png') }}" alt="CPPS>
                      @endif
                   </div>
                   <div class="brand-logo-collapsed">
                      @if ($GLOBALS['cliente_id'] == 1)
-                        <img class="img-fluid" src="/img/logo-cpps.jpg" alt="CPPS">
+                        <img class="img-fluid" src="/img/logo-cpps-black.png" alt="CPPS">
                      @endif
                      @if ($GLOBALS['cliente_id'] == 4)
-                        <img class="img-fluid" src="/img/logo-cpps.jpg" alt="CPPS">
+                        <img class="img-fluid" src="/img/logo-cpps-black.png" alt="CPPS">
                      @endif
                   </div>
                </a>

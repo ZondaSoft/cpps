@@ -15,8 +15,10 @@ use Maatwebsite\Excel\Concerns\WithEvents;
 use Maatwebsite\Excel\Events\AfterSheet;
 use Maatwebsite\Excel\Events\BeforeExport;
 use Maatwebsite\Excel\Events\AfterExport;
+use Maatwebsite\Excel\Concerns\WithPreCalculateFormulas;
+//use Maatwebsite\Excel\Concerns\WithStyles;
 
-class OrdenesExport implements FromQuery, WithHeadings, WithEvents   //FromCollection
+class OrdenesExport implements FromQuery, WithHeadings, WithEvents, WithPreCalculateFormulas      //, WithStyles   //FromCollection
 {
     use Exportable;
 
@@ -49,7 +51,8 @@ class OrdenesExport implements FromQuery, WithHeadings, WithEvents   //FromColle
             ->join('cpps14s', function ($join) {
                 $join->on('cpps14s.cod_nemotecnico', '=', 'cpps30s.cod_nemotecnico')->on('cpps14s.cod_convenio', '=', 'cpps30s.plan');
                 })
-            ->orderBy('cpps30s.mat_prov_cole','desc');
+            ->orderBy('cpps01s.nom_ape','asc')
+            ->orderBy('cpps30s.ordennro','asc');
         
         // $novedades = Cpps30::where('periodo', $periodo)
         //     ->join('cpps01s', function ($join) {
@@ -202,38 +205,34 @@ class OrdenesExport implements FromQuery, WithHeadings, WithEvents   //FromColle
                 //$event->sheet->getDelegate()->getCell('A1');
                 //$event->sheet->getDelegate()->appendRow();
                 //$event->sheet->getDelegate()->getcellCollection()->appendRow(2,array('appended', 'appended'));
-                //dd($event->sheet->getDelegate()->getcellCollection());
+                $numOfRows = $event->sheet->getDelegate()->getHighestRow();
+                $totalRow = $numOfRows + 2;
 
-                //dd($event->sheet->getDelegate());
+                $cellRange = 'K' . $totalRow;
+                $cellRange2 = 'L' . $totalRow;
+                
+                $event->sheet->getDelegate()->getStyle($cellRange)
+                      ->getFont()->setBold(true);
+                $event->getDelegate()->setCellValue("K{$totalRow}", "TOTAL");
+
+                $event->sheet->getDelegate()->getStyle($cellRange2)
+                      ->getFont()->setBold(true);
+                $event->getDelegate()->setCellValue("L{$totalRow}", "=SUM(L1:L{$numOfRows})");
+
                 //$cellRange = 'A1'; // All headers
                 //$event->sheet->getDelegate()->add
 
                 // PHPExcel_Style_Border::BORDER_THIN
                 //dd($event->sheet->getDelegate()->getStyle('A7:K7')->getBorders()->getTop()->setBorderStyle("thin"));
+
+                
             }
         ];
     }
 
-    public function registerEvents2(): array
-    {
-        return [
-            // Handle by a closure.
-            BeforeExport::class => function(BeforeExport $event) {
-                $event->writer->getProperties()->setCreator('Zonda Software');
-                $event->writer->getProperties()->setTitle('Ordenes1');
-
-
-            },
-
-            // Array callable, refering to a static method.
-            //BeforeWriting::class => [self::class, 'beforeWriting'],
-
-            // Using a class with an __invoke method.
-            //BeforeSheet::class => new BeforeSheetHandler()
-            ];
-    }
-
-    public static function registerEvents3(AfterSheet $event){
-        $event->sheet->getDelegate()->getParent()->getDefaultStyle()->getFont()->setName('Arial');
-    }
+    // public function styles()
+    // {
+    //     // Add cell with SUM formula to last row
+    //     $sheet->setCellValue("B{$totalRow}", "=SUM(B1:B{$numOfRows})");
+    // }
 }

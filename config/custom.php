@@ -17,9 +17,9 @@ return [
         'isFooterFixed' => false, //options:true or false
         'templateTitle' => '', //template Title can be changes default('Materialize)
         'isCustomizer' => false, //If True customizer available or false its not available
-        'defaultLanguage' => 'en', //set your default language Options: en(default),pt,fr,de
-        'largeScreenLogo' => 'images/logo/logo-cpps.jpg', //we used saparete log image for large screen and small
-        'smallScreenLogo' => 'images/logo/logo-cpps.jpg', // pass the image path here e.g:'images/logo/materialize-logo-color.png' note:(Vertical-menu-nav-dark and horizontal-menu template used a single logo in both small and large screen)
+        'defaultLanguage' => 'es', //set your default language Options: en(default),pt,fr,de
+        'largeScreenLogo' => 'images/logo/logo-cpps-black.png', //we used saparete log image for large screen and small
+        'smallScreenLogo' => 'images/logo/logo-cpps-black.png', // pass the image path here e.g:'images/logo/materialize-logo-color.png' note:(Vertical-menu-nav-dark and horizontal-menu template used a single logo in both small and large screen)
         'isFabButton' => false,   //favorite button for shortcurt menu Option: True or False
         'direction' => env('MIX_CONTENT_DIRECTION', 'ltr'),
         'title' => '',
