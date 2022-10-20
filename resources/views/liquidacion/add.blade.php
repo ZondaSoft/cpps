@@ -19,12 +19,13 @@
 {{-- page content --}}
 @section('content')
 <!-- invoice list -->
+<form method="post" action="#" enctype="multipart/form-data" id="formMain" name="formMain">
+  {{ csrf_field() }}
 <section class="invoice-list-wrapper section" style="margin-top: 0px;">
   <!-- create invoice button-->
   <!-- Options and filter dropdown button-->
   <div class="invoice-filter-action mr-3">
-    <form method="post" action="{{ url('/cajas/print') }}/{{ $id_caja }}" enctype="multipart/form-data" id="formMain" name="formMain">
-      {{ csrf_field() }}
+    
       
       <div class="col s12">
         <ul id="dropdown2" class="dropdown-content">
@@ -49,12 +50,12 @@
       </button> --}}
 
       <!-- create agregar button-->
-      <div class="invoice-create-btn" style="margin-left: -5px">
+      {{-- <div class="invoice-create-btn" style="margin-left: -5px">
         <a href="{{asset('facturacion')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
           <i class="material-icons">add</i>
           <span class="hide-on-small-only">Agregar</span>
         </a>
-      </div>
+      </div> --}}
 
       <!-- create cierre de caja button-->
       
@@ -67,7 +68,7 @@
 
       {{-- onclick="showModalBorrar()" --}}
     
-    </form>
+    
   </div>
   
   
@@ -101,8 +102,9 @@
         <li><a href="#!">TODAS</a></li>
       </ul>
     </div>
-  <!-- </div> -->     
+  <!-- </div> -->
   <div class="responsive-table">
+    
     <table id="mainTable" class="table invoice-data-table white border-radius-4 pt-1">
       <thead>
         <tr>
@@ -210,13 +212,16 @@
     <div class="s12 m12">
       <div class="form-row">
         <!-- create agregar button-->
-          <div class="create-btn" style="margin-left: -5px">
-            <a href="{{ asset('liquidaciones') . '/add/' . $facturas }}" class="mb-6 btn waves-effect waves-light cyan">Nueva Liquidación</a>
-          </div>
+        <div class="create-btn" style="margin-left: -5px">
+          <a href="{{ asset('liquidaciones') . '/add/' . $facturas }}" class="mb-6 btn waves-effect waves-light green">Agregar descuentos</a>
+          &nbsp;
+          <button href="{{ asset('liquidaciones') . '/add/' . $facturas }}" class="mb-6 btn waves-effect waves-light red">Confirmar y Cerrar</button>
+        </div>
       </div>
     </div>
   </div>
 </section>
+</form>
 
 @endsection
 

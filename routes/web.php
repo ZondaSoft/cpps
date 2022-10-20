@@ -233,6 +233,7 @@ Route::get('/print-orders/print/', 'OrdenesController@printpdf2')->name('orders.
 Route::get('/print-orders/excel/', 'OrdenesController@excel2')->name('orders.excel2');
 
 Route::get('/importar-ordenes/', 'OrdenesController@importar')->name('orders.import');
+Route::post('/importar-ordenes/', 'OrdenesController@importar2')->name('orders.import2');
 
 //Route::post('/carga-ordenes/print/', 'OrdenesController@printpdf')->name('convenios.print');
 //Route::post('/carga-ordenes/excel/', 'OrdenesController@excel')->name('convenios.excel');
@@ -271,13 +272,11 @@ Route::get('/facturacion/edit/{id?}', 'FacturarController@edit')->name('facturar
 Route::get('/facturacion/web/{id?}', 'FacturarController@webupload')->name('facturar.webupload');
 Route::get('/facturacion/view/{id?}', 'OrdenesController@vieworders')->name('facturar.view');
 
-
-
 //-------------------------------------
 //              Liquidaciones
 //-------------------------------------
 Route::get('/liquidaciones/add/{id?}', 'LiquidacionController@add')->name('liquidacion.add');
-
+Route::post('/liquidaciones/add/{id?}', 'LiquidacionController@store')->name('liquidacion.store');
 
 //-------------------------------------
 //        Comprobantes de cajas

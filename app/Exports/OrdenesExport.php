@@ -22,6 +22,10 @@ class OrdenesExport implements FromQuery, WithHeadings, WithEvents, WithPreCalcu
 {
     use Exportable;
 
+    protected $filas = [];
+    protected $total = 0;
+    protected $novedades = [];
+
     public function __construct($periodo, $obra, $profesional1, $profesional2)
     {
         $this->periodo = $periodo;
@@ -125,7 +129,21 @@ class OrdenesExport implements FromQuery, WithHeadings, WithEvents, WithPreCalcu
             AfterSheet::class    => function(AfterSheet $event) {
                 $event->sheet->getDelegate()->getParent()->getDefaultStyle()->getFont()->setName('Arial');
                 $event->sheet->getDelegate()->getParent()->getDefaultStyle()->getFont()->setSize('8');
+
+                dd($this->filas);
+
+                //----------------------
+                foreach ($this->filas as $index => $fila){
+                    $fila++;
+                    $event->sheet->insertNewRowBefore($fila, 1);
+                    // $event->sheet->getStyle("A{$fila}:G{$fila}")->applyFromArray($styleTitulos)->getFill()
+                    //     ->setFillType(\PhpOffice\PhpSpreadsheet\Style\Fill::FILL_SOLID)
+                    //     ->getStartColor()->setARGB('FFFF0000');
+                    $event->sheet->setCellValue("A{$fila}","Subtotal Propiedad");
+                    $event->sheet->setCellValue("G{$fila}", "=SUM(G".($fila - $this->limites[$index]).":G".($fila - 1).")");
+                }
                 
+                //-----------------------------------------------------------------
                 $cellRange = 'A1';
                 $event->sheet->getDelegate()->getStyle($cellRange)
                       ->getFont()->setBold(true);

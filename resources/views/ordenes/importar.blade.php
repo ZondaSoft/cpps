@@ -17,12 +17,8 @@
   <div class="card">
     <div class="card-content" style="padding-top: 0px;">
       <!-- users edit account form start -->
-      @if($agregar == true)
-      <form action="#" enctype="multipart/form-data">
-      @else
-      <form action="#" enctype="multipart/form-data">
-      @endif
-
+      <form method="post" action="{{url('importar-ordenes')}}" enctype="multipart/form-data">
+      
         {{ csrf_field() }}
 
         <div class="row">
@@ -33,8 +29,6 @@
           
         </div>
         </div>
-
-
 
         <div class="divider mb-2"></div>
 
@@ -65,7 +59,7 @@
                   <ul class="collapsible collapsible-accordion" style="margin-bottom: 10px;">
                     <li>
                       <div class="collapsible-header waves-light gradient-45deg-purple-deep-orange lightrn-1 white-text" style="padding-bottom: 10px;padding-top: 10px;" disabled>
-                        <i class="material-icons">toll</i> Seleccion de archivo de origen
+                        <i class="material-icons">toll</i> Selección de archivo de origen y parametros de importación
                       </div>
                       <div class="collapsible-body" style="display: block;padding-top: 15px;padding-bottom: 5px;">
                           <div class="row">
@@ -80,6 +74,17 @@
                               <label>Obra Social a importar</label>
                             </div>
 
+                            <div class="col m2 s2 input-field">
+                              <select id="periodo" name="periodo">
+                                <option value = '2022-07' @if ( old('periodo','2022-07')  == '2022-07')>2022-07</option>  @endif  >2022-07</option>
+                                <option value = '2022-08' @if ( old('periodo','2022-08')  == '2022-08')>2022-08</option>  @endif  >2022-08</option>
+                                <option value = '2022-09' @if ( old('periodo','2022-09')  == '2022-09')>2022-09</option>  selected   @endif  >2022-09</option>
+                                <option value = '2022-10' @if ( old('periodo','2022-10')  == '2022-10')>2022-10</option>  @endif  >2022-10</option>
+                              </select>
+                              <label>Periodo</label>
+                            </div>
+
+
                             <div class="col m12 s12 input-field" style="padding-right: 0px;margin-bottom: 0px;">
                             </div>
                             <div class="col m12 s12 input-field" style="padding-right: 0px;margin-bottom: 0px;">
@@ -92,14 +97,16 @@
                                         <p>Seleccione el archivo a importar</p>
                                     </div>
                                     <div class="col s12 m8 l9">
-                                        <input type="file" id="input-file-now" class="dropify" data-default-file="" />
+                                        <input type="file" id="xls_import1" name="xls_import1" class="dropify" data-default-file="" />
                                     </div>
                                 </div>
                             </div>
 
+                            <div class="divider mb-2"></div>
+
                             <div class="col m3 s3 input-field">
-                              <a type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1" onclick="verOrdenes()">
-                                Iniciar importación</a>
+                              <button type="submit" class="waves-effect light-blue darken-4 btn mb-1 mr-1" onclick="verOrdenes()">
+                                Iniciar importación</button>
                             </div>
 
                             <!-- Circular Flashing Colors -->

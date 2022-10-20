@@ -16,7 +16,9 @@ use App\Models\Cpps40;  // Facturas
 use App\Models\Cpps90;  // Ordenes de baja y/o editadas
 use App\Models\Vta001;
 use Carbon\Carbon;
-use Maatwebsite\Excel\Facades\Excel;
+//use Maatwebsite\Excel\Facades\Excel;
+use Excel;
+use App;
 
 class OrdenesController extends Controller
 {
@@ -958,7 +960,7 @@ class OrdenesController extends Controller
         $cerrada = false;
         $ddesde = Carbon::parse(Carbon::today())->format('d/m/Y');
         $dhasta = Carbon::parse(Carbon::today())->format('d/m/Y');
-        $periodo = null;
+        $periodo = '2022-09';
 
         $legajo = Cpps30::Where('mat_prov_cole', '>', 0)
                 ->orderBy('mat_prov_cole')
@@ -991,6 +993,32 @@ class OrdenesController extends Controller
     }
 
 
+    public function importar2(Request $request)
+    {
+        if ($request->hasFile('xls_import1')) {
+            $path = $request->file('xls_import1')->getRealPath();
+
+            $datos = Excel::import(new CsvImport, function($reader) {
+            })->get();
+
+            if (!empty($datos) && $datos->count()) {
+                $datos = $datos->toArray();
+
+                dd($datos);
+
+                for ($i=0; $i < count($datos); $i++) { 
+                    $renglon = $datos[$i];
+                }
+            }
+            
+            Cpps30::insert($renglon);
+        }
+
+        return back();
+    }
+    
+    
+    
     public function test()
     {
         $iconSearch = false;

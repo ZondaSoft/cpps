@@ -96,18 +96,16 @@
               <div class="s10 m10">
                 <!-- Cuenta -->
                 <div class="form-row">
-                    <div class="col m2 s2 input-field">
-                      <select id="periodo" name="periodo">
-                        <option value = '2022-07' @if ( old('periodo','2022-07')  == '2022-07')>2022-07</option>  @endif  >2022-07</option>
-                        <option value = '2022-08' @if ( old('periodo','2022-08')  == '2022-08')>2022-08</option>  selected   @endif  >2022-08</option>
-                        <option value = '2022-09' @if ( old('periodo','2022-09')  == '2022-09')>2022-09</option>  selected   @endif  >2022-09</option>
-                      </select>
-                      <label>Periodo</label>
+                  <div class="col m2 s2 input-field">
+                    <select id="periodo" name="periodo">
+                      <option value = '2022-07' @if ( old('periodo','2022-07')  == '2022-07')>2022-07</option>  @endif  >2022-07</option>
+                      <option value = '2022-08' @if ( old('periodo','2022-08')  == '2022-08')>2022-08</option>  selected   @endif  >2022-08</option>
+                      <option value = '2022-09' @if ( old('periodo','2022-09')  == '2022-09')>2022-09</option>  selected   @endif  >2022-09</option>
+                      <option value = '2022-10' @if ( old('periodo','2022-10')  == '2022-10')>2022-10</option>  selected   @endif  >2022-10</option>
+                    </select>
+                    <label>Periodo</label>
                   </div>
                   
-                  
-
-
                   <div class="col m12 s12 input-field">
                   </div>
 

@@ -50,7 +50,7 @@
 
       <!-- create agregar button-->
       <div class="invoice-create-btn" style="margin-left: -5px">
-        <a href="{{asset('facturacion')}}/{{ $id_caja }}" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
+        <a href="{{asset('liquidaciones')}}/add" class="btn waves-effect waves-light invoice-create border-round z-depth-4">
           <i class="material-icons">add</i>
           <span class="hide-on-small-only">Agregar</span>
         </a>
@@ -109,10 +109,10 @@
           <th></th>
           <th></th>
           <th class="sorting_asc" tabindex="0">
-            <span>Tipo</span>
+            <span># Liq.</span>
           </th>
           <th>
-            <span>Nro.</span>
+            <span>Factura</span>
           </th>
           <th style="width: 10%">Fecha</th>
           <th>Obra Social</th>
@@ -127,22 +127,24 @@
         @foreach ($facturas as $novedad)
         <tr>
           <td>aa</td>
-          <td>{{ $novedad->id }}</td>
-          <td>{{ $novedad->tipo_comprob }}</td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
-              <a @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif href="{{ asset('facturacion') . '/edit/' . $novedad->id }}">{{ str_pad($novedad->pventa, 4, "0", STR_PAD_LEFT) }}-{{ str_pad($novedad->numero, 8, "0", STR_PAD_LEFT) }}</a>
+          <td>{{ $novedad->num_liq }}</td>
+          <td>{{ $novedad->num_liq }}</td>
+          <td>
+            @if ($novedad->numero > 0)
+              <a href="{{ asset('facturacion') . '/edit/' . $novedad->id }}">{{ str_pad($novedad->pventa, 4, "0", STR_PAD_LEFT) }}-{{ str_pad($novedad->numero, 8, "0", STR_PAD_LEFT) }}</a>
+            @endif
           </td>
-          <td @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
+          <td>{{ date('d/m/Y', strtotime($novedad->fecha)) }}</td>
           <td>
             {{ $novedad->cod_os }} - 
             {{ $novedad->NomObra }}
           </td>
-          <td><span class="invoice-customer" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
+          <td><span class="invoice-customer">
             {{ substr($novedad->concepto,0,20) }}
           </span></td>
           
           <td>
-            <span class="invoice-amount" @if ($novedad->cuenta > 0 and $novedad->cuenta < 5) style="color: red" @endif>
+            <span class="invoice-amount">
               $ {{ number_format($novedad->importe,2) }}
             </span>
           </td>
@@ -154,7 +156,7 @@
           </td>
           <td>
             <div class="invoice-action">
-              <a href="{{ asset('facturacion') . '/view/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Ver ordenes asociadas">
+              <a href="{{ asset('facturacion') . '/view/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Ver detalle de la liq.">
                 <i class="material-icons">remove_red_eye</i>
               </a>
               <a href="{{ asset('facturacion') . '/edit/' . $novedad->id }}" class="invoice-action-edit mr-4" title="Modificar factura">

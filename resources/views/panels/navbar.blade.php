@@ -20,7 +20,7 @@
             Obras Sociales -> Carga de Ordenes
           @endif
           @if ($active == 40)
-            Facturas a Obras Sociales
+            Liquidaciones
           @endif
           @if ($active == 42)
             Facturas (Ver ordenes) 
