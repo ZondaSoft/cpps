@@ -53,10 +53,16 @@ class LiquidacionController extends Controller
         $fecha5 = null;
         $facturas = null;
         
-        $facturas = Cpps30::select('mat_prov_cole', DB::raw('SUM(importe) as facturacion'))
-            ->where('periodo', '2022-09')
-            ->orderBy('mat_prov_cole','asc')
-            ->groupBy('mat_prov_cole')
+        $facturas = Cpps30::select('cpps30s.mat_prov_cole', 'cpps01s.cod_prof', 'cpps01s.nom_ape', DB::raw('SUM(importe) as facturacion'), DB::raw('0.00 as otros'))
+            ->join('cpps01s', function ($join) {
+                $join->on('cpps30s.mat_prov_cole', '=', 'cpps01s.mat_prov_cole');
+            })
+            ->join('cpps43s', function ($join) {
+                $join->on('cpps30s.mat_prov_cole', '=', 'cpps43s.mat_prov_cole');
+            })
+            ->where('periodo', '2022-07')
+            ->orderBy('cpps30s.mat_prov_cole','asc')
+            ->groupBy('cpps30s.mat_prov_cole')
             ->get();
         
             // ->orderBy('fecha','asc')
@@ -85,7 +91,6 @@ class LiquidacionController extends Controller
         // ->join('sue031s', function ($join) {
         //     $join->on('cpps30s.cod_nov', '=', 'sue031s.codigo');
         //     })
-        
         
         // Filtro de sectores segun perfil del usuario
         if (auth()->user()->rol == "ADMINISTRADOR" ) {
@@ -139,7 +144,7 @@ class LiquidacionController extends Controller
         $facturas = null;
         
         $facturas = Cpps30::select('mat_prov_cole', DB::raw('SUM(importe) as facturacion'))
-            ->where('periodo', '2022-09')
+            ->where('periodo', '2022-07')
             ->orderBy('mat_prov_cole','asc')
             ->groupBy('mat_prov_cole')
             ->get();

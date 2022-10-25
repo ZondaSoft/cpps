@@ -72,8 +72,8 @@
         },
         {
           "url": "facturacion",
-          "name": "Facturación a O.S.",
-          "i18n": "Facturación a O.S.",
+          "name": "Liquidaciones",
+          "i18n": "Liquidaciones",
           "class": "waves-effect waves-cyan",
           "icon": "assignment",
           "slug": "eCommerce-pricing"

@@ -2,7 +2,7 @@
 @extends('layouts.contentLayoutMaster')
 
 {{-- page title --}}
-@section('title','CPPS - Liquidacion')
+@section('title','CPPS - Nueva Liquidacion')
 
 {{-- vendor styles --}}
 @section('vendor-style')
@@ -118,8 +118,8 @@
           </th>
           <th style="width: 10%">Facturación</th>
           <th>Descuentos</th>
+          <th>Otros</th>
           <th>Importe</th>
-          <th>Estado</th>
           <th>Acciones</th>
         </tr>
       </thead>
@@ -135,14 +135,14 @@
           <td>$ {{ number_format($novedad->facturacion * 0.04,2) }} </td>
           <td>
             <span class="invoice-amount">
-              $ {{ number_format($novedad->facturacion / 1.04,2) }}
+              $ {{ number_format($novedad->otros,2) }}
             </span>
           </td>
 
           <td>
-            @if ($novedad->estado == 0 or $novedad->estado == 5)
-              <span class="chip lighten-5 red red-text">PENDIENTE</span>
-            @endif
+            <span class="invoice-amount">
+              $ {{ number_format($novedad->facturacion / 1.04,2) }}
+            </span>
           </td>
           <td>
             <div class="invoice-action">

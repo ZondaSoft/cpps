@@ -13,15 +13,11 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::create('cpps43s', function (Blueprint $table) {
+        Schema::create('cpps44s', function (Blueprint $table) {
             $table->id();
-            $table->integer('num_liq')->nullable();
-            $table->Integer('cod_prof')->nullable();
-            $table->Integer('mat_prov_cole')->nullable();
             $table->string('operacion', 1)->nullable();
             $table->integer('cod_operacion')->nullable();
             $table->string('desc_operacion', 50)->nullable();
-            $table->double('importe_op')->nullable();
             $table->timestamps();
         });
     }
@@ -33,6 +29,6 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('cpps43s');
+        Schema::dropIfExists('cpps44s');
     }
 };

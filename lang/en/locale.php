@@ -10,6 +10,7 @@ return [
     "Importar Ordenes"=> "Importar Ordenes",
     "Carga de Ordenes"=> "Carga de Ordenes",
     "Facturación a O.S."=> "Facturación a O.S.",
+    "Liquidaciones"=> "Liquidaciones",
     "Caja Diaria"=> "Caja Diaria",
     "Proveedores"=> "Proveedores",
     "Clientes"=> "Clientes",
